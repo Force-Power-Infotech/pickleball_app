@@ -1,0 +1,890 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
+
+import '../theme/app_theme.dart';
+import '../models/match.dart';
+import '../providers/match_provider.dart';
+import '../widgets/animated_button.dart';
+import '../widgets/custom_text_field.dart';
+import 'game_scoring_screen.dart';
+
+/// Screen for setting up a new pickleball match
+class MatchSetupScreen extends StatefulWidget {
+  const MatchSetupScreen({super.key});
+
+  @override
+  State<MatchSetupScreen> createState() => _MatchSetupScreenState();
+}
+
+class _MatchSetupScreenState extends State<MatchSetupScreen>
+    with TickerProviderStateMixin {
+  final _formKey = GlobalKey<FormState>();
+  final _teamAController = TextEditingController();
+  final _teamBController = TextEditingController();
+  
+  // Controllers for doubles players
+  final _teamAPlayer1Controller = TextEditingController();
+  final _teamAPlayer2Controller = TextEditingController();
+  final _teamBPlayer1Controller = TextEditingController();
+  final _teamBPlayer2Controller = TextEditingController();
+  
+  int _selectedTargetScore = 11;
+  ServingTeam _firstServingTeam = ServingTeam.teamA;
+  MatchType _selectedMatchType = MatchType.singles;
+  
+  late AnimationController _slideController;
+  late AnimationController _fadeController;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeAnimations();
+    _setupDefaultValues();
+    _setupTextControllerListeners();
+  }
+
+  void _initializeAnimations() {
+    _slideController = AnimationController(
+      duration: AppTheme.normalAnimation,
+      vsync: this,
+    );
+    
+    _fadeController = AnimationController(
+      duration: AppTheme.slowAnimation,
+      vsync: this,
+    );
+
+    _fadeController.forward();
+    Future.delayed(const Duration(milliseconds: 200), () {
+      if (mounted) _slideController.forward();
+    });
+  }
+
+  void _setupDefaultValues() {
+    // Leave controllers empty for user input
+    // For singles: users enter player names
+    // For doubles: users enter player names, team names are auto-generated
+  }
+
+  void _setupTextControllerListeners() {
+    // Add listeners to rebuild the UI when text changes
+    _teamAController.addListener(() {
+      setState(() {});
+    });
+    
+    _teamBController.addListener(() {
+      setState(() {});
+    });
+    
+    _teamAPlayer1Controller.addListener(() {
+      setState(() {});
+    });
+    
+    _teamAPlayer2Controller.addListener(() {
+      setState(() {});
+    });
+    
+    _teamBPlayer1Controller.addListener(() {
+      setState(() {});
+    });
+    
+    _teamBPlayer2Controller.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _slideController.dispose();
+    _fadeController.dispose();
+    _teamAController.dispose();
+    _teamBController.dispose();
+    _teamAPlayer1Controller.dispose();
+    _teamAPlayer2Controller.dispose();
+    _teamBPlayer1Controller.dispose();
+    _teamBPlayer2Controller.dispose();
+    super.dispose();
+  }
+
+  void _startMatch() {
+    if (_formKey.currentState!.validate()) {
+      if (_selectedMatchType == MatchType.singles) {
+        // Singles match
+        context.read<MatchProvider>().startMatch(
+          teamAName: _teamAController.text.trim(),
+          teamBName: _teamBController.text.trim(),
+          matchType: _selectedMatchType,
+          targetScore: _selectedTargetScore,
+          firstServingTeam: _firstServingTeam,
+        );
+      } else {
+        // Doubles match - use default team names since we only need player names
+        context.read<MatchProvider>().startMatch(
+          teamAName: 'Team A',
+          teamBName: 'Team B',
+          matchType: _selectedMatchType,
+          targetScore: _selectedTargetScore,
+          firstServingTeam: _firstServingTeam,
+          teamAPlayer1: _teamAPlayer1Controller.text.trim(),
+          teamAPlayer2: _teamAPlayer2Controller.text.trim(),
+          teamBPlayer1: _teamBPlayer1Controller.text.trim(),
+          teamBPlayer2: _teamBPlayer2Controller.text.trim(),
+        );
+      }
+
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const GameScoringScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SlideTransition(
+              position: animation.drive(
+                Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
+                    .chain(CurveTween(curve: AppTheme.defaultCurve)),
+              ),
+              child: child,
+            );
+          },
+          transitionDuration: AppTheme.normalAnimation,
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppTheme.backgroundGradient,
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Header
+                  _buildHeader(),
+                  
+                  const SizedBox(height: 40),
+                  
+                  // Team setup section
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _buildMatchTypeSection(),
+                          
+                          const SizedBox(height: 40),
+                          
+                          _buildTeamSetupSection(),
+                          
+                          const SizedBox(height: 40),
+                          
+                          _buildMatchConfigSection(),
+                          
+                          const SizedBox(height: 60),
+                          
+                          _buildStartButton(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return AnimatedBuilder(
+      animation: _fadeController,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _fadeController.value,
+          child: Column(
+            children: [
+              Text(
+                'SETUP MATCH',
+                style: AppTheme.headlineStyle.copyWith(
+                  fontSize: 28,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Configure your pickleball game',
+                style: AppTheme.captionStyle,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMatchTypeSection() {
+    return AnimatedBuilder(
+      animation: _slideController,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, 30 * (1 - _slideController.value)),
+          child: Opacity(
+            opacity: _slideController.value,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: AppTheme.cardGradient,
+                borderRadius: AppTheme.cardRadius,
+                boxShadow: AppTheme.cardShadow,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Match Type',
+                    style: AppTheme.titleStyle.copyWith(fontSize: 20),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildMatchTypeOption(MatchType.singles),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildMatchTypeOption(MatchType.doubles),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    )
+        .animate(delay: 100.ms)
+        .slideY(begin: 0.3, duration: 500.ms, curve: AppTheme.defaultCurve)
+        .fadeIn();
+  }
+
+  Widget _buildMatchTypeOption(MatchType matchType) {
+    final isSelected = _selectedMatchType == matchType;
+    final screenWidth = MediaQuery.of(context).size.width;
+    
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedMatchType = matchType;
+        });
+      },
+      child: AnimatedContainer(
+        duration: AppTheme.fastAnimation,
+        curve: AppTheme.defaultCurve,
+        padding: EdgeInsets.all(screenWidth * 0.04),
+        decoration: BoxDecoration(
+          gradient: isSelected 
+              ? AppTheme.primaryGradient 
+              : LinearGradient(
+                  colors: [
+                    AppTheme.surfaceColor,
+                    AppTheme.surfaceColor.withOpacity(0.8),
+                  ],
+                ),
+          borderRadius: AppTheme.buttonRadius,
+          border: Border.all(
+            color: isSelected 
+                ? AppTheme.textPrimary 
+                : AppTheme.textSecondary.withOpacity(0.3),
+            width: 2,
+          ),
+          boxShadow: isSelected ? AppTheme.neonShadow : null,
+        ),
+        child: Column(
+          children: [
+            Icon(
+              matchType == MatchType.singles ? Icons.person : Icons.groups,
+              size: screenWidth * 0.08,
+              color: isSelected 
+                  ? AppTheme.textPrimary 
+                  : AppTheme.textSecondary,
+            ),
+            SizedBox(height: screenWidth * 0.02),
+            Text(
+              matchType.displayName,
+              style: AppTheme.bodyStyle.copyWith(
+                fontWeight: FontWeight.w600,
+                fontSize: screenWidth * 0.035,
+                color: isSelected 
+                    ? AppTheme.textPrimary 
+                    : AppTheme.textSecondary,
+              ),
+            ),
+            SizedBox(height: screenWidth * 0.01),
+            Text(
+              matchType.description,
+              style: AppTheme.captionStyle.copyWith(
+                fontSize: screenWidth * 0.025,
+                color: isSelected 
+                    ? AppTheme.textPrimary.withOpacity(0.8)
+                    : AppTheme.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTeamSetupSection() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    
+    return AnimatedBuilder(
+      animation: _slideController,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, 50 * (1 - _slideController.value)),
+          child: Opacity(
+            opacity: _slideController.value,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _selectedMatchType == MatchType.singles ? 'Teams' : 'Teams & Players',
+                  style: AppTheme.titleStyle.copyWith(fontSize: 20),
+                ),
+                const SizedBox(height: 20),
+                
+                if (_selectedMatchType == MatchType.singles) ...[
+                  // Singles Mode - Team A Section
+                  Container(
+                    padding: EdgeInsets.all(screenWidth * 0.04),
+                    decoration: BoxDecoration(
+                      gradient: AppTheme.cardGradient,
+                      borderRadius: AppTheme.cardRadius,
+                      boxShadow: AppTheme.cardShadow,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.person,
+                              color: AppTheme.primaryRed,
+                              size: screenWidth * 0.05,
+                            ),
+                            SizedBox(width: screenWidth * 0.02),
+                            Text(
+                              'Team A',
+                              style: AppTheme.bodyStyle.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.primaryRed,
+                                fontSize: screenWidth * 0.04,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenWidth * 0.04),
+                        
+                        CustomTextField(
+                          controller: _teamAController,
+                          label: 'Player Name',
+                          prefixIcon: Icons.person,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Please enter player name';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
+                  )
+                      .animate(delay: 100.ms)
+                      .slideX(begin: -0.3, duration: 400.ms, curve: AppTheme.defaultCurve)
+                      .fadeIn(),
+                  
+                  SizedBox(height: screenWidth * 0.04),
+                  
+                  // Singles Mode - Team B Section
+                  Container(
+                    padding: EdgeInsets.all(screenWidth * 0.04),
+                    decoration: BoxDecoration(
+                      gradient: AppTheme.cardGradient,
+                      borderRadius: AppTheme.cardRadius,
+                      boxShadow: AppTheme.cardShadow,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.person,
+                              color: AppTheme.primaryBlue,
+                              size: screenWidth * 0.05,
+                            ),
+                            SizedBox(width: screenWidth * 0.02),
+                            Text(
+                              'Team B',
+                              style: AppTheme.bodyStyle.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.primaryBlue,
+                                fontSize: screenWidth * 0.04,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenWidth * 0.04),
+                        
+                        CustomTextField(
+                          controller: _teamBController,
+                          label: 'Player Name',
+                          prefixIcon: Icons.person,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Please enter player name';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
+                  )
+                      .animate(delay: 200.ms)
+                      .slideX(begin: 0.3, duration: 400.ms, curve: AppTheme.defaultCurve)
+                      .fadeIn(),
+                ] else ...[
+                  // Doubles Mode - Team A Section
+                  Container(
+                    padding: EdgeInsets.all(screenWidth * 0.04),
+                    decoration: BoxDecoration(
+                      gradient: AppTheme.cardGradient,
+                      borderRadius: AppTheme.cardRadius,
+                      boxShadow: AppTheme.cardShadow,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.group,
+                              color: AppTheme.primaryRed,
+                              size: screenWidth * 0.05,
+                            ),
+                            SizedBox(width: screenWidth * 0.02),
+                            Text(
+                              'Team A',
+                              style: AppTheme.bodyStyle.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.primaryRed,
+                                fontSize: screenWidth * 0.045,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenWidth * 0.04),
+                        
+                        // Team A Players
+                        Column(
+                          children: [
+                            CustomTextField(
+                              controller: _teamAPlayer1Controller,
+                              label: 'Player 1',
+                              prefixIcon: Icons.person,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Required';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: screenWidth * 0.03),
+                            CustomTextField(
+                              controller: _teamAPlayer2Controller,
+                              label: 'Player 2',
+                              prefixIcon: Icons.person,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Required';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                      .animate(delay: 100.ms)
+                      .slideX(begin: -0.3, duration: 400.ms, curve: AppTheme.defaultCurve)
+                      .fadeIn(),
+                  
+                  SizedBox(height: screenWidth * 0.04),
+                  
+                  // Doubles Mode - Team B Section
+                  Container(
+                    padding: EdgeInsets.all(screenWidth * 0.04),
+                    decoration: BoxDecoration(
+                      gradient: AppTheme.cardGradient,
+                      borderRadius: AppTheme.cardRadius,
+                      boxShadow: AppTheme.cardShadow,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.group,
+                              color: AppTheme.primaryBlue,
+                              size: screenWidth * 0.05,
+                            ),
+                            SizedBox(width: screenWidth * 0.02),
+                            Text(
+                              'Team B',
+                              style: AppTheme.bodyStyle.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.primaryBlue,
+                                fontSize: screenWidth * 0.045,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenWidth * 0.04),
+                        
+                        // Team B Players
+                        Column(
+                          children: [
+                            CustomTextField(
+                              controller: _teamBPlayer1Controller,
+                              label: 'Player 1',
+                              prefixIcon: Icons.person,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Required';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: screenWidth * 0.03),
+                            CustomTextField(
+                              controller: _teamBPlayer2Controller,
+                              label: 'Player 2',
+                              prefixIcon: Icons.person,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Required';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                      .animate(delay: 200.ms)
+                      .slideX(begin: 0.3, duration: 400.ms, curve: AppTheme.defaultCurve)
+                      .fadeIn(),
+                ],
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMatchConfigSection() {
+    return AnimatedBuilder(
+      animation: _slideController,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, 70 * (1 - _slideController.value)),
+          child: Opacity(
+            opacity: _slideController.value * 0.9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Match Configuration',
+                  style: AppTheme.titleStyle.copyWith(fontSize: 20),
+                ),
+                const SizedBox(height: 20),
+                
+                // Target score selector
+                _buildTargetScoreSelector(),
+                
+                const SizedBox(height: 30),
+                
+                // First serving team selector
+                _buildFirstServingTeamSelector(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTargetScoreSelector() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: AppTheme.cardGradient,
+        borderRadius: AppTheme.cardRadius,
+        boxShadow: AppTheme.cardShadow,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Target Score',
+            style: AppTheme.bodyStyle.copyWith(fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [11, 18, 21].map((score) {
+              final isSelected = _selectedTargetScore == score;
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedTargetScore = score;
+                  });
+                },
+                child: AnimatedContainer(
+                  duration: AppTheme.fastAnimation,
+                  curve: AppTheme.defaultCurve,
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    gradient: isSelected 
+                        ? AppTheme.primaryGradient 
+                        : LinearGradient(
+                            colors: [
+                              AppTheme.surfaceColor,
+                              AppTheme.surfaceColor.withOpacity(0.8),
+                            ],
+                          ),
+                    borderRadius: BorderRadius.circular(35),
+                    border: Border.all(
+                      color: isSelected 
+                          ? AppTheme.textPrimary 
+                          : AppTheme.textSecondary.withOpacity(0.3),
+                      width: 2,
+                    ),
+                    boxShadow: isSelected ? AppTheme.neonShadow : null,
+                  ),
+                  child: Center(
+                    child: Text(
+                      score.toString(),
+                      style: AppTheme.titleStyle.copyWith(
+                        fontSize: 24,
+                        color: isSelected 
+                            ? AppTheme.textPrimary 
+                            : AppTheme.textSecondary,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    )
+        .animate(delay: 300.ms)
+        .slideY(begin: 0.3, duration: 500.ms, curve: AppTheme.defaultCurve)
+        .fadeIn();
+  }
+
+  Widget _buildFirstServingTeamSelector() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: AppTheme.cardGradient,
+        borderRadius: AppTheme.cardRadius,
+        boxShadow: AppTheme.cardShadow,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'First Serving Team',
+            style: AppTheme.bodyStyle.copyWith(fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: _buildTeamSelector(
+                  team: ServingTeam.teamA,
+                  isSelected: _firstServingTeam == ServingTeam.teamA,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildTeamSelector(
+                  team: ServingTeam.teamB,
+                  isSelected: _firstServingTeam == ServingTeam.teamB,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    )
+        .animate(delay: 400.ms)
+        .slideY(begin: 0.3, duration: 500.ms, curve: AppTheme.defaultCurve)
+        .fadeIn();
+  }
+
+
+  Widget _buildTeamSelector({
+    required ServingTeam team,
+    required bool isSelected,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _firstServingTeam = team;
+        });
+      },
+      child: AnimatedContainer(
+        duration: AppTheme.fastAnimation,
+        curve: AppTheme.defaultCurve,
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+        decoration: BoxDecoration(
+          gradient: isSelected 
+              ? AppTheme.primaryGradient 
+              : LinearGradient(
+                  colors: [
+                    AppTheme.surfaceColor,
+                    AppTheme.surfaceColor.withOpacity(0.8),
+                  ],
+                ),
+          borderRadius: AppTheme.buttonRadius,
+          border: Border.all(
+            color: isSelected 
+                ? AppTheme.textPrimary 
+                : AppTheme.textSecondary.withOpacity(0.3),
+            width: 2,
+          ),
+          boxShadow: isSelected 
+              ? [
+                  BoxShadow(
+                    color: AppTheme.primaryRed.withOpacity(0.3),
+                    blurRadius: 10,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : null,
+        ),
+        child: Center(
+          child: _buildTeamContent(team, isSelected),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTeamContent(ServingTeam team, bool isSelected) {
+    if (_selectedMatchType == MatchType.singles) {
+      // Singles mode - single line display
+      String playerName;
+      if (team == ServingTeam.teamA) {
+        playerName = _teamAController.text.isNotEmpty ? _teamAController.text : 'Player A';
+      } else {
+        playerName = _teamBController.text.isNotEmpty ? _teamBController.text : 'Player B';
+      }
+      
+      return Text(
+        playerName,
+        style: AppTheme.bodyStyle.copyWith(
+          fontWeight: FontWeight.w600,
+          color: isSelected 
+              ? AppTheme.textPrimary 
+              : AppTheme.textSecondary,
+        ),
+        textAlign: TextAlign.center,
+      );
+    } else {
+      // Doubles mode - multi-line display
+      String teamName = team == ServingTeam.teamA ? 'Team A' : 'Team B';
+      String player1, player2;
+      
+      if (team == ServingTeam.teamA) {
+        player1 = _teamAPlayer1Controller.text.isNotEmpty ? _teamAPlayer1Controller.text : 'Player 1';
+        player2 = _teamAPlayer2Controller.text.isNotEmpty ? _teamAPlayer2Controller.text : 'Player 2';
+      } else {
+        player1 = _teamBPlayer1Controller.text.isNotEmpty ? _teamBPlayer1Controller.text : 'Player 1';
+        player2 = _teamBPlayer2Controller.text.isNotEmpty ? _teamBPlayer2Controller.text : 'Player 2';
+      }
+      
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            teamName,
+            style: AppTheme.bodyStyle.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: isSelected 
+                  ? AppTheme.textPrimary 
+                  : AppTheme.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '$player1 & $player2',
+            style: AppTheme.bodyStyle.copyWith(
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              color: isSelected 
+                  ? AppTheme.textPrimary.withOpacity(0.9)
+                  : AppTheme.textSecondary.withOpacity(0.8),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
+    }
+  }
+
+  Widget _buildStartButton() {
+    return AnimatedButton(
+      onPressed: _startMatch,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.play_arrow, size: 28),
+          const SizedBox(width: 12),
+          Flexible(
+            child: FittedBox(
+              child: Text(
+                'START MATCH',
+                style: AppTheme.buttonStyle.copyWith(fontSize: 20),
+              ),
+            ),
+          ),
+        ],
+      ),
+    )
+        .animate(delay: 500.ms)
+        .slideY(begin: 0.5, duration: 600.ms, curve: AppTheme.bouncyCurve)
+        .fadeIn();
+  }
+}

@@ -1,0 +1,217 @@
+/// Match model representing a pickleball game
+class Match {
+  final String teamAName;
+  final String teamBName;
+  final MatchType matchType;
+  final int targetScore; // 11, 18, or 21
+  final ServingTeam firstServingTeam;
+  
+  // Player names for doubles matches
+  final String? teamAPlayer1;
+  final String? teamAPlayer2;
+  final String? teamBPlayer1;
+  final String? teamBPlayer2;
+  
+  int teamAScore;
+  int teamBScore;
+  ServingTeam currentServingTeam;
+  bool isMatchComplete;
+  DateTime startTime;
+  DateTime? endTime;
+  
+  List<ScorePoint> scoreHistory;
+
+  Match({
+    required this.teamAName,
+    required this.teamBName,
+    required this.matchType,
+    required this.targetScore,
+    required this.firstServingTeam,
+    this.teamAPlayer1,
+    this.teamAPlayer2,
+    this.teamBPlayer1,
+    this.teamBPlayer2,
+    this.teamAScore = 0,
+    this.teamBScore = 0,
+    this.isMatchComplete = false,
+  }) : currentServingTeam = firstServingTeam,
+       startTime = DateTime.now(),
+       scoreHistory = [];
+
+  /// Get formatted team A display name
+  String get teamADisplayName {
+    if (matchType == MatchType.singles) {
+      return teamAName;
+    } else {
+      final player1 = teamAPlayer1 ?? 'Player 1';
+      final player2 = teamAPlayer2 ?? 'Player 2';
+      return '$player1 & $player2';
+    }
+  }
+
+  /// Get formatted team B display name
+  String get teamBDisplayName {
+    if (matchType == MatchType.singles) {
+      return teamBName;
+    } else {
+      final player1 = teamBPlayer1 ?? 'Player 1';
+      final player2 = teamBPlayer2 ?? 'Player 2';
+      return '$player1 & $player2';
+    }
+  }
+
+  /// Check if the match has been won by any team
+  bool get hasWinner {
+    return teamAScore >= targetScore || teamBScore >= targetScore;
+  }
+
+  /// Get the winning team
+  ServingTeam? get winner {
+    if (teamAScore >= targetScore) return ServingTeam.teamA;
+    if (teamBScore >= targetScore) return ServingTeam.teamB;
+    return null;
+  }
+
+  /// Get the current score as a formatted string
+  String get scoreDisplay => '$teamAScore - $teamBScore';
+
+  /// Get match duration
+  Duration get matchDuration {
+    final end = endTime ?? DateTime.now();
+    return end.difference(startTime);
+  }
+
+  /// Convert to JSON for persistence
+  Map<String, dynamic> toJson() {
+    return {
+      'teamAName': teamAName,
+      'teamBName': teamBName,
+      'matchType': matchType.index,
+      'targetScore': targetScore,
+      'firstServingTeam': firstServingTeam.index,
+      'teamAPlayer1': teamAPlayer1,
+      'teamAPlayer2': teamAPlayer2,
+      'teamBPlayer1': teamBPlayer1,
+      'teamBPlayer2': teamBPlayer2,
+      'teamAScore': teamAScore,
+      'teamBScore': teamBScore,
+      'currentServingTeam': currentServingTeam.index,
+      'isMatchComplete': isMatchComplete,
+      'startTime': startTime.toIso8601String(),
+      'endTime': endTime?.toIso8601String(),
+      'scoreHistory': scoreHistory.map((e) => e.toJson()).toList(),
+    };
+  }
+
+  /// Create from JSON
+  factory Match.fromJson(Map<String, dynamic> json) {
+    final match = Match(
+      teamAName: json['teamAName'],
+      teamBName: json['teamBName'],
+      matchType: MatchType.values[json['matchType'] ?? 0],
+      targetScore: json['targetScore'],
+      firstServingTeam: ServingTeam.values[json['firstServingTeam']],
+      teamAPlayer1: json['teamAPlayer1'],
+      teamAPlayer2: json['teamAPlayer2'],
+      teamBPlayer1: json['teamBPlayer1'],
+      teamBPlayer2: json['teamBPlayer2'],
+      teamAScore: json['teamAScore'],
+      teamBScore: json['teamBScore'],
+      isMatchComplete: json['isMatchComplete'],
+    );
+    
+    match.currentServingTeam = ServingTeam.values[json['currentServingTeam']];
+    match.startTime = DateTime.parse(json['startTime']);
+    if (json['endTime'] != null) {
+      match.endTime = DateTime.parse(json['endTime']);
+    }
+    
+    match.scoreHistory = (json['scoreHistory'] as List)
+        .map((e) => ScorePoint.fromJson(e))
+        .toList();
+    
+    return match;
+  }
+}
+
+/// Enum for match types
+enum MatchType {
+  singles,
+  doubles;
+
+  String get displayName {
+    switch (this) {
+      case MatchType.singles:
+        return 'Singles';
+      case MatchType.doubles:
+        return 'Doubles';
+    }
+  }
+
+  String get description {
+    switch (this) {
+      case MatchType.singles:
+        return '1 vs 1 Player';
+      case MatchType.doubles:
+        return '2 vs 2 Players';
+    }
+  }
+}
+
+/// Represents which team is currently serving
+enum ServingTeam {
+  teamA,
+  teamB;
+
+  /// Get the opposite team
+  ServingTeam get opposite {
+    return this == ServingTeam.teamA ? ServingTeam.teamB : ServingTeam.teamA;
+  }
+}
+
+/// Represents a single point in the match history
+class ScorePoint {
+  final int turnNumber;
+  final ServingTeam servingTeam;
+  final ServingTeam winningTeam;
+  final bool pointAwarded;
+  final int teamAScore;
+  final int teamBScore;
+  final DateTime timestamp;
+
+  ScorePoint({
+    required this.turnNumber,
+    required this.servingTeam,
+    required this.winningTeam,
+    required this.pointAwarded,
+    required this.teamAScore,
+    required this.teamBScore,
+    required this.timestamp,
+  });
+
+  /// Convert to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'turnNumber': turnNumber,
+      'servingTeam': servingTeam.index,
+      'winningTeam': winningTeam.index,
+      'pointAwarded': pointAwarded,
+      'teamAScore': teamAScore,
+      'teamBScore': teamBScore,
+      'timestamp': timestamp.toIso8601String(),
+    };
+  }
+
+  /// Create from JSON
+  factory ScorePoint.fromJson(Map<String, dynamic> json) {
+    return ScorePoint(
+      turnNumber: json['turnNumber'],
+      servingTeam: ServingTeam.values[json['servingTeam']],
+      winningTeam: ServingTeam.values[json['winningTeam']],
+      pointAwarded: json['pointAwarded'],
+      teamAScore: json['teamAScore'],
+      teamBScore: json['teamBScore'],
+      timestamp: DateTime.parse(json['timestamp']),
+    );
+  }
+}
