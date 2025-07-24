@@ -255,8 +255,16 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
   }
 
   Widget _buildTimelineItem(ScorePoint point, int index) {
-    final isMatchPoint = (point.teamAScore >= widget.match.targetScore) ||
-                        (point.teamBScore >= widget.match.targetScore);
+    // Check if it's a duce situation first
+    final duceThreshold = widget.match.targetScore - 1;
+    final isDuce = point.teamAScore >= duceThreshold && 
+                   point.teamBScore >= duceThreshold && 
+                   point.teamAScore == point.teamBScore;
+    
+    // Match point is when one team is at target score or above AND ahead by 1+, but NOT in duce
+    final isMatchPoint = !isDuce && 
+                        ((point.teamAScore >= widget.match.targetScore && point.teamAScore > point.teamBScore) ||
+                         (point.teamBScore >= widget.match.targetScore && point.teamBScore > point.teamAScore));
     
     final servingTeamColor = point.servingTeam == ServingTeam.teamA 
         ? AppTheme.primaryRed 
@@ -278,7 +286,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                 height: 24,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isMatchPoint ? AppTheme.accentGold : winningTeamColor,
+                  color: (isMatchPoint || isDuce) ? AppTheme.accentGold : winningTeamColor,
                   border: Border.all(
                     color: AppTheme.textPrimary,
                     width: 2,
@@ -290,7 +298,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                     style: AppTheme.captionStyle.copyWith(
                       fontSize: 10,
                       fontWeight: FontWeight.w900,
-                      color: isMatchPoint ? AppTheme.darkBackground : AppTheme.textPrimary,
+                      color: (isMatchPoint || isDuce) ? AppTheme.darkBackground : AppTheme.textPrimary,
                     ),
                   ),
                 ),
@@ -311,7 +319,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                gradient: isMatchPoint 
+                gradient: (isMatchPoint || isDuce) 
                     ? LinearGradient(
                         colors: [
                           AppTheme.accentGold.withOpacity(0.2),
@@ -320,7 +328,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                       )
                     : AppTheme.cardGradient,
                 borderRadius: BorderRadius.circular(12),
-                border: isMatchPoint
+                border: (isMatchPoint || isDuce)
                     ? Border.all(color: AppTheme.accentGold, width: 1)
                     : null,
               ),
@@ -419,6 +427,28 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                             fit: BoxFit.scaleDown,
                             child: Text(
                               'MATCH POINT',
+                              style: AppTheme.captionStyle.copyWith(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w900,
+                                color: AppTheme.darkBackground,
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (isDuce && point.teamAScore == point.teamBScore)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppTheme.accentGold,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              'TIED',
                               style: AppTheme.captionStyle.copyWith(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w900,
