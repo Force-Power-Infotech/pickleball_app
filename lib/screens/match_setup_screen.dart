@@ -242,7 +242,6 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
               decoration: BoxDecoration(
                 gradient: AppTheme.cardGradient,
                 borderRadius: AppTheme.cardRadius,
-                boxShadow: AppTheme.cardShadow,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -305,7 +304,6 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                 : AppTheme.textSecondary.withOpacity(0.3),
             width: 2,
           ),
-          boxShadow: isSelected ? AppTheme.neonShadow : null,
         ),
         child: Column(
           children: [
@@ -370,7 +368,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                     decoration: BoxDecoration(
                       gradient: AppTheme.cardGradient,
                       borderRadius: AppTheme.cardRadius,
-                      boxShadow: AppTheme.cardShadow,
+                      
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -421,7 +419,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                     decoration: BoxDecoration(
                       gradient: AppTheme.cardGradient,
                       borderRadius: AppTheme.cardRadius,
-                      boxShadow: AppTheme.cardShadow,
+                      
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -470,7 +468,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                     decoration: BoxDecoration(
                       gradient: AppTheme.cardGradient,
                       borderRadius: AppTheme.cardRadius,
-                      boxShadow: AppTheme.cardShadow,
+                      
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -538,7 +536,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                     decoration: BoxDecoration(
                       gradient: AppTheme.cardGradient,
                       borderRadius: AppTheme.cardRadius,
-                      boxShadow: AppTheme.cardShadow,
+                      
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -644,7 +642,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
       decoration: BoxDecoration(
         gradient: AppTheme.cardGradient,
         borderRadius: AppTheme.cardRadius,
-        boxShadow: AppTheme.cardShadow,
+        
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -685,7 +683,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                           : AppTheme.textSecondary.withOpacity(0.3),
                       width: 2,
                     ),
-                    boxShadow: isSelected ? AppTheme.neonShadow : null,
+                    
                   ),
                   child: Center(
                     child: Text(
@@ -716,7 +714,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
       decoration: BoxDecoration(
         gradient: AppTheme.cardGradient,
         borderRadius: AppTheme.cardRadius,
-        boxShadow: AppTheme.cardShadow,
+        
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -782,15 +780,6 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                 : AppTheme.textSecondary.withOpacity(0.3),
             width: 2,
           ),
-          boxShadow: isSelected 
-              ? [
-                  BoxShadow(
-                    color: AppTheme.primaryRed.withOpacity(0.3),
-                    blurRadius: 10,
-                    spreadRadius: 1,
-                  ),
-                ]
-              : null,
         ),
         child: Center(
           child: _buildTeamContent(team, isSelected),
@@ -800,67 +789,20 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
   }
 
   Widget _buildTeamContent(ServingTeam team, bool isSelected) {
-    if (_selectedMatchType == MatchType.singles) {
-      // Singles mode - single line display
-      String playerName;
-      if (team == ServingTeam.teamA) {
-        playerName = _teamAController.text.isNotEmpty ? _teamAController.text : 'Player A';
-      } else {
-        playerName = _teamBController.text.isNotEmpty ? _teamBController.text : 'Player B';
-      }
-      
-      return Text(
-        playerName,
-        style: AppTheme.bodyStyle.copyWith(
-          fontWeight: FontWeight.w600,
-          color: isSelected 
-              ? AppTheme.textPrimary 
-              : AppTheme.textSecondary,
-        ),
-        textAlign: TextAlign.center,
-      );
-    } else {
-      // Doubles mode - multi-line display
-      String teamName = team == ServingTeam.teamA ? 'Team A' : 'Team B';
-      String player1, player2;
-      
-      if (team == ServingTeam.teamA) {
-        player1 = _teamAPlayer1Controller.text.isNotEmpty ? _teamAPlayer1Controller.text : 'Player 1';
-        player2 = _teamAPlayer2Controller.text.isNotEmpty ? _teamAPlayer2Controller.text : 'Player 2';
-      } else {
-        player1 = _teamBPlayer1Controller.text.isNotEmpty ? _teamBPlayer1Controller.text : 'Player 1';
-        player2 = _teamBPlayer2Controller.text.isNotEmpty ? _teamBPlayer2Controller.text : 'Player 2';
-      }
-      
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            teamName,
-            style: AppTheme.bodyStyle.copyWith(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: isSelected 
-                  ? AppTheme.textPrimary 
-                  : AppTheme.textSecondary,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '$player1 & $player2',
-            style: AppTheme.bodyStyle.copyWith(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-              color: isSelected 
-                  ? AppTheme.textPrimary.withOpacity(0.9)
-                  : AppTheme.textSecondary.withOpacity(0.8),
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      );
-    }
+    // Only show Team A or Team B for first serving option, regardless of match type
+    String teamName = team == ServingTeam.teamA ? 'Team A' : 'Team B';
+    
+    return Text(
+      teamName,
+      style: AppTheme.bodyStyle.copyWith(
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+        color: isSelected 
+            ? AppTheme.textPrimary 
+            : AppTheme.textSecondary,
+      ),
+      textAlign: TextAlign.center,
+    );
   }
 
   Widget _buildStartButton() {

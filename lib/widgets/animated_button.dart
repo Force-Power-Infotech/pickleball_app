@@ -38,11 +38,9 @@ class AnimatedButton extends StatefulWidget {
 class _AnimatedButtonState extends State<AnimatedButton>
     with TickerProviderStateMixin {
   late AnimationController _pressController;
-  late AnimationController _glowController;
   late AnimationController _loadingController;
   
   late Animation<double> _scaleAnimation;
-  late Animation<double> _glowAnimation;
 
   @override
   void initState() {
@@ -53,11 +51,6 @@ class _AnimatedButtonState extends State<AnimatedButton>
   void _initializeAnimations() {
     _pressController = AnimationController(
       duration: const Duration(milliseconds: 100),
-      vsync: this,
-    );
-
-    _glowController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
 
@@ -73,17 +66,6 @@ class _AnimatedButtonState extends State<AnimatedButton>
       parent: _pressController,
       curve: Curves.easeInOut,
     ));
-
-    _glowAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _glowController,
-      curve: Curves.easeInOut,
-    ));
-
-    // Start glow animation loop
-    _glowController.repeat(reverse: true);
   }
 
   @override
@@ -101,7 +83,6 @@ class _AnimatedButtonState extends State<AnimatedButton>
   @override
   void dispose() {
     _pressController.dispose();
-    _glowController.dispose();
     _loadingController.dispose();
     super.dispose();
   }
@@ -145,7 +126,6 @@ class _AnimatedButtonState extends State<AnimatedButton>
     return AnimatedBuilder(
       animation: Listenable.merge([
         _pressController,
-        _glowController,
         _loadingController,
       ]),
       builder: (context, child) {
@@ -176,20 +156,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
                         ],
                       ),
                 borderRadius: borderRadius,
-                boxShadow: widget.enabled && !widget.isLoading
-                    ? [
-                        BoxShadow(
-                          color: backgroundColor.withOpacity(0.3 + (_glowAnimation.value * 0.2)),
-                          blurRadius: 15 + (_glowAnimation.value * 10),
-                          spreadRadius: _glowAnimation.value * 2,
-                        ),
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ]
-                    : null,
+                // Box shadows removed as requested
               ),
               child: Material(
                 color: Colors.transparent,

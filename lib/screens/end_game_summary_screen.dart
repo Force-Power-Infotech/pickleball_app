@@ -18,11 +18,9 @@ class EndGameSummaryScreen extends StatefulWidget {
 
 class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
     with TickerProviderStateMixin {
-  late AnimationController _celebrationController;
   late AnimationController _slideController;
   late AnimationController _statsController;
   
-  late Animation<double> _celebrationAnimation;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _statsAnimation;
 
@@ -30,15 +28,10 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
   void initState() {
     super.initState();
     _initializeAnimations();
-    _startCelebrationSequence();
+    _startAnimations();
   }
 
   void _initializeAnimations() {
-    _celebrationController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
-      vsync: this,
-    );
-    
     _slideController = AnimationController(
       duration: AppTheme.normalAnimation,
       vsync: this,
@@ -48,14 +41,6 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
       duration: AppTheme.slowAnimation,
       vsync: this,
     );
-
-    _celebrationAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _celebrationController,
-      curve: AppTheme.bouncyCurve,
-    ));
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 1),
@@ -74,21 +59,17 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
     ));
   }
 
-  void _startCelebrationSequence() {
-    _celebrationController.forward();
+  void _startAnimations() {
+    // Start animations immediately
+    _slideController.forward();
     
-    Future.delayed(const Duration(milliseconds: 800), () {
-      if (mounted) _slideController.forward();
-    });
-    
-    Future.delayed(const Duration(milliseconds: 1200), () {
+    Future.delayed(const Duration(milliseconds: 400), () {
       if (mounted) _statsController.forward();
     });
   }
 
   @override
   void dispose() {
-    _celebrationController.dispose();
     _slideController.dispose();
     _statsController.dispose();
     super.dispose();
@@ -144,62 +125,42 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
         }
 
         return Scaffold(
-          body: Stack(
-            children: [
-              // Background gradient covering entire screen
-              Container(
-                decoration: const BoxDecoration(
-                  gradient: AppTheme.backgroundGradient,
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              gradient: AppTheme.backgroundGradient,
+            ),
+            child: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    // Winner celebration - always fits
+                    _buildWinnerCelebration(match),
+                    
+                    const SizedBox(height: 20),
+                    
+                    // Match summary - responsive
+                    _buildMatchSummary(match),
+                    
+                    const SizedBox(height: 60),
+                    
+                    // Action buttons - responsive
+                    _buildActionButtons(),
+                    
+                    const SizedBox(height: 40),
+                  ],
                 ),
               ),
-              
-              // Celebration particles covering entire screen
-              _buildCelebrationBackground(),
-              
-              // Main content with SafeArea
-              SafeArea(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      // Winner celebration - always fits
-                      _buildWinnerCelebration(match),
-                      
-                      const SizedBox(height: 20),
-                      
-                      // Match summary - responsive
-                      _buildMatchSummary(match),
-                      
-                      const SizedBox(height: 60),
-                      
-                      // Action buttons - responsive
-                      _buildActionButtons(),
-                      
-                      const SizedBox(height: 40),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         );
       },
     );
   }
 
-  Widget _buildCelebrationBackground() {
-    return AnimatedBuilder(
-      animation: _celebrationAnimation,
-      builder: (context, child) {
-        return Positioned.fill(
-          child: CustomPaint(
-            size: Size.infinite,
-            painter: CelebrationParticlesPainter(_celebrationAnimation.value),
-          ),
-        );
-      },
-    );
-  }
+  // Celebration background removed for cleaner UI
 
   String _getWinnerDisplayName(Match match, ServingTeam? winner) {
     if (winner == null) return 'No Winner';
@@ -231,127 +192,98 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
         ? AppTheme.primaryRed 
         : AppTheme.primaryBlue;
 
-    return AnimatedBuilder(
-      animation: _celebrationAnimation,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: 0.8 + (_celebrationAnimation.value * 0.2),
-          child: Opacity(
-            opacity: _celebrationAnimation.value,
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Trophy icon - responsive
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          AppTheme.accentGold,
-                          AppTheme.accentGold.withOpacity(0.8),
-                        ],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.accentGold.withOpacity(0.5),
-                          blurRadius: 20,
-                          spreadRadius: 3,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.emoji_events,
-                      size: 48,
-                      color: AppTheme.darkBackground,
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 16),
-                  
-                  // Winner announcement
-                  Text(
-                    'WINNER!',
-                    style: AppTheme.headlineStyle.copyWith(
-                      fontSize: 32,
-                      color: AppTheme.accentGold,
-                      shadows: [
-                        Shadow(
-                          color: AppTheme.accentGold.withOpacity(0.5),
-                          blurRadius: 15,
-                        ),
-                      ],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 8),
-                  
-                  // Winner name - fully responsive
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      final screenWidth = MediaQuery.of(context).size.width;
-                      final maxWidth = constraints.maxWidth;
-                      
-                      // Calculate responsive font size based on screen width
-                      double fontSize = screenWidth < 320 ? 18 : // Very small screens
-                                       screenWidth < 360 ? 20 : // Small screens 
-                                       screenWidth < 400 ? 22 : // Medium screens
-                                       24; // Large screens
-                      
-                      // Adjust for very long names in doubles mode
-                      final isDoublesWithLongNames = match.matchType == MatchType.doubles && 
-                                                    winnerName.length > 15;
-                      if (isDoublesWithLongNames) {
-                        fontSize = fontSize * 0.9; // Reduce font size for long names
-                      }
-                      
-                      return Container(
-                        width: maxWidth,
-                        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            winnerName.toUpperCase(),
-                            style: AppTheme.titleStyle.copyWith(
-                              fontSize: fontSize,
-                              color: winnerColor,
-                              letterSpacing: 1.2,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  
-                  const SizedBox(height: 8),
-                  
-                  // Final score
-                  Text(
-                    'Final Score: ${match.scoreDisplay}',
-                    style: AppTheme.bodyStyle.copyWith(
-                      fontSize: 16,
-                      color: AppTheme.textSecondary,
-                    ),
-                  ),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Trophy icon - responsive
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [
+                  AppTheme.accentGold,
+                  AppTheme.accentGold.withOpacity(0.8),
                 ],
               ),
             ),
+            child: const Icon(
+              Icons.emoji_events,
+              size: 48,
+              color: AppTheme.darkBackground,
+            ),
           ),
-        );
-      },
-    )
-        .animate()
-        .fadeIn(duration: 1000.ms)
-        .scale(begin: const Offset(0.5, 0.5), duration: 1000.ms, curve: AppTheme.bouncyCurve)
-        .then()
-        .shimmer(duration: 2000.ms, color: AppTheme.accentGold.withOpacity(0.3));
+          
+          const SizedBox(height: 16),
+          
+          // Winner announcement
+          Text(
+            'WINNER!',
+            style: AppTheme.headlineStyle.copyWith(
+              fontSize: 32,
+              color: AppTheme.accentGold,
+            ),
+          ),
+          
+          const SizedBox(height: 8),
+          
+          // Winner name - fully responsive
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final screenWidth = MediaQuery.of(context).size.width;
+              final maxWidth = constraints.maxWidth;
+              
+              // Calculate responsive font size based on screen width
+              double fontSize = screenWidth < 320 ? 18 : // Very small screens
+                               screenWidth < 360 ? 20 : // Small screens 
+                               screenWidth < 400 ? 22 : // Medium screens
+                               24; // Large screens
+              
+              // Adjust for very long names in doubles mode
+              final isDoublesWithLongNames = match.matchType == MatchType.doubles && 
+                                            winnerName.length > 15;
+              if (isDoublesWithLongNames) {
+                fontSize = fontSize * 0.9; // Reduce font size for long names
+              }
+              
+              return Container(
+                width: maxWidth,
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    winnerName.toUpperCase(),
+                    style: AppTheme.titleStyle.copyWith(
+                      fontSize: fontSize,
+                      color: winnerColor,
+                      letterSpacing: 1.2,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              );
+            },
+          ),
+          
+          const SizedBox(height: 8),
+          
+          // Final score
+          Text(
+            'Final Score: ${match.scoreDisplay}',
+            style: AppTheme.bodyStyle.copyWith(
+              fontSize: 16,
+              color: AppTheme.textSecondary,
+            ),
+          ),
+        ],
+      ),
+    ).animate().fadeIn(duration: 500.ms);
   }
 
   Widget _buildMatchSummary(Match match) {
@@ -362,7 +294,6 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
         decoration: BoxDecoration(
           gradient: AppTheme.cardGradient,
           borderRadius: AppTheme.cardRadius,
-          boxShadow: AppTheme.cardShadow,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -588,7 +519,6 @@ class PointAnalysisScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   gradient: AppTheme.cardGradient,
-                  boxShadow: AppTheme.cardShadow,
                 ),
                 child: Row(
                   children: [
@@ -663,7 +593,6 @@ class PointAnalysisScreen extends StatelessWidget {
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
                     ),
-                    boxShadow: AppTheme.cardShadow,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -807,13 +736,6 @@ class PointAnalysisScreen extends StatelessWidget {
                 teamColor.withOpacity(0.8),
               ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: teamColor.withOpacity(0.5),
-                blurRadius: 15,
-                spreadRadius: 2,
-              ),
-            ],
           ),
           child: Center(
             child: Text(
@@ -861,13 +783,6 @@ class PointAnalysisScreen extends StatelessWidget {
                   winningTeamColor.withOpacity(0.8),
                 ],
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: winningTeamColor.withOpacity(0.3),
-                  blurRadius: 8,
-                  spreadRadius: 1,
-                ),
-              ],
             ),
             child: Center(
               child: Text(
@@ -953,78 +868,4 @@ class PointAnalysisScreen extends StatelessWidget {
   }
 }
 
-/// Custom painter for celebration particles
-class CelebrationParticlesPainter extends CustomPainter {
-  final double animationValue;
 
-  CelebrationParticlesPainter(this.animationValue);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..style = PaintingStyle.fill;
-
-    // Gold confetti - more particles for better coverage
-    for (int i = 0; i < 50; i++) {
-      final x = (size.width / 50) * i + (animationValue * 150);
-      final y = (size.height / 15) * (i % 15) + (animationValue * size.height);
-      
-      paint.color = AppTheme.accentGold.withOpacity(0.6 * animationValue);
-      canvas.drawCircle(
-        Offset(x % size.width, y % size.height),
-        3 + (animationValue * 4),
-        paint,
-      );
-    }
-
-    // Additional floating particles
-    for (int i = 0; i < 30; i++) {
-      final x = (size.width / 30) * i + (animationValue * -120);
-      final y = (size.height / 12) * (i % 12) + (animationValue * size.height * 0.7);
-      
-      paint.color = AppTheme.accentGold.withOpacity(0.4 * animationValue);
-      canvas.drawCircle(
-        Offset(x % size.width, y % size.height),
-        1 + (animationValue * 2),
-        paint,
-      );
-    }
-
-    // Red and blue sparkles - increased coverage
-    final colors = [AppTheme.primaryRed, AppTheme.primaryBlue];
-    for (int i = 0; i < 40; i++) {
-      final color = colors[i % 2];
-      final x = (size.width / 40) * i + (animationValue * -100);
-      final y = (size.height / 12) * (i % 12) + (animationValue * size.height * 0.9);
-      
-      paint.color = color.withOpacity(0.4 * animationValue);
-      canvas.drawRect(
-        Rect.fromCenter(
-          center: Offset(x % size.width, y % size.height),
-          width: 5,
-          height: 5,
-        ),
-        paint,
-      );
-    }
-
-    // Additional sparkles moving in opposite direction
-    for (int i = 0; i < 25; i++) {
-      final color = colors[(i + 1) % 2];
-      final x = (size.width / 25) * i + (animationValue * 120);
-      final y = (size.height / 10) * (i % 10) + (animationValue * size.height * 0.6);
-      
-      paint.color = color.withOpacity(0.3 * animationValue);
-      canvas.drawRect(
-        Rect.fromCenter(
-          center: Offset(x % size.width, y % size.height),
-          width: 3,
-          height: 3,
-        ),
-        paint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}

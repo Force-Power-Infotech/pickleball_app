@@ -291,13 +291,6 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                         teamColor.withOpacity(0.7),
                       ],
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: teamColor.withOpacity(0.3),
-                        blurRadius: 20,
-                        spreadRadius: 2,
-                      ),
-                    ],
                   ),
                   child: Center(
                     child: Text(
@@ -323,14 +316,6 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                         decoration: BoxDecoration(
                           color: isServing ? teamColor : AppTheme.textSecondary,
                           borderRadius: BorderRadius.circular(20),
-                          boxShadow: isServing
-                              ? [
-                                  BoxShadow(
-                                    color: teamColor.withOpacity(0.4),
-                                    blurRadius: 10,
-                                  ),
-                                ]
-                              : null,
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
