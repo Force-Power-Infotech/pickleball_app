@@ -289,86 +289,109 @@ class _GameScoringScreenState extends State<GameScoringScreen>
       builder: (context, child) {
         return Transform.scale(
           scale: _scoreAnimation.value,
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Team name
-                Text(
-                  teamName.toUpperCase(),
-                  style: AppTheme.titleStyle.copyWith(
-                    fontSize: 16,
-                    color: teamColor,
-                  ),
-                  textAlign: TextAlign.center,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // Responsive sizing
+              final double maxCircle = (constraints.maxHeight * 0.4).clamp(56.0, 110.0);
+              final double fontSize = (maxCircle * 0.4).clamp(20.0, 44.0);
+              final double vSpace = constraints.maxHeight < 300 ? 8 : 16;
+              return Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: constraints.maxWidth < 180 ? 8 : 16,
+                  vertical: vSpace,
                 ),
-                
-                const SizedBox(height: 20),
-                
-                // Score
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [
-                        teamColor,
-                        teamColor.withOpacity(0.7),
-                      ],
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      score.toString(),
-                      style: AppTheme.scoreStyle.copyWith(
-                        fontSize: 48,
-                        color: AppTheme.textPrimary,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    // Team name
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          teamName.toUpperCase(),
+                          style: AppTheme.titleStyle.copyWith(
+                            fontSize: 16,
+                            color: teamColor,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                
-                const SizedBox(height: 20),
-                
-                // Serving indicator
-                AnimatedBuilder(
-                  animation: _serveAnimation,
-                  builder: (context, child) {
-                    return Opacity(
-                      opacity: isServing ? 0.3 + (_serveAnimation.value * 0.7) : 0.2,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: isServing ? teamColor : AppTheme.textSecondary,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.sports_tennis,
-                              size: 16,
-                              color: AppTheme.textPrimary,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              isServing ? 'SERVING' : 'WAITING',
-                              style: AppTheme.captionStyle.copyWith(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.textPrimary,
-                              ),
-                            ),
+                    SizedBox(height: vSpace),
+                    // Score
+                    Container(
+                      width: maxCircle,
+                      height: maxCircle,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            teamColor,
+                            teamColor.withOpacity(0.7),
                           ],
                         ),
                       ),
-                    );
-                  },
+                      child: Center(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            score.toString(),
+                            style: AppTheme.scoreStyle.copyWith(
+                              fontSize: fontSize,
+                              color: AppTheme.textPrimary,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: vSpace),
+                    // Serving indicator
+                    AnimatedBuilder(
+                      animation: _serveAnimation,
+                      builder: (context, child) {
+                        return Opacity(
+                          opacity: isServing ? 0.3 + (_serveAnimation.value * 0.7) : 0.2,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: constraints.maxWidth < 180 ? 8 : 14,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isServing ? teamColor : AppTheme.textSecondary,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.sports_tennis,
+                                  size: 16,
+                                  color: AppTheme.textPrimary,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  isServing ? 'SERVING' : 'WAITING',
+                                  style: AppTheme.captionStyle.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppTheme.textPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
         );
       },

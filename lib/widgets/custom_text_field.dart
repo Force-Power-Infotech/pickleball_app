@@ -84,15 +84,7 @@ class _CustomTextFieldState extends State<CustomTextField>
         return Container(
           decoration: BoxDecoration(
             borderRadius: AppTheme.buttonRadius,
-            boxShadow: _isFocused
-                ? [
-                    BoxShadow(
-                      color: AppTheme.primaryRed.withOpacity(0.2),
-                      blurRadius: 8,
-                      spreadRadius: 0,
-                    ),
-                  ]
-                : null,
+            // No boxShadow or glow
           ),
           child: Focus(
             onFocusChange: _onFocusChanged,
