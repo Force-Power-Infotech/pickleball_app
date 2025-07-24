@@ -116,7 +116,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildTeamScore(
-                widget.match.teamADisplayName,
+                widget.match.teamAName,
                 widget.match.teamAScore,
                 AppTheme.primaryRed,
               ),
@@ -130,7 +130,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                 ),
               ),
               _buildTeamScore(
-                widget.match.teamBDisplayName,
+                widget.match.teamBName,
                 widget.match.teamBScore,
                 AppTheme.primaryBlue,
               ),
@@ -396,15 +396,9 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
   }
 
   String _getTeamName(ServingTeam team) {
-    if (widget.match.matchType == MatchType.singles) {
-      return team == ServingTeam.teamA 
-          ? widget.match.teamAName 
-          : widget.match.teamBName;
-    } else {
-      return team == ServingTeam.teamA
-          ? widget.match.teamADisplayName
-          : widget.match.teamBDisplayName;
-    }
+    return team == ServingTeam.teamA 
+        ? widget.match.teamAName 
+        : widget.match.teamBName;
   }
 
   String _formatDuration(Duration duration) {
