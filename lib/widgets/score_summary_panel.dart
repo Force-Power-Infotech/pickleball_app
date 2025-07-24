@@ -116,7 +116,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildTeamScore(
-                widget.match.teamAName,
+                widget.match.teamADisplayName,
                 widget.match.teamAScore,
                 AppTheme.primaryRed,
               ),
@@ -130,7 +130,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                 ),
               ),
               _buildTeamScore(
-                widget.match.teamBName,
+                widget.match.teamBDisplayName,
                 widget.match.teamBScore,
                 AppTheme.primaryBlue,
               ),
@@ -148,9 +148,12 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
 
   Widget _buildTeamScore(String teamName, int score, Color color) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           teamName.toUpperCase(),
+          textAlign: TextAlign.center,
           style: AppTheme.captionStyle.copyWith(
             fontSize: 12,
             color: color,
@@ -162,23 +165,16 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
           width: 60,
           height: 60,
           decoration: BoxDecoration(
+            color: color,
             shape: BoxShape.circle,
-            gradient: LinearGradient(
-              colors: [color, color.withOpacity(0.7)],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: color.withOpacity(0.3),
-                blurRadius: 10,
-              ),
-            ],
           ),
           child: Center(
             child: Text(
               score.toString(),
               style: AppTheme.titleStyle.copyWith(
                 fontSize: 24,
-                color: AppTheme.textPrimary,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -400,9 +396,15 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
   }
 
   String _getTeamName(ServingTeam team) {
-    return team == ServingTeam.teamA 
-        ? widget.match.teamAName 
-        : widget.match.teamBName;
+    if (widget.match.matchType == MatchType.singles) {
+      return team == ServingTeam.teamA 
+          ? widget.match.teamAName 
+          : widget.match.teamBName;
+    } else {
+      return team == ServingTeam.teamA
+          ? widget.match.teamADisplayName
+          : widget.match.teamBDisplayName;
+    }
   }
 
   String _formatDuration(Duration duration) {
