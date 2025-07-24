@@ -203,21 +203,20 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                   colors: [AppTheme.accentGold, AppTheme.accentGold.withOpacity(0.8)],
                 ),
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.accentGold.withOpacity(0.5),
-                    blurRadius: 10,
-                    spreadRadius: 2,
-                  ),
-                ],
               ),
-              child: Text(
-                match.duceMessage ?? 'DUCE',
-                style: AppTheme.titleStyle.copyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w900,
-                  color: AppTheme.darkBackground,
-                  letterSpacing: 1.2,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  match.duceMessage ?? 'Match Duce',
+                  style: AppTheme.titleStyle.copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w900,
+                    color: AppTheme.darkBackground,
+                    letterSpacing: 1.2,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
                 ),
               ),
             )

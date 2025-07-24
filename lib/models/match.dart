@@ -91,10 +91,12 @@ class Match {
     if (!isDuce) return null;
     
     if (teamAScore == teamBScore) {
-      return 'DUCE - ${teamAScore} ALL';
+      return 'Match Duce ${teamAScore} all';
     } else {
       final leadingTeam = teamAScore > teamBScore ? teamAName : teamBName;
-      return 'ADVANTAGE $leadingTeam';
+      // Truncate team name if too long for mobile
+      final shortTeamName = leadingTeam.length > 12 ? '${leadingTeam.substring(0, 9)}...' : leadingTeam;
+      return 'ADV: $shortTeamName';
     }
   }
 

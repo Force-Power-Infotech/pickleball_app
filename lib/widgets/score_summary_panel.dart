@@ -123,23 +123,21 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                   colors: [AppTheme.accentGold, AppTheme.accentGold.withOpacity(0.8)],
                 ),
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.accentGold.withOpacity(0.3),
-                    blurRadius: 8,
-                    spreadRadius: 1,
-                  ),
-                ],
               ),
-              child: Text(
-                widget.match.duceMessage ?? 'DUCE',
-                style: AppTheme.titleStyle.copyWith(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w900,
-                  color: AppTheme.darkBackground,
-                  letterSpacing: 1.0,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  widget.match.duceMessage ?? 'Match Duce',
+                  style: AppTheme.titleStyle.copyWith(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    color: AppTheme.darkBackground,
+                    letterSpacing: 1.0,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
           
@@ -285,14 +283,6 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                     color: AppTheme.textPrimary,
                     width: 2,
                   ),
-                  boxShadow: isMatchPoint
-                      ? [
-                          BoxShadow(
-                            color: AppTheme.accentGold.withOpacity(0.5),
-                            blurRadius: 10,
-                          ),
-                        ]
-                      : null,
                 ),
                 child: Center(
                   child: Text(
