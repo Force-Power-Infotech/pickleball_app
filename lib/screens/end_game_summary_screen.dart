@@ -8,6 +8,17 @@ import '../providers/match_provider.dart';
 import '../widgets/animated_button.dart';
 import 'match_setup_screen.dart';
 
+// Helper class for timeline items
+class TimelineItem {
+  final bool isDuce;
+  final ScorePoint? point;
+  final int? pointNumber;
+  final int? score;
+  
+  TimelineItem.duce(this.score) : isDuce = true, point = null, pointNumber = null;
+  TimelineItem.point(this.point, this.pointNumber) : isDuce = false, score = null;
+}
+
 /// Screen displayed when match ends with winner celebration and stats
 class EndGameSummaryScreen extends StatefulWidget {
   const EndGameSummaryScreen({super.key});
@@ -681,11 +692,10 @@ class PointAnalysisScreen extends StatelessWidget {
                               )
                             : ListView.separated(
                                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                                itemCount: match.scoreHistory.length,
+                                itemCount: _getTimelineItemCount(match),
                                 separatorBuilder: (context, index) => const SizedBox(height: 12),
                                 itemBuilder: (context, index) {
-                                  final point = match.scoreHistory[index];
-                                  return _buildTimelineItem(point, match, index + 1)
+                                  return _buildTimelineItemAtIndex(match, index)
                                       .animate(delay: (index * 50).ms)
                                       .slideX(begin: 0.3, duration: 400.ms, curve: AppTheme.defaultCurve)
                                       .fadeIn();
@@ -698,6 +708,86 @@ class PointAnalysisScreen extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  // Helper methods for timeline with duce cards
+  int _getTimelineItemCount(Match match) {
+    final timelineItems = _buildTimelineData(match);
+    return timelineItems.length;
+  }
+
+  List<TimelineItem> _buildTimelineData(Match match) {
+    final timelineItems = <TimelineItem>[];
+    final duceThreshold = match.targetScore - 1;
+    final seenDuceScores = <String>{};
+    
+    for (int i = 0; i < match.scoreHistory.length; i++) {
+      final point = match.scoreHistory[i];
+      
+      // Check if this point created a duce condition
+      if (point.teamAScore >= duceThreshold && 
+          point.teamBScore >= duceThreshold && 
+          point.teamAScore == point.teamBScore) {
+        
+        final duceKey = '${point.teamAScore}-${point.teamBScore}';
+        
+        // Add duce card if we haven't seen this score tie before
+        if (!seenDuceScores.contains(duceKey)) {
+          timelineItems.add(TimelineItem.duce(point.teamAScore));
+          seenDuceScores.add(duceKey);
+        }
+      }
+      
+      // Add the regular point
+      timelineItems.add(TimelineItem.point(point, i + 1));
+    }
+    
+    return timelineItems;
+  }
+
+  Widget _buildTimelineItemAtIndex(Match match, int index) {
+    final timelineItems = _buildTimelineData(match);
+    
+    if (index >= timelineItems.length) {
+      return const SizedBox.shrink();
+    }
+    
+    final item = timelineItems[index];
+    
+    if (item.isDuce) {
+      return _buildDuceCard(item.score!);
+    } else {
+      return _buildTimelineItem(item.point!, match, item.pointNumber!);
+    }
+  }
+
+  Widget _buildDuceCard(int score) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppTheme.accentGold, AppTheme.accentGold.withOpacity(0.8)],
+        ),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          'Match Duce $score all',
+          style: AppTheme.titleStyle.copyWith(
+            fontSize: 12,
+            fontWeight: FontWeight.w900,
+            color: AppTheme.darkBackground,
+            letterSpacing: 1.0,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
