@@ -23,6 +23,10 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
   final _teamAController = TextEditingController();
   final _teamBController = TextEditingController();
   
+  // Controllers for team names in doubles mode
+  final _teamANameController = TextEditingController();
+  final _teamBNameController = TextEditingController();
+  
   // Controllers for doubles players
   final _teamAPlayer1Controller = TextEditingController();
   final _teamAPlayer2Controller = TextEditingController();
@@ -77,6 +81,15 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
       setState(() {});
     });
     
+    // Team name controllers for doubles mode
+    _teamANameController.addListener(() {
+      setState(() {});
+    });
+    
+    _teamBNameController.addListener(() {
+      setState(() {});
+    });
+    
     _teamAPlayer1Controller.addListener(() {
       setState(() {});
     });
@@ -100,6 +113,8 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
     _fadeController.dispose();
     _teamAController.dispose();
     _teamBController.dispose();
+    _teamANameController.dispose();
+    _teamBNameController.dispose();
     _teamAPlayer1Controller.dispose();
     _teamAPlayer2Controller.dispose();
     _teamBPlayer1Controller.dispose();
@@ -119,10 +134,17 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
           firstServingTeam: _firstServingTeam,
         );
       } else {
-        // Doubles match - use default team names since we only need player names
+        // Doubles match - use custom team names or defaults
+        String teamAName = _teamANameController.text.trim().isNotEmpty 
+            ? _teamANameController.text.trim() 
+            : 'Team A';
+        String teamBName = _teamBNameController.text.trim().isNotEmpty 
+            ? _teamBNameController.text.trim() 
+            : 'Team B';
+            
         context.read<MatchProvider>().startMatch(
-          teamAName: 'Team A',
-          teamBName: 'Team B',
+          teamAName: teamAName,
+          teamBName: teamBName,
           matchType: _selectedMatchType,
           targetScore: _selectedTargetScore,
           firstServingTeam: _firstServingTeam,
@@ -493,6 +515,20 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                         ),
                         SizedBox(height: screenWidth * 0.04),
                         
+                        // Team A Name Input
+                        CustomTextField(
+                          controller: _teamANameController,
+                          label: 'Team A Name',
+                          prefixIcon: Icons.sports_tennis,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Team name required';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: screenWidth * 0.03),
+                        
                         // Team A Players
                         Column(
                           children: [
@@ -560,6 +596,20 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                           ],
                         ),
                         SizedBox(height: screenWidth * 0.04),
+                        
+                        // Team B Name Input
+                        CustomTextField(
+                          controller: _teamBNameController,
+                          label: 'Team B Name',
+                          prefixIcon: Icons.sports_tennis,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Team name required';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: screenWidth * 0.03),
                         
                         // Team B Players
                         Column(
@@ -656,43 +706,55 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [11, 18, 21].map((score) {
               final isSelected = _selectedTargetScore == score;
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedTargetScore = score;
-                  });
-                },
-                child: AnimatedContainer(
-                  duration: AppTheme.fastAnimation,
-                  curve: AppTheme.defaultCurve,
-                  width: 70,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    gradient: isSelected 
-                        ? AppTheme.primaryGradient 
-                        : LinearGradient(
-                            colors: [
-                              AppTheme.surfaceColor,
-                              AppTheme.surfaceColor.withOpacity(0.8),
-                            ],
+              return Flexible(
+                child: FittedBox(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedTargetScore = score;
+                      });
+                    },
+                    child: AnimatedContainer(
+                      duration: AppTheme.fastAnimation,
+                      curve: AppTheme.defaultCurve,
+                      width: 60,
+                      height: 60,
+                      constraints: const BoxConstraints(
+                        minWidth: 50,
+                        minHeight: 50,
+                        maxWidth: 70,
+                        maxHeight: 70,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: isSelected 
+                            ? AppTheme.primaryGradient 
+                            : LinearGradient(
+                                colors: [
+                                  AppTheme.surfaceColor,
+                                  AppTheme.surfaceColor.withOpacity(0.8),
+                                ],
+                              ),
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: isSelected 
+                              ? AppTheme.textPrimary 
+                              : AppTheme.textSecondary.withOpacity(0.3),
+                          width: 2,
+                        ),
+                        
+                      ),
+                      child: Center(
+                        child: FittedBox(
+                          child: Text(
+                            score.toString(),
+                            style: AppTheme.titleStyle.copyWith(
+                              fontSize: 20,
+                              color: isSelected 
+                                  ? AppTheme.textPrimary 
+                                  : AppTheme.textSecondary,
+                            ),
                           ),
-                    borderRadius: BorderRadius.circular(35),
-                    border: Border.all(
-                      color: isSelected 
-                          ? AppTheme.textPrimary 
-                          : AppTheme.textSecondary.withOpacity(0.3),
-                      width: 2,
-                    ),
-                    
-                  ),
-                  child: Center(
-                    child: Text(
-                      score.toString(),
-                      style: AppTheme.titleStyle.copyWith(
-                        fontSize: 24,
-                        color: isSelected 
-                            ? AppTheme.textPrimary 
-                            : AppTheme.textSecondary,
+                        ),
                       ),
                     ),
                   ),
@@ -789,19 +851,37 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
   }
 
   Widget _buildTeamContent(ServingTeam team, bool isSelected) {
-    // Only show Team A or Team B for first serving option, regardless of match type
-    String teamName = team == ServingTeam.teamA ? 'Team A' : 'Team B';
+    String teamName;
     
-    return Text(
-      teamName,
-      style: AppTheme.bodyStyle.copyWith(
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
-        color: isSelected 
-            ? AppTheme.textPrimary 
-            : AppTheme.textSecondary,
+    if (_selectedMatchType == MatchType.doubles) {
+      // Use custom team names for doubles
+      teamName = team == ServingTeam.teamA 
+          ? (_teamANameController.text.isNotEmpty 
+              ? _teamANameController.text 
+              : 'Team A')
+          : (_teamBNameController.text.isNotEmpty 
+              ? _teamBNameController.text 
+              : 'Team B');
+    } else {
+      // Default to Team A/B for singles
+      teamName = team == ServingTeam.teamA ? 'Team A' : 'Team B';
+    }
+    
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        teamName,
+        style: AppTheme.bodyStyle.copyWith(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+          color: isSelected 
+              ? AppTheme.textPrimary 
+              : AppTheme.textSecondary,
+        ),
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
-      textAlign: TextAlign.center,
     );
   }
 
