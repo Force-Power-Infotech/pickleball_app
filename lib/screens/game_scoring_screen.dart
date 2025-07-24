@@ -214,7 +214,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
           // Team A side
           Expanded(
             child: _buildTeamSide(
-              match.teamADisplayName,
+              match.teamAName, // Use team name instead of display name
               match.teamAScore,
               match.currentServingTeam == ServingTeam.teamA,
               AppTheme.primaryRed,
@@ -238,7 +238,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
           // Team B side
           Expanded(
             child: _buildTeamSide(
-              match.teamBDisplayName,
+              match.teamBName, // Use team name instead of display name
               match.teamBScore,
               match.currentServingTeam == ServingTeam.teamB,
               AppTheme.primaryBlue,
@@ -376,7 +376,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
               Expanded(
                 child: ScoreButton(
                   onPressed: () => _awardPoint(ServingTeam.teamA),
-                  teamName: match.teamADisplayName,
+                  teamName: match.teamAName, // Use team name instead of display name
                   color: AppTheme.primaryRed,
                   isEnabled: !match.isMatchComplete,
                 ),
@@ -388,7 +388,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
               Expanded(
                 child: ScoreButton(
                   onPressed: () => _awardPoint(ServingTeam.teamB),
-                  teamName: match.teamBDisplayName,
+                  teamName: match.teamBName, // Use team name instead of display name
                   color: AppTheme.primaryBlue,
                   isEnabled: !match.isMatchComplete,
                 ),

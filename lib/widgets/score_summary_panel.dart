@@ -113,15 +113,16 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
           ),
           const SizedBox(height: 8),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildTeamScore(
-                widget.match.teamAName,
-                widget.match.teamAScore,
-                AppTheme.primaryRed,
+              Expanded(
+                child: _buildTeamScore(
+                  widget.match.teamAName,
+                  widget.match.teamAScore,
+                  AppTheme.primaryRed,
+                ),
               ),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   'VS',
                   style: AppTheme.captionStyle.copyWith(
@@ -129,10 +130,12 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                   ),
                 ),
               ),
-              _buildTeamScore(
-                widget.match.teamBName,
-                widget.match.teamBScore,
-                AppTheme.primaryBlue,
+              Expanded(
+                child: _buildTeamScore(
+                  widget.match.teamBName,
+                  widget.match.teamBScore,
+                  AppTheme.primaryBlue,
+                ),
               ),
             ],
           ),
@@ -151,13 +154,18 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          teamName.toUpperCase(),
-          textAlign: TextAlign.center,
-          style: AppTheme.captionStyle.copyWith(
-            fontSize: 12,
-            color: color,
-            fontWeight: FontWeight.w600,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            teamName.toUpperCase(),
+            textAlign: TextAlign.center,
+            style: AppTheme.captionStyle.copyWith(
+              fontSize: 12,
+              color: color,
+              fontWeight: FontWeight.w600,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
         const SizedBox(height: 4),
@@ -299,29 +307,42 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.sports_tennis,
-                            size: 16,
-                            color: servingTeamColor,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${_getTeamName(point.servingTeam)} serving',
-                            style: AppTheme.captionStyle.copyWith(
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.sports_tennis,
+                              size: 16,
                               color: servingTeamColor,
-                              fontWeight: FontWeight.w600,
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  '${_getTeamName(point.servingTeam)} serving',
+                                  style: AppTheme.captionStyle.copyWith(
+                                    color: servingTeamColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      Text(
-                        DateFormat('HH:mm:ss').format(point.timestamp),
-                        style: AppTheme.captionStyle.copyWith(
-                          fontSize: 11,
+                      const SizedBox(width: 8),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          DateFormat('HH:mm:ss').format(point.timestamp),
+                          style: AppTheme.captionStyle.copyWith(
+                            fontSize: 11,
+                          ),
                         ),
                       ),
                     ],
@@ -354,12 +375,13 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                   const SizedBox(height: 8),
                   
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Score: ${point.teamAScore} - ${point.teamBScore}',
-                        style: AppTheme.titleStyle.copyWith(
-                          fontSize: 16,
+                      Expanded(
+                        child: Text(
+                          'Score: ${point.teamAScore} - ${point.teamBScore}',
+                          style: AppTheme.titleStyle.copyWith(
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                       if (isMatchPoint)
@@ -372,12 +394,15 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                             color: AppTheme.accentGold,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Text(
-                            'MATCH POINT',
-                            style: AppTheme.captionStyle.copyWith(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w900,
-                              color: AppTheme.darkBackground,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              'MATCH POINT',
+                              style: AppTheme.captionStyle.copyWith(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w900,
+                                color: AppTheme.darkBackground,
+                              ),
                             ),
                           ),
                         ),

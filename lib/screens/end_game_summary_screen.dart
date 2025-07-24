@@ -165,27 +165,14 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
   String _getWinnerDisplayName(Match match, ServingTeam? winner) {
     if (winner == null) return 'No Winner';
     
-    if (match.matchType == MatchType.singles) {
-      // For singles, use the regular team name (which is the player name)
-      return winner == ServingTeam.teamA ? match.teamAName : match.teamBName;
-    } else {
-      // For doubles, show player names instead of team names
-      if (winner == ServingTeam.teamA) {
-        final player1 = match.teamAPlayer1 ?? 'Player 1';
-        final player2 = match.teamAPlayer2 ?? 'Player 2';
-        return '$player1 & $player2';
-      } else {
-        final player1 = match.teamBPlayer1 ?? 'Player 1';
-        final player2 = match.teamBPlayer2 ?? 'Player 2';
-        return '$player1 & $player2';
-      }
-    }
+    // For both singles and doubles, use team names
+    return winner == ServingTeam.teamA ? match.teamAName : match.teamBName;
   }
 
   Widget _buildWinnerCelebration(Match match) {
     final winner = match.winner;
     
-    // For doubles matches, show player names instead of team names
+    // Get the winning team name
     final winnerName = _getWinnerDisplayName(match, winner);
     
     final winnerColor = winner == ServingTeam.teamA 
@@ -551,33 +538,46 @@ class PointAnalysisScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildTeamSummary(
-                      match.teamAName,
-                      match.teamAScore,
-                      AppTheme.primaryRed,
-                      match.winner == ServingTeam.teamA,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: AppTheme.surfaceColor,
-                        borderRadius: BorderRadius.circular(20),
+                    Expanded(
+                      flex: 2,
+                      child: _buildTeamSummary(
+                        match.teamAName,
+                        match.teamAScore,
+                        AppTheme.primaryRed,
+                        match.winner == ServingTeam.teamA,
                       ),
-                      child: Text(
-                        'FINAL',
-                        style: AppTheme.captionStyle.copyWith(
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1.2,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: AppTheme.surfaceColor,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              'FINAL',
+                              style: AppTheme.captionStyle.copyWith(
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                    _buildTeamSummary(
-                      match.teamBName,
-                      match.teamBScore,
-                      AppTheme.primaryBlue,
-                      match.winner == ServingTeam.teamB,
+                    Expanded(
+                      flex: 2,
+                      child: _buildTeamSummary(
+                        match.teamBName,
+                        match.teamBScore,
+                        AppTheme.primaryBlue,
+                        match.winner == ServingTeam.teamB,
+                      ),
                     ),
                   ],
                 ),
@@ -711,16 +711,19 @@ class PointAnalysisScreen extends StatelessWidget {
         
         const SizedBox(height: 4), // Reduced spacing to accommodate larger winner badge
         
-        Text(
-          teamName,
-          style: AppTheme.bodyStyle.copyWith(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: isWinner ? AppTheme.accentGold : teamColor,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            teamName,
+            style: AppTheme.bodyStyle.copyWith(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: isWinner ? AppTheme.accentGold : teamColor,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
         ),
         
         const SizedBox(height: 8),
@@ -843,18 +846,26 @@ class PointAnalysisScreen extends StatelessWidget {
                       ),
                     ),
                     
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 8),
                     const Icon(
                       Icons.sports_volleyball,
                       size: 12,
                       color: AppTheme.textSecondary,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      'Serving: ${point.servingTeam == ServingTeam.teamA ? match.teamAName : match.teamBName}',
-                      style: AppTheme.captionStyle.copyWith(
-                        fontSize: 11,
-                        color: AppTheme.textSecondary,
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Serving: ${point.servingTeam == ServingTeam.teamA ? match.teamAName : match.teamBName}',
+                          style: AppTheme.captionStyle.copyWith(
+                            fontSize: 11,
+                            color: AppTheme.textSecondary,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                   ],
