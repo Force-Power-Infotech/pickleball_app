@@ -152,20 +152,17 @@ class MatchProvider extends ChangeNotifier {
         .where((point) => point.winningTeam == ServingTeam.teamB && point.pointAwarded)
         .length;
 
-    // Count duce periods
+    // Count duce periods (every time the match returns to a tied duce state, e.g., 10-10, 11-11, etc.)
     int ducePeriods = 0;
-    bool wasInDuce = false;
     final duceThreshold = _currentMatch!.targetScore - 1;
-    
+    int? lastDuceScore;
     for (final point in _currentMatch!.scoreHistory) {
-      final isCurrentlyDuce = point.teamAScore >= duceThreshold && 
-                               point.teamBScore >= duceThreshold &&
-                               (point.teamAScore - point.teamBScore).abs() < 2;
-      
-      if (isCurrentlyDuce && !wasInDuce) {
-        ducePeriods++;
+      if (point.teamAScore == point.teamBScore && point.teamAScore >= duceThreshold) {
+        if (lastDuceScore == null || point.teamAScore != lastDuceScore) {
+          ducePeriods++;
+          lastDuceScore = point.teamAScore;
+        }
       }
-      wasInDuce = isCurrentlyDuce;
     }
 
     return {
