@@ -238,25 +238,21 @@ class ScoreButton extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.add_circle_outline,
-            size: 32,
-            color: AppTheme.textPrimary,
-          ),
           const SizedBox(height: 8),
           Text(
-            teamName.toUpperCase(),
+            'W',
             style: AppTheme.buttonStyle.copyWith(
-              fontSize: 16,
+              fontSize: 32,
               fontWeight: FontWeight.w900,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 4),
           Text(
-            'WINS POINT',
+            '+1',
             style: AppTheme.captionStyle.copyWith(
-              fontSize: 12,
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
               color: AppTheme.textPrimary.withOpacity(0.8),
             ),
             textAlign: TextAlign.center,

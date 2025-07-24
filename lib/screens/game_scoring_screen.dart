@@ -410,16 +410,8 @@ class _GameScoringScreenState extends State<GameScoringScreen>
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
-          Text(
-            'TAP TO AWARD POINT',
-            style: AppTheme.captionStyle.copyWith(
-              fontSize: 14,
-              letterSpacing: 1.5,
-            ),
-          ),
-          
+          // ...removed 'TAP TO AWARD POINT' text...
           const SizedBox(height: 20),
-          
           Row(
             children: [
               // Team A button
