@@ -356,6 +356,31 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
                   ),
                 ],
               ),
+              
+              const SizedBox(height: 12),
+              
+              // Third row - Duce and Final Score
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildStatCard(
+                      'Duce Periods',
+                      stats['ducePeriods'].toString(),
+                      Icons.balance,
+                      color: AppTheme.accentGold,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildStatCard(
+                      'Final Score',
+                      '${match.teamAScore} - ${match.teamBScore}',
+                      Icons.scoreboard,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         );

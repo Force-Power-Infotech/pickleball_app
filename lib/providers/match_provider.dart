@@ -152,6 +152,22 @@ class MatchProvider extends ChangeNotifier {
         .where((point) => point.winningTeam == ServingTeam.teamB && point.pointAwarded)
         .length;
 
+    // Count duce periods
+    int ducePeriods = 0;
+    bool wasInDuce = false;
+    final duceThreshold = _currentMatch!.targetScore - 1;
+    
+    for (final point in _currentMatch!.scoreHistory) {
+      final isCurrentlyDuce = point.teamAScore >= duceThreshold && 
+                               point.teamBScore >= duceThreshold &&
+                               (point.teamAScore - point.teamBScore).abs() < 2;
+      
+      if (isCurrentlyDuce && !wasInDuce) {
+        ducePeriods++;
+      }
+      wasInDuce = isCurrentlyDuce;
+    }
+
     return {
       'totalRallies': totalRallies,
       'teamAWins': teamAWins,
@@ -161,6 +177,9 @@ class MatchProvider extends ChangeNotifier {
       'teamAWinPercentage': totalRallies > 0 ? (teamAWins / totalRallies * 100).round() : 0,
       'teamBWinPercentage': totalRallies > 0 ? (teamBWins / totalRallies * 100).round() : 0,
       'matchDuration': _currentMatch!.matchDuration,
+      'ducePeriods': ducePeriods,
+      'isCurrentlyDuce': _currentMatch!.isDuce,
+      'duceMessage': _currentMatch!.duceMessage,
     };
   }
 

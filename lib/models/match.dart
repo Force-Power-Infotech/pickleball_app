@@ -62,13 +62,48 @@ class Match {
 
   /// Check if the match has been won by any team
   bool get hasWinner {
-    return teamAScore >= targetScore || teamBScore >= targetScore;
+    // Must reach target score first
+    if (teamAScore < targetScore && teamBScore < targetScore) {
+      return false;
+    }
+    
+    // Must win by at least 2 points
+    final scoreDifference = (teamAScore - teamBScore).abs();
+    return (teamAScore >= targetScore || teamBScore >= targetScore) && scoreDifference >= 2;
+  }
+
+  /// Check if the match is in duce state
+  bool get isDuce {
+    final duceThreshold = targetScore - 1; // 10 for 11-point, 17 for 18-point, 20 for 21-point
+    
+    // Both teams must be at or above duce threshold
+    if (teamAScore < duceThreshold || teamBScore < duceThreshold) {
+      return false;
+    }
+    
+    // Score difference must be less than 2
+    final scoreDifference = (teamAScore - teamBScore).abs();
+    return scoreDifference < 2;
+  }
+
+  /// Get duce message for display
+  String? get duceMessage {
+    if (!isDuce) return null;
+    
+    if (teamAScore == teamBScore) {
+      return 'DUCE - ${teamAScore} ALL';
+    } else {
+      final leadingTeam = teamAScore > teamBScore ? teamAName : teamBName;
+      return 'ADVANTAGE $leadingTeam';
+    }
   }
 
   /// Get the winning team
   ServingTeam? get winner {
-    if (teamAScore >= targetScore) return ServingTeam.teamA;
-    if (teamBScore >= targetScore) return ServingTeam.teamB;
+    if (!hasWinner) return null;
+    
+    if (teamAScore > teamBScore) return ServingTeam.teamA;
+    if (teamBScore > teamAScore) return ServingTeam.teamB;
     return null;
   }
 

@@ -112,6 +112,37 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
             style: AppTheme.titleStyle.copyWith(fontSize: 20),
           ),
           const SizedBox(height: 8),
+          
+          // Show duce status if applicable
+          if (widget.match.isDuce)
+            Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppTheme.accentGold, AppTheme.accentGold.withOpacity(0.8)],
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.accentGold.withOpacity(0.3),
+                    blurRadius: 8,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              child: Text(
+                widget.match.duceMessage ?? 'DUCE',
+                style: AppTheme.titleStyle.copyWith(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  color: AppTheme.darkBackground,
+                  letterSpacing: 1.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          
           Row(
             children: [
               Expanded(
