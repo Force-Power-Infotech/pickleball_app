@@ -1399,10 +1399,10 @@ class ScorecardScreen extends StatelessWidget {
                                       color: Colors.orange,
                                       shape: BoxShape.circle,
                                     ),
-                                    child: const Center(
+                                    child: Center(
                                       child: Text(
-                                        '+1',
-                                        style: TextStyle(
+                                        '${point.teamAScore}',
+                                        style: const TextStyle(
                                           fontSize: 9,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
@@ -1498,10 +1498,10 @@ class ScorecardScreen extends StatelessWidget {
                                       color: Colors.orange,
                                       shape: BoxShape.circle,
                                     ),
-                                    child: const Center(
+                                    child: Center(
                                       child: Text(
-                                        '+1',
-                                        style: TextStyle(
+                                        '${point.teamBScore}',
+                                        style: const TextStyle(
                                           fontSize: 9,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
@@ -1676,7 +1676,7 @@ class ScorecardScreen extends StatelessWidget {
                       ),
                       child: const Center(
                         child: Text(
-                          '+1',
+                          '1',
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
@@ -1687,7 +1687,7 @@ class ScorecardScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Point Scored',
+                      'Current Score',
                       style: AppTheme.captionStyle.copyWith(
                         color: Colors.grey.shade700,
                       ),
