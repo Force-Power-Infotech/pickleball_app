@@ -1467,7 +1467,7 @@ class ScorecardScreen extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
-                          color: Colors.blue.shade800,
+                          color: Colors.green.shade800,
                         ),
                       ),
                     ),
