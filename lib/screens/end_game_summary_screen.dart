@@ -122,6 +122,29 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
     );
   }
 
+  void _showScorecard() {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => ScorecardScreen(
+          match: context.read<MatchProvider>().currentMatch!,
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 1),
+              end: Offset.zero,
+            ).animate(CurvedAnimation(
+              parent: animation,
+              curve: AppTheme.defaultCurve,
+            )),
+            child: child,
+          );
+        },
+        transitionDuration: AppTheme.normalAnimation,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<MatchProvider>(
@@ -475,6 +498,32 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
                 const SizedBox(width: 8),
                 Text(
                   'POINT ANALYSIS',
+                  style: AppTheme.buttonStyle.copyWith(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        ),
+        
+        const SizedBox(height: 16),
+        
+        // Scorecard Button
+        SizedBox(
+          width: double.infinity,
+          child: AnimatedButton(
+            onPressed: _showScorecard,
+            backgroundColor: AppTheme.neonGreen,
+            height: 56,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.scoreboard,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'SCORECARD',
                   style: AppTheme.buttonStyle.copyWith(fontSize: 16),
                 ),
               ],
@@ -994,4 +1043,458 @@ class PointAnalysisScreen extends StatelessWidget {
   }
 }
 
+/// Full-screen scorecard screen with rally-by-rally breakdown
+class ScorecardScreen extends StatelessWidget {
+  final Match match;
 
+  const ScorecardScreen({
+    super.key,
+    required this.match,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 10,
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: AppTheme.primaryRed,
+                      size: 28,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'SCORECARD',
+                          style: AppTheme.titleStyle.copyWith(
+                            fontSize: 28,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          'Rally by Rally Analysis',
+                          style: AppTheme.captionStyle.copyWith(
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => _downloadScorecard(context),
+                    icon: const Icon(
+                      Icons.download,
+                      color: AppTheme.primaryRed,
+                      size: 28,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            // Content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: _buildScorecardTable(context),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildScorecardTable(BuildContext context) {
+    final scoreHistory = match.scoreHistory;
+    List<String> playerNamesA = [];
+    List<String> playerNamesB = [];
+    
+    // Get player names based on match type
+    if (match.matchType == MatchType.doubles) {
+      if (match.teamAPlayer1 != null) playerNamesA.add(_truncatePlayerName(match.teamAPlayer1!));
+      if (match.teamAPlayer2 != null) playerNamesA.add(_truncatePlayerName(match.teamAPlayer2!));
+      if (match.teamBPlayer1 != null) playerNamesB.add(_truncatePlayerName(match.teamBPlayer1!));
+      if (match.teamBPlayer2 != null) playerNamesB.add(_truncatePlayerName(match.teamBPlayer2!));
+    } else {
+      // For singles, use player names or team names as fallback
+      playerNamesA.add(_truncatePlayerName(match.teamAPlayer1 ?? match.teamAName));
+      playerNamesB.add(_truncatePlayerName(match.teamBPlayer1 ?? match.teamBName));
+    }
+    
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.grey.shade300),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 10,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header info
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(15),
+                topRight: Radius.circular(15),
+              ),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'PICKLEBALL SCORECARD',
+                  style: AppTheme.titleStyle.copyWith(
+                    fontSize: 20,
+                    color: Colors.black,
+                    letterSpacing: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  '${match.matchType.displayName} • Target: ${match.targetScore} • Final: ${match.teamAScore}-${match.teamBScore}',
+                  style: AppTheme.captionStyle.copyWith(
+                    color: Colors.grey.shade700,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          
+          // Responsive Data Table
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: DataTable(
+                columnSpacing: MediaQuery.of(context).size.width * 0.04,
+                horizontalMargin: 0,
+                headingRowColor: MaterialStateProperty.all(Colors.grey.shade100),
+                border: TableBorder.all(color: Colors.grey.shade300, width: 1),
+                headingRowHeight: 56,
+                dataRowHeight: 48,
+                columns: [
+                  const DataColumn(
+                    label: Expanded(
+                      child: Text(
+                        '#',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold, 
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  ...playerNamesA.map(
+                    (name) => DataColumn(
+                      label: Expanded(
+                        child: Text(
+                          name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold, 
+                            fontSize: 12,
+                            color: AppTheme.primaryRed,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                  ...playerNamesB.map(
+                    (name) => DataColumn(
+                      label: Expanded(
+                        child: Text(
+                          name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold, 
+                            fontSize: 12,
+                            color: AppTheme.primaryBlue,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                rows: List.generate(scoreHistory.length, (index) {
+                  final point = scoreHistory[index];
+                  return DataRow(
+                    color: MaterialStateProperty.all(
+                      index % 2 == 0 ? Colors.white : Colors.grey.shade50,
+                    ),
+                    cells: [
+                      DataCell(
+                        Container(
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          child: Text(
+                            '${index + 1}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                      ...playerNamesA.map(
+                        (name) => DataCell(
+                          Container(
+                            width: double.infinity,
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: _getScorecardCellContent(point, true).startsWith('W') 
+                                    ? Colors.green.shade100 
+                                    : Colors.red.shade100,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: _getScorecardCellContent(point, true).startsWith('W') 
+                                      ? Colors.green.shade300 
+                                      : Colors.red.shade300,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Text(
+                                _getScorecardCellContent(point, true),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: _getScorecardCellContent(point, true).startsWith('W') 
+                                      ? Colors.green.shade800 
+                                      : Colors.red.shade800,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ...playerNamesB.map(
+                        (name) => DataCell(
+                          Container(
+                            width: double.infinity,
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: _getScorecardCellContent(point, false).startsWith('W') 
+                                    ? Colors.green.shade100 
+                                    : Colors.red.shade100,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: _getScorecardCellContent(point, false).startsWith('W') 
+                                      ? Colors.green.shade300 
+                                      : Colors.red.shade300,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Text(
+                                _getScorecardCellContent(point, false),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: _getScorecardCellContent(point, false).startsWith('W') 
+                                      ? Colors.green.shade800 
+                                      : Colors.red.shade800,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ),
+            ),
+          ),
+          
+          // Legend
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15),
+              ),
+            ),
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 16,
+              runSpacing: 8,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade100,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.green.shade300),
+                      ),
+                      child: Text(
+                        'W',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: Colors.green.shade800,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Won Rally',
+                      style: AppTheme.captionStyle.copyWith(
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade100,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.red.shade300),
+                      ),
+                      child: Text(
+                        'L',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: Colors.red.shade800,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Lost Rally',
+                      style: AppTheme.captionStyle.copyWith(
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade100,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.blue.shade300),
+                      ),
+                      child: Text(
+                        'W●',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: Colors.blue.shade800,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Serving & Won',
+                      style: AppTheme.captionStyle.copyWith(
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _truncatePlayerName(String name) {
+    if (name.length <= 8) return name;
+    return '${name.substring(0, 6)}..';
+  }
+
+  String _getScorecardCellContent(ScorePoint point, bool isTeamA) {
+    String winLoss;
+    if (isTeamA) {
+      winLoss = point.winningTeam == ServingTeam.teamA ? 'W' : 'L';
+    } else {
+      winLoss = point.winningTeam == ServingTeam.teamB ? 'W' : 'L';
+    }
+    
+    // Add serving indicator
+    bool isServing = (isTeamA && point.servingTeam == ServingTeam.teamA) || 
+                     (!isTeamA && point.servingTeam == ServingTeam.teamB);
+    
+    return isServing ? '$winLoss●' : winLoss;
+  }
+
+  void _downloadScorecard(BuildContext context) {
+    // TODO: Implement scorecard download functionality
+    // This would typically involve generating a PDF or image and saving to device
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Download feature coming soon!'),
+        backgroundColor: AppTheme.primaryBlue,
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+  }
+}
