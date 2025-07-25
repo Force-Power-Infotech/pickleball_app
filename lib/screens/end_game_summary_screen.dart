@@ -1135,14 +1135,32 @@ class ScorecardScreen extends StatelessWidget {
     
     // Get player names based on match type
     if (match.matchType == MatchType.doubles) {
-      if (match.teamAPlayer1 != null) playerNamesA.add(_truncatePlayerName(match.teamAPlayer1!));
-      if (match.teamAPlayer2 != null) playerNamesA.add(_truncatePlayerName(match.teamAPlayer2!));
-      if (match.teamBPlayer1 != null) playerNamesB.add(_truncatePlayerName(match.teamBPlayer1!));
-      if (match.teamBPlayer2 != null) playerNamesB.add(_truncatePlayerName(match.teamBPlayer2!));
+      // For doubles, combine both players into one column per team
+      String teamANames = '';
+      String teamBNames = '';
+      
+      if (match.teamAPlayer1 != null && match.teamAPlayer2 != null) {
+        teamANames = '${match.teamAPlayer1!} & ${match.teamAPlayer2!}';
+      } else if (match.teamAPlayer1 != null) {
+        teamANames = match.teamAPlayer1!;
+      } else {
+        teamANames = match.teamAName;
+      }
+      
+      if (match.teamBPlayer1 != null && match.teamBPlayer2 != null) {
+        teamBNames = '${match.teamBPlayer1!} & ${match.teamBPlayer2!}';
+      } else if (match.teamBPlayer1 != null) {
+        teamBNames = match.teamBPlayer1!;
+      } else {
+        teamBNames = match.teamBName;
+      }
+      
+      playerNamesA.add(teamANames);
+      playerNamesB.add(teamBNames);
     } else {
       // For singles, use player names or team names as fallback
-          playerNamesA.add(match.teamAPlayer1 ?? match.teamAName);
-          playerNamesB.add(match.teamBPlayer1 ?? match.teamBName);
+      playerNamesA.add(match.teamAPlayer1 ?? match.teamAName);
+      playerNamesB.add(match.teamBPlayer1 ?? match.teamBName);
     }
     
     return Container(
@@ -1468,11 +1486,6 @@ class ScorecardScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _truncatePlayerName(String name) {
-    if (name.length <= 8) return name;
-    return '${name.substring(0, 6)}..';
   }
 
   String _getScorecardCellContent(ScorePoint point, bool isTeamA) {
