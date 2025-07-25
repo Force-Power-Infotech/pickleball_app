@@ -8,6 +8,20 @@ import '../providers/match_provider.dart';
 import '../widgets/animated_button.dart';
 import 'match_setup_screen.dart';
 
+/// Helper function to check if the match was in duce state at a given point
+bool isDuceAtPoint(ScorePoint point, Match match) {
+  final duceThreshold = match.targetScore - 1; // 10 for 11-point, 17 for 18-point, 20 for 21-point
+  
+  // Both teams must be at or above duce threshold
+  if (point.teamAScore < duceThreshold || point.teamBScore < duceThreshold) {
+    return false;
+  }
+  
+  // Duce indicator only shows when scores are tied (active duce state)
+  // Examples: 10-10, 11-11, 17-17, 20-20
+  return point.teamAScore == point.teamBScore;
+}
+
 // Helper class for timeline items
 class TimelineItem {
   final bool isDuce;
@@ -1312,6 +1326,27 @@ class ScorecardScreen extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                if (isDuceAtPoint(point, match)) ...[
+                                  Container(
+                                    width: 18,
+                                    height: 18,
+                                    margin: const EdgeInsets.only(right: 6),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.yellow,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'D',
+                                        style: TextStyle(
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
@@ -1390,6 +1425,27 @@ class ScorecardScreen extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                if (isDuceAtPoint(point, match)) ...[
+                                  Container(
+                                    width: 18,
+                                    height: 18,
+                                    margin: const EdgeInsets.only(right: 6),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.yellow,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'D',
+                                        style: TextStyle(
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
@@ -1632,6 +1688,36 @@ class ScorecardScreen extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       'Point Scored',
+                      style: AppTheme.captionStyle.copyWith(
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 18,
+                      height: 18,
+                      decoration: const BoxDecoration(
+                        color: Colors.yellow,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'D',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Duce',
                       style: AppTheme.captionStyle.copyWith(
                         color: Colors.grey.shade700,
                       ),
