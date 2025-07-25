@@ -153,7 +153,33 @@ class _GameScoringScreenState extends State<GameScoringScreen>
             flex: 2,
             child: _buildActionButtons(match),
           ),
-          
+          // Rally counter below action buttons
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Container(
+              width: double.infinity,
+              alignment: Alignment.center,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.blue.shade200, width: 1),
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'Rallies: ${match.scoreHistory.length}',
+                    style: AppTheme.bodyStyle.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.blue.shade700,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
           // Bottom controls
           _buildBottomControls(),
         ],
