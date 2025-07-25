@@ -1566,6 +1566,78 @@ class ScorecardScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade100,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.red.shade300),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'L',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              color: Colors.red.shade800,
+                            ),
+                          ),
+                          const SizedBox(width: 2),
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade800,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Serving & Lost',
+                      style: AppTheme.captionStyle.copyWith(
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 18,
+                      height: 18,
+                      decoration: const BoxDecoration(
+                        color: Colors.orange,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          '+1',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Point Scored',
+                      style: AppTheme.captionStyle.copyWith(
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
