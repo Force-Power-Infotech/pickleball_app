@@ -853,19 +853,25 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
   Widget _buildTeamContent(ServingTeam team, bool isSelected) {
     String teamName;
     
-    if (_selectedMatchType == MatchType.doubles) {
-      // Use custom team names for doubles
-      teamName = team == ServingTeam.teamA 
-          ? (_teamANameController.text.isNotEmpty 
-              ? _teamANameController.text 
-              : 'Team A')
-          : (_teamBNameController.text.isNotEmpty 
-              ? _teamBNameController.text 
-              : 'Team B');
-    } else {
-      // Default to Team A/B for singles
-      teamName = team == ServingTeam.teamA ? 'Team A' : 'Team B';
-    }
+  if (_selectedMatchType == MatchType.doubles) {
+    // Use custom team names for doubles
+    teamName = team == ServingTeam.teamA 
+      ? (_teamANameController.text.isNotEmpty 
+        ? _teamANameController.text 
+        : 'Team A')
+      : (_teamBNameController.text.isNotEmpty 
+        ? _teamBNameController.text 
+        : 'Team B');
+  } else {
+    // Use player names for singles
+    teamName = team == ServingTeam.teamA 
+      ? (_teamAController.text.isNotEmpty 
+        ? _teamAController.text 
+        : 'Team A')
+      : (_teamBController.text.isNotEmpty 
+        ? _teamBController.text 
+        : 'Team B');
+  }
     
     return FittedBox(
       fit: BoxFit.scaleDown,
