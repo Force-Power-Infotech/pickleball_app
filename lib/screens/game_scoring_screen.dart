@@ -155,25 +155,40 @@ class _GameScoringScreenState extends State<GameScoringScreen>
           ),
           // Rally counter below action buttons
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            padding: const EdgeInsets.symmetric(vertical: 13.0),
             child: Container(
               width: double.infinity,
               alignment: Alignment.center,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                constraints: BoxConstraints(
+                  minWidth: 90,
+                  maxWidth: MediaQuery.of(context).size.width * 0.5,
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.052,
+                  vertical: MediaQuery.of(context).size.height * 0.018,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.blue.shade200, width: 1),
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: Colors.blue.shade200, width: 1.3),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue.withOpacity(0.09),
+                      blurRadius: 7,
+                      offset: Offset(0, 1),
+                    ),
+                  ],
                 ),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
                     'Rallies: ${match.scoreHistory.length}',
-                    style: AppTheme.bodyStyle.copyWith(
+                    style: AppTheme.titleStyle.copyWith(
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontSize: MediaQuery.of(context).size.width * 0.037,
                       color: Colors.blue.shade700,
+                      letterSpacing: 1.08,
                     ),
                   ),
                 ),
