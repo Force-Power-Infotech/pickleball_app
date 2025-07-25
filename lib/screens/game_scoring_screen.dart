@@ -317,15 +317,34 @@ class _GameScoringScreenState extends State<GameScoringScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              // Team name
-              Flexible(
+              // Team name inside squared colored container with padding
+              Container(
+                width: maxCircle * 1.25,
+                height: maxCircle * 0.34,
+                padding: EdgeInsets.symmetric(
+                  horizontal: maxCircle * 0.13,
+                  vertical: maxCircle * 0.04,
+                ),
+                decoration: BoxDecoration(
+                  color: teamColor,
+                  borderRadius: BorderRadius.circular(maxCircle * 0.10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: teamColor.withOpacity(0.15),
+                      blurRadius: 6,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                alignment: Alignment.center,
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    teamName.toUpperCase(),
+                    teamName,
                     style: AppTheme.titleStyle.copyWith(
-                      fontSize: 16,
-                      color: teamColor,
+                      fontSize: fontSize * 0.38,
+                      color: AppTheme.textPrimary,
+                      fontWeight: FontWeight.w700,
                     ),
                     textAlign: TextAlign.center,
                     maxLines: 1,
