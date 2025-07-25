@@ -1544,9 +1544,9 @@ class ScorecardScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.blue.shade100,
+                        color: Colors.green.shade100,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.blue.shade300),
+                        border: Border.all(color: Colors.green.shade300),
                       ),
                       child: Text(
                         'W●',
