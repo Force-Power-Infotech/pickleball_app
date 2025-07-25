@@ -1344,8 +1344,10 @@ class ScorecardScreen extends StatelessWidget {
                                         Container(
                                           width: 8,
                                           height: 8,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.black,
+                                          decoration: BoxDecoration(
+                                            color: (point.servingTeam == ServingTeam.teamA && point.winningTeam == ServingTeam.teamA)
+                                                ? Colors.green.shade800
+                                                : Colors.red.shade800,
                                             shape: BoxShape.circle,
                                           ),
                                         ),
@@ -1420,8 +1422,10 @@ class ScorecardScreen extends StatelessWidget {
                                         Container(
                                           width: 8,
                                           height: 8,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.black,
+                                          decoration: BoxDecoration(
+                                            color: (point.servingTeam == ServingTeam.teamB && point.winningTeam == ServingTeam.teamB)
+                                                ? Colors.green.shade800
+                                                : Colors.red.shade800,
                                             shape: BoxShape.circle,
                                           ),
                                         ),
