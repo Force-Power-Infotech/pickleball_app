@@ -1141,8 +1141,8 @@ class ScorecardScreen extends StatelessWidget {
       if (match.teamBPlayer2 != null) playerNamesB.add(_truncatePlayerName(match.teamBPlayer2!));
     } else {
       // For singles, use player names or team names as fallback
-      playerNamesA.add(_truncatePlayerName(match.teamAPlayer1 ?? match.teamAName));
-      playerNamesB.add(_truncatePlayerName(match.teamBPlayer1 ?? match.teamBName));
+          playerNamesA.add(match.teamAPlayer1 ?? match.teamAName);
+          playerNamesB.add(match.teamBPlayer1 ?? match.teamBName);
     }
     
     return Container(
@@ -1211,10 +1211,10 @@ class ScorecardScreen extends StatelessWidget {
                   const DataColumn(
                     label: Expanded(
                       child: Text(
-                        '#',
+                        'Rally',
                         style: TextStyle(
                           fontWeight: FontWeight.bold, 
-                          fontSize: 14,
+                          fontSize: 16,
                           color: Colors.black,
                         ),
                         textAlign: TextAlign.center,
@@ -1224,16 +1224,20 @@ class ScorecardScreen extends StatelessWidget {
                   ...playerNamesA.map(
                     (name) => DataColumn(
                       label: Expanded(
-                        child: Text(
-                          name,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold, 
-                            fontSize: 12,
-                            color: AppTheme.primaryRed,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: AppTheme.primaryRed,
+                            ),
+                            overflow: TextOverflow.visible,
+                            softWrap: true,
+                            maxLines: 3,
+                            textAlign: TextAlign.center,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),
@@ -1241,16 +1245,20 @@ class ScorecardScreen extends StatelessWidget {
                   ...playerNamesB.map(
                     (name) => DataColumn(
                       label: Expanded(
-                        child: Text(
-                          name,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold, 
-                            fontSize: 12,
-                            color: AppTheme.primaryBlue,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: AppTheme.primaryBlue,
+                            ),
+                            overflow: TextOverflow.visible,
+                            softWrap: true,
+                            maxLines: 3,
+                            textAlign: TextAlign.center,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),
