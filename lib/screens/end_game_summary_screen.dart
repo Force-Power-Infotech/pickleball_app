@@ -1185,7 +1185,7 @@ class ScorecardScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  '${match.matchType.displayName} • Target: ${match.targetScore} • Final: ${match.teamAScore}-${match.teamBScore}',
+                  '${match.matchType.displayName} • Final: ${match.teamAScore}-${match.teamBScore}',
                   style: AppTheme.captionStyle.copyWith(
                     color: Colors.grey.shade700,
                   ),
