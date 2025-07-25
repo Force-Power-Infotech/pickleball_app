@@ -351,7 +351,7 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
                   Expanded(
                     child: _buildStatCard(
                       _truncateName(match.teamAName),
-                      '${stats['teamAWins']} wins (${stats['teamAWinPercentage']}%)',
+                      '${stats['teamAWins']} points (${stats['teamAWinPercentage']}%)',
                       Icons.trending_up,
                       color: AppTheme.primaryRed,
                     ),
@@ -360,7 +360,7 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
                   Expanded(
                     child: _buildStatCard(
                       _truncateName(match.teamBName),
-                      '${stats['teamBWins']} wins (${stats['teamBWinPercentage']}%)',
+                      '${stats['teamBWins']} points (${stats['teamBWinPercentage']}%)',
                       Icons.trending_up,
                       color: AppTheme.primaryBlue,
                     ),
@@ -659,7 +659,7 @@ class PointAnalysisScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
-                                '${match.scoreHistory.length} points',
+                                '${match.scoreHistory.length} Rallies',
                                 style: AppTheme.captionStyle.copyWith(
                                   fontWeight: FontWeight.w600,
                                 ),
