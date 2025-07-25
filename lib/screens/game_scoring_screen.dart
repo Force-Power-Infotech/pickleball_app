@@ -304,10 +304,10 @@ class _GameScoringScreenState extends State<GameScoringScreen>
   ) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Responsive sizing
-        final double maxCircle = (constraints.maxHeight * 0.4).clamp(56.0, 110.0);
-        final double fontSize = (maxCircle * 0.4).clamp(20.0, 44.0);
-        final double vSpace = constraints.maxHeight < 300 ? 8 : 16;
+  // Responsive sizing
+  final double maxCircle = (constraints.maxHeight * 0.48).clamp(64.0, 130.0);
+  final double fontSize = (maxCircle * 0.45).clamp(24.0, 52.0);
+  final double vSpace = constraints.maxHeight < 300 ? 10 : 18;
         return Container(
           padding: EdgeInsets.symmetric(
             horizontal: constraints.maxWidth < 180 ? 8 : 16,
@@ -379,27 +379,27 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                     opacity: isServing ? 0.3 + (_serveAnimation.value * 0.7) : 0.2,
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: constraints.maxWidth < 180 ? 8 : 14,
-                        vertical: 6,
+                        horizontal: constraints.maxWidth < 180 ? 10 : 18,
+                        vertical: 8,
                       ),
                       decoration: BoxDecoration(
                         color: isServing ? teamColor : AppTheme.textSecondary,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(24),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
                             Icons.sports_tennis,
-                            size: 16,
+                            size: 22,
                             color: AppTheme.textPrimary,
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 10),
                           Text(
                             isServing ? 'SERVING' : 'WAITING',
                             style: AppTheme.captionStyle.copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
                               color: AppTheme.textPrimary,
                             ),
                           ),
