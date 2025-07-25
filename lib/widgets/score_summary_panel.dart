@@ -448,7 +448,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              'TIED',
+                              'DUCE',
                               style: AppTheme.captionStyle.copyWith(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w900,
