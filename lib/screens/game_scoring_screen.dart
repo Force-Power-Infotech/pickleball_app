@@ -19,11 +19,9 @@ class GameScoringScreen extends StatefulWidget {
 
 class _GameScoringScreenState extends State<GameScoringScreen>
     with TickerProviderStateMixin {
-  late AnimationController _scoreController;
   late AnimationController _serveController;
   late AnimationController _slideController;
   
-  late Animation<double> _scoreAnimation;
   late Animation<double> _serveAnimation;
   late Animation<Offset> _slideAnimation;
 
@@ -33,12 +31,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
     _initializeAnimations();
   }
 
-  void _initializeAnimations() {
-    _scoreController = AnimationController(
-      duration: AppTheme.normalAnimation,
-      vsync: this,
-    );
-    
+  void _initializeAnimations() {    
     _serveController = AnimationController(
       duration: AppTheme.slowAnimation,
       vsync: this,
@@ -48,14 +41,6 @@ class _GameScoringScreenState extends State<GameScoringScreen>
       duration: AppTheme.normalAnimation,
       vsync: this,
     );
-
-    _scoreAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _scoreController,
-      curve: AppTheme.bouncyCurve,
-    ));
 
     _serveAnimation = Tween<double>(
       begin: 0.0,
@@ -78,7 +63,6 @@ class _GameScoringScreenState extends State<GameScoringScreen>
 
   @override
   void dispose() {
-    _scoreController.dispose();
     _serveController.dispose();
     _slideController.dispose();
     super.dispose();
@@ -86,7 +70,6 @@ class _GameScoringScreenState extends State<GameScoringScreen>
 
   void _awardPoint(ServingTeam team) {
     context.read<MatchProvider>().awardPoint(team);
-    _animateScoreUpdate();
     
     // Check if match is complete
     final match = context.read<MatchProvider>().currentMatch;
@@ -105,12 +88,6 @@ class _GameScoringScreenState extends State<GameScoringScreen>
         }
       });
     }
-  }
-
-  void _animateScoreUpdate() {
-    _scoreController.forward().then((_) {
-      _scoreController.reverse();
-    });
   }
 
   void _toggleScoreSummary() {
@@ -284,114 +261,114 @@ class _GameScoringScreenState extends State<GameScoringScreen>
     Color teamColor,
     ServingTeam team,
   ) {
-    return AnimatedBuilder(
-      animation: _scoreAnimation,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: _scoreAnimation.value,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              // Responsive sizing
-              final double maxCircle = (constraints.maxHeight * 0.4).clamp(56.0, 110.0);
-              final double fontSize = (maxCircle * 0.4).clamp(20.0, 44.0);
-              final double vSpace = constraints.maxHeight < 300 ? 8 : 16;
-              return Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: constraints.maxWidth < 180 ? 8 : 16,
-                  vertical: vSpace,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Responsive sizing
+        final double maxCircle = (constraints.maxHeight * 0.4).clamp(56.0, 110.0);
+        final double fontSize = (maxCircle * 0.4).clamp(20.0, 44.0);
+        final double vSpace = constraints.maxHeight < 300 ? 8 : 16;
+        return Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: constraints.maxWidth < 180 ? 8 : 16,
+            vertical: vSpace,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              // Team name
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    teamName.toUpperCase(),
+                    style: AppTheme.titleStyle.copyWith(
+                      fontSize: 16,
+                      color: teamColor,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    // Team name
-                    Flexible(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          teamName.toUpperCase(),
-                          style: AppTheme.titleStyle.copyWith(
-                            fontSize: 16,
-                            color: teamColor,
-                          ),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: vSpace),
+              // Score with smooth fade animation
+              AnimatedSwitcher(
+                duration: AppTheme.normalAnimation,
+                transitionBuilder: (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: child,
+                ),
+                child: Container(
+                  key: ValueKey<int>(score),
+                  width: maxCircle,
+                  height: maxCircle,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [
+                        teamColor,
+                        teamColor.withOpacity(0.7),
+                      ],
+                    ),
+                  ),
+                  child: Center(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        score.toString(),
+                        style: AppTheme.scoreStyle.copyWith(
+                          fontSize: fontSize,
+                          color: AppTheme.textPrimary,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    SizedBox(height: vSpace),
-                    // Score
-                    Container(
-                      width: maxCircle,
-                      height: maxCircle,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            teamColor,
-                            teamColor.withOpacity(0.7),
-                          ],
-                        ),
+                  ),
+                ),
+              ),
+              SizedBox(height: vSpace),
+              // Serving indicator
+              AnimatedBuilder(
+                animation: _serveAnimation,
+                builder: (context, child) {
+                  return Opacity(
+                    opacity: isServing ? 0.3 + (_serveAnimation.value * 0.7) : 0.2,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: constraints.maxWidth < 180 ? 8 : 14,
+                        vertical: 6,
                       ),
-                      child: Center(
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            score.toString(),
-                            style: AppTheme.scoreStyle.copyWith(
-                              fontSize: fontSize,
+                      decoration: BoxDecoration(
+                        color: isServing ? teamColor : AppTheme.textSecondary,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.sports_tennis,
+                            size: 16,
+                            color: AppTheme.textPrimary,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            isServing ? 'SERVING' : 'WAITING',
+                            style: AppTheme.captionStyle.copyWith(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
                               color: AppTheme.textPrimary,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: vSpace),
-                    // Serving indicator
-                    AnimatedBuilder(
-                      animation: _serveAnimation,
-                      builder: (context, child) {
-                        return Opacity(
-                          opacity: isServing ? 0.3 + (_serveAnimation.value * 0.7) : 0.2,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: constraints.maxWidth < 180 ? 8 : 14,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isServing ? teamColor : AppTheme.textSecondary,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.sports_tennis,
-                                  size: 16,
-                                  color: AppTheme.textPrimary,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  isServing ? 'SERVING' : 'WAITING',
-                                  style: AppTheme.captionStyle.copyWith(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppTheme.textPrimary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
+                  );
+                },
+              ),
+            ],
           ),
         );
       },
