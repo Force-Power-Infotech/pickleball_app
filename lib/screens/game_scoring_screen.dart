@@ -203,13 +203,16 @@ class _GameScoringScreenState extends State<GameScoringScreen>
   }
 
   Widget _buildHeader(Match match) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
           Text(
             'LIVE MATCH',
-            style: AppTheme.titleStyle.copyWith(fontSize: 18),
+            style: AppTheme.titleStyle.copyWith(
+              fontSize: screenWidth * 0.052, // Slightly smaller, responsive
+            ),
           ),
           const SizedBox(height: 8),
           // Show duce status or target score
@@ -227,9 +230,9 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                 child: Text(
                   match.duceMessage ?? 'Match Duce',
                   style: AppTheme.titleStyle.copyWith(
-                    fontSize: 14,
+                    fontSize: screenWidth * 0.052,
                     fontWeight: FontWeight.w900,
-                    color: AppTheme.darkBackground,
+                    color: AppTheme.textPrimary,
                     letterSpacing: 1.2,
                   ),
                   maxLines: 1,
@@ -241,7 +244,11 @@ class _GameScoringScreenState extends State<GameScoringScreen>
           else
             Text(
               'First to ${match.targetScore}',
-              style: AppTheme.captionStyle,
+              style: AppTheme.captionStyle.copyWith(
+                fontSize: screenWidth * 0.042,
+                fontWeight: FontWeight.w700,
+                color: AppTheme.textSecondary,
+              ),
             ),
         ],
       ),
