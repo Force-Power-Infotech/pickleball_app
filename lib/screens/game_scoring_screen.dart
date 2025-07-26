@@ -503,6 +503,8 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                 onPressed: canUndo ? () => provider.undoLastPoint() : null,
                 enabled: canUndo,
                 backgroundColor: AppTheme.surfaceColor,
+                boxShadow: AppTheme.metallicShadow,
+                gradient: AppTheme.buttonGradient,
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -526,10 +528,12 @@ class _GameScoringScreenState extends State<GameScoringScreen>
             builder: (context, provider, child) {
               return AnimatedButton(
                 onPressed: _toggleScoreSummary,
-                backgroundColor: provider.showScoreSummary 
-                    ? AppTheme.accentGold 
-                    : AppTheme.surfaceColor,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        backgroundColor: provider.showScoreSummary 
+          ? AppTheme.accentGold 
+          : AppTheme.surfaceColor,
+        boxShadow: AppTheme.metallicShadow,
+        gradient: provider.showScoreSummary ? AppTheme.selectedButtonGradient : AppTheme.buttonGradient,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

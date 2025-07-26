@@ -4,6 +4,7 @@ import '../theme/app_theme.dart';
 
 /// Custom animated button with modern styling and haptic feedback
 class AnimatedButton extends StatefulWidget {
+  final Gradient? gradient;
   final VoidCallback? onPressed;
   final Widget child;
   final Color? backgroundColor;
@@ -29,6 +30,7 @@ class AnimatedButton extends StatefulWidget {
     this.height,
     this.isLoading = false,
     this.enabled = true,
+  this.gradient,
   });
 
   @override
@@ -123,7 +125,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
       vertical: 16,
     );
 
-    return AnimatedBuilder(
+  return AnimatedBuilder(
       animation: Listenable.merge([
         _pressController,
         _loadingController,
@@ -140,7 +142,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
               width: widget.width,
               height: widget.height,
               decoration: BoxDecoration(
-                gradient: widget.enabled && !widget.isLoading
+                gradient: widget.gradient ?? (widget.enabled && !widget.isLoading
                     ? LinearGradient(
                         colors: [
                           backgroundColor,
@@ -154,9 +156,9 @@ class _AnimatedButtonState extends State<AnimatedButton>
                           AppTheme.textSecondary.withOpacity(0.3),
                           AppTheme.textSecondary.withOpacity(0.2),
                         ],
-                      ),
+                      )),
                 borderRadius: borderRadius,
-                // Box shadows removed as requested
+                boxShadow: widget.boxShadow,
               ),
               child: Material(
                 color: Colors.transparent,
