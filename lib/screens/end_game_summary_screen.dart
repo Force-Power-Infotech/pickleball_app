@@ -510,9 +510,14 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
                   size: 20,
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  'POINT ANALYSIS',
-                  style: AppTheme.buttonStyle.copyWith(fontSize: 16),
+                Expanded(
+                  child: Text(
+                    'POINT ANALYSIS',
+                    style: AppTheme.buttonStyle.copyWith(fontSize: 16),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),
@@ -536,9 +541,14 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
                   size: 20,
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  'SCORECARD',
-                  style: AppTheme.buttonStyle.copyWith(fontSize: 16),
+                Expanded(
+                  child: Text(
+                    'SCORECARD',
+                    style: AppTheme.buttonStyle.copyWith(fontSize: 16),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),
@@ -559,9 +569,14 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
               children: [
                 const Icon(Icons.refresh, size: 20),
                 const SizedBox(width: 8),
-                Text(
-                  'NEW MATCH',
-                  style: AppTheme.buttonStyle.copyWith(fontSize: 16),
+                Expanded(
+                  child: Text(
+                    'NEW MATCH',
+                    style: AppTheme.buttonStyle.copyWith(fontSize: 16),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),
