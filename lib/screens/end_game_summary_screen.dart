@@ -6,6 +6,9 @@ import '../theme/app_theme.dart';
 import '../models/match.dart';
 import '../providers/match_provider.dart';
 import '../widgets/animated_button.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
 import 'match_setup_screen.dart';
 
 /// Helper function to check if the match was in duce state at a given point
@@ -1784,18 +1787,55 @@ class ScorecardScreen extends StatelessWidget {
   }
 
   void _downloadScorecard(BuildContext context) {
-    // TODO: Implement scorecard download functionality
-    // This would typically involve generating a PDF or image and saving to device
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Download feature coming soon!'),
-        backgroundColor: AppTheme.primaryBlue,
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+    () async {
+      final match = context.read<MatchProvider>().currentMatch;
+      if (match == null) return;
+
+      final pdf = pw.Document();
+
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (pw.Context context) {
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text('Pickleball Match Scorecard', style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold, font: pw.Font.helvetica())),
+                pw.SizedBox(height: 12),
+                pw.Text('Date: ' + (match.endTime?.toLocal().toString().split(' ')[0] ?? ''), style: pw.TextStyle(fontSize: 12, font: pw.Font.helvetica())),
+                pw.SizedBox(height: 8),
+                pw.Text('Team A: ' + match.teamADisplayName, style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica())),
+                pw.Text('Team B: ' + match.teamBDisplayName, style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica())),
+                pw.SizedBox(height: 8),
+                pw.Text('Final Score: ${match.teamAScore} - ${match.teamBScore}', style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica())),
+                pw.SizedBox(height: 16),
+                pw.Text('Rally Breakdown', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold, font: pw.Font.helvetica())),
+                pw.SizedBox(height: 8),
+                pw.Table.fromTextArray(
+                  headers: ['Rally', 'Team A', 'Team B', 'Server'],
+                  data: [
+                    for (int i = 0; i < match.scoreHistory.length; i++)
+                      [
+                        (i + 1).toString(),
+                        match.scoreHistory[i].teamAScore.toString(),
+                        match.scoreHistory[i].teamBScore.toString(),
+                        match.scoreHistory[i].servingTeam == ServingTeam.teamA ? 'A' : 'B',
+                      ]
+                  ],
+                  cellStyle: pw.TextStyle(font: pw.Font.helvetica(), fontSize: 10),
+                  headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: pw.Font.helvetica(), fontSize: 11),
+                  cellAlignment: pw.Alignment.center,
+                  headerDecoration: pw.BoxDecoration(color: PdfColors.grey300),
+                  border: pw.TableBorder.all(color: PdfColors.grey600, width: 0.5),
+                ),
+              ],
+            );
+          },
         ),
-      ),
-    );
+      );
+
+      final bytes = await pdf.save();
+      await Printing.sharePdf(bytes: bytes, filename: 'pickleball_scorecard.pdf');
+    }();
   }
 }
