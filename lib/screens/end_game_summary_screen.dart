@@ -1800,6 +1800,18 @@ class ScorecardScreen extends StatelessWidget {
             return pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
+                // Date at top right
+                pw.Row(
+                  children: [
+                    pw.Spacer(),
+                    pw.Text(
+                      'Date: ' + (match.endTime?.toLocal().toString().split(' ')[0] ?? ''),
+                      style: pw.TextStyle(fontSize: 12, font: pw.Font.helvetica()),
+                    ),
+                  ],
+                ),
+                pw.SizedBox(height: 8),
+                // Centered heading
                 pw.Center(
                   child: pw.Text(
                     'Pickleball Match Scorecard',
@@ -1807,8 +1819,6 @@ class ScorecardScreen extends StatelessWidget {
                   ),
                 ),
                 pw.SizedBox(height: 12),
-                pw.Text('Date: ' + (match.endTime?.toLocal().toString().split(' ')[0] ?? ''), style: pw.TextStyle(fontSize: 12, font: pw.Font.helvetica())),
-                pw.SizedBox(height: 8),
                 pw.Text('Team A: ' + match.teamADisplayName, style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica())),
                 pw.Text('Team B: ' + match.teamBDisplayName, style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica())),
                 pw.SizedBox(height: 8),
