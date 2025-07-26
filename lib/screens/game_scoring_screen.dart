@@ -169,12 +169,12 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                   vertical: MediaQuery.of(context).size.height * 0.018,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
+                  color: AppTheme.buttonViolet.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.blue.shade200, width: 1.3),
+                  border: Border.all(color: AppTheme.buttonViolet.withOpacity(0.45), width: 1.3),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.blue.withOpacity(0.09),
+                      color: AppTheme.buttonViolet.withOpacity(0.13),
                       blurRadius: 7,
                       offset: Offset(0, 1),
                     ),
@@ -187,7 +187,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                     style: AppTheme.titleStyle.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: MediaQuery.of(context).size.width * 0.037,
-                      color: Colors.blue.shade700,
+                      color: AppTheme.buttonViolet,
                       letterSpacing: 1.08,
                     ),
                   ),
