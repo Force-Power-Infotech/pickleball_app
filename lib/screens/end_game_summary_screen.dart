@@ -1812,7 +1812,7 @@ class ScorecardScreen extends StatelessWidget {
                 pw.Text('Rally Breakdown', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold, font: pw.Font.helvetica())),
                 pw.SizedBox(height: 8),
                 pw.Table.fromTextArray(
-                  headers: ['Rally', 'Team A', 'Team B', 'Server'],
+                  headers: ['Rally', 'Team A', 'Team B', 'Server', 'Winner'],
                   data: [
                     for (int i = 0; i < match.scoreHistory.length; i++)
                       [
@@ -1820,6 +1820,7 @@ class ScorecardScreen extends StatelessWidget {
                         match.scoreHistory[i].teamAScore.toString(),
                         match.scoreHistory[i].teamBScore.toString(),
                         match.scoreHistory[i].servingTeam == ServingTeam.teamA ? 'A' : 'B',
+                        match.scoreHistory[i].winningTeam == ServingTeam.teamA ? 'A' : 'B',
                       ]
                   ],
                   cellStyle: pw.TextStyle(font: pw.Font.helvetica(), fontSize: 10),
