@@ -1855,8 +1855,13 @@ class ScorecardScreen extends StatelessWidget {
         ),
       );
 
-      final bytes = await pdf.save();
-      await Printing.sharePdf(bytes: bytes, filename: 'pickleball_scorecard.pdf');
+  final bytes = await pdf.save();
+  // Sanitize team names for filename (remove spaces and special characters)
+  String sanitize(String name) => name.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+  final teamA = sanitize(match.teamADisplayName);
+  final teamB = sanitize(match.teamBDisplayName);
+  final filename = 'scorecard_${teamA}_vs_${teamB}.pdf';
+  await Printing.sharePdf(bytes: bytes, filename: filename);
     }();
   }
 }
