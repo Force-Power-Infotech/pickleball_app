@@ -208,12 +208,19 @@ class _GameScoringScreenState extends State<GameScoringScreen>
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          Text(
-            'LIVE MATCH',
-            style: AppTheme.titleStyle.copyWith(
-              fontSize: screenWidth * 0.052, // Slightly smaller, responsive
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _BlinkingRedDot(size: screenWidth * 0.032, margin: EdgeInsets.only(right: screenWidth * 0.032)),
+              Text(
+                'LIVE MATCH',
+                style: AppTheme.titleStyle.copyWith(
+                  fontSize: screenWidth * 0.052, // Slightly smaller, responsive
+                ),
+              ),
+            ],
           ),
+
           const SizedBox(height: 8),
           // Show duce status or target score
           if (match.isDuce)
@@ -570,6 +577,59 @@ class _GameScoringScreenState extends State<GameScoringScreen>
     return SlideTransition(
       position: _slideAnimation,
       child: ScoreSummaryPanel(match: match),
+    );
+  }
+}
+
+// Blinking red dot widget
+class _BlinkingRedDot extends StatefulWidget {
+  final double size;
+  final EdgeInsets margin;
+  const _BlinkingRedDot({required this.size, required this.margin});
+
+  @override
+  State<_BlinkingRedDot> createState() => _BlinkingRedDotState();
+}
+
+class _BlinkingRedDotState extends State<_BlinkingRedDot> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _opacityAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    )..repeat(reverse: true);
+    _opacityAnim = Tween<double>(begin: 1.0, end: 0.2).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _opacityAnim,
+      builder: (context, child) => Opacity(
+        opacity: _opacityAnim.value,
+        child: Container(
+          width: widget.size,
+          height: widget.size,
+          margin: widget.margin,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.red,
+          ),
+        ),
+      ),
     );
   }
 }
