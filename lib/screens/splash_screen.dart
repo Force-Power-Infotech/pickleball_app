@@ -204,7 +204,7 @@ class _SplashScreenState extends State<SplashScreen>
                 fontSize: 38,
                 shadows: [
                   Shadow(
-                    color: AppTheme.primaryEmerald.withOpacity(0.5),
+                    color: AppTheme.buttonViolet.withOpacity(0.5),
                     blurRadius: 15,
                   ),
                 ],
@@ -245,7 +245,7 @@ class _SplashScreenState extends State<SplashScreen>
       child: CircularProgressIndicator(
         strokeWidth: 3,
         valueColor: AlwaysStoppedAnimation<Color>(
-          AppTheme.primaryEmerald.withOpacity(0.8),
+          AppTheme.buttonViolet.withOpacity(0.8),
         ),
       ),
     )
@@ -264,7 +264,7 @@ class ParticlesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppTheme.primaryEmerald.withOpacity(0.1)
+  ..color = AppTheme.buttonViolet.withOpacity(0.1)
       ..style = PaintingStyle.fill;
 
     // Draw animated particles
