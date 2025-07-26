@@ -248,7 +248,7 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
             child: const Icon(
               Icons.emoji_events,
               size: 48,
-              color: AppTheme.darkBackground,
+              color: AppTheme.textPrimary,
             ),
           ),
           
@@ -329,6 +329,7 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
         decoration: BoxDecoration(
           gradient: AppTheme.cardGradient,
           borderRadius: AppTheme.cardRadius,
+          boxShadow: AppTheme.metallicShadow,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -445,11 +446,12 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppTheme.surfaceColor.withOpacity(0.5),
+        color: AppTheme.surfaceColor.withOpacity(0.8),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: (color ?? AppTheme.textSecondary).withOpacity(0.3),
         ),
+        boxShadow: AppTheme.metallicShadow,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -860,7 +862,7 @@ class PointAnalysisScreen extends StatelessWidget {
           style: AppTheme.titleStyle.copyWith(
             fontSize: 12,
             fontWeight: FontWeight.w900,
-            color: AppTheme.darkBackground,
+            color: AppTheme.textPrimary,
             letterSpacing: 1.0,
           ),
           textAlign: TextAlign.center,
@@ -893,7 +895,7 @@ class PointAnalysisScreen extends StatelessWidget {
                       style: AppTheme.captionStyle.copyWith(
                         fontSize: 9,
                         fontWeight: FontWeight.w900,
-                        color: AppTheme.darkBackground,
+                        color: AppTheme.textPrimary,
                         letterSpacing: 0.5,
                       ),
                     ),

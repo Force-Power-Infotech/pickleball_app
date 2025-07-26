@@ -172,7 +172,7 @@ class _SplashScreenState extends State<SplashScreen>
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: AppTheme.primaryGradient,
-              boxShadow: AppTheme.neonShadow,
+              boxShadow: AppTheme.metallicShadow,
             ),
             child: const Icon(
               Icons.sports_tennis,

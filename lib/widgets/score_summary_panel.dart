@@ -131,7 +131,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                   style: AppTheme.titleStyle.copyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.w900,
-                    color: AppTheme.darkBackground,
+                    color: AppTheme.textPrimary,
                     letterSpacing: 1.0,
                   ),
                   textAlign: TextAlign.center,
@@ -298,7 +298,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                     style: AppTheme.captionStyle.copyWith(
                       fontSize: 10,
                       fontWeight: FontWeight.w900,
-                      color: (isMatchPoint || isDuce) ? AppTheme.darkBackground : AppTheme.textPrimary,
+                      color: (isMatchPoint || isDuce) ? AppTheme.textPrimary : AppTheme.textPrimary,
                     ),
                   ),
                 ),
@@ -430,7 +430,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                               style: AppTheme.captionStyle.copyWith(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w900,
-                                color: AppTheme.darkBackground,
+                                color: AppTheme.textPrimary,
                               ),
                             ),
                           ),
@@ -452,7 +452,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                               style: AppTheme.captionStyle.copyWith(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w900,
-                                color: AppTheme.darkBackground,
+                                color: AppTheme.textPrimary,
                               ),
                             ),
                           ),

@@ -310,30 +310,16 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
         duration: AppTheme.fastAnimation,
         curve: AppTheme.defaultCurve,
         padding: EdgeInsets.all(screenWidth * 0.04),
-        decoration: BoxDecoration(
-          gradient: isSelected 
-              ? AppTheme.primaryGradient 
-              : LinearGradient(
-                  colors: [
-                    AppTheme.surfaceColor,
-                    AppTheme.surfaceColor.withOpacity(0.8),
-                  ],
-                ),
-          borderRadius: AppTheme.buttonRadius,
-          border: Border.all(
-            color: isSelected 
-                ? AppTheme.textPrimary 
-                : AppTheme.textSecondary.withOpacity(0.3),
-            width: 2,
-          ),
-        ),
+        decoration: isSelected 
+            ? AppTheme.selectedButtonDecoration 
+            : AppTheme.inactiveButtonDecoration,
         child: Column(
           children: [
             Icon(
               matchType == MatchType.singles ? Icons.person : Icons.groups,
               size: screenWidth * 0.08,
               color: isSelected 
-                  ? AppTheme.textPrimary 
+                  ? Colors.white 
                   : AppTheme.textSecondary,
             ),
             SizedBox(height: screenWidth * 0.02),
@@ -343,7 +329,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                 fontWeight: FontWeight.w600,
                 fontSize: screenWidth * 0.035,
                 color: isSelected 
-                    ? AppTheme.textPrimary 
+                    ? Colors.white 
                     : AppTheme.textSecondary,
               ),
             ),
@@ -353,7 +339,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
               style: AppTheme.captionStyle.copyWith(
                 fontSize: screenWidth * 0.025,
                 color: isSelected 
-                    ? AppTheme.textPrimary.withOpacity(0.8)
+                    ? Colors.white.withOpacity(0.9)
                     : AppTheme.textSecondary,
               ),
               textAlign: TextAlign.center,
@@ -725,24 +711,13 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                         maxWidth: 70,
                         maxHeight: 70,
                       ),
-                      decoration: BoxDecoration(
-                        gradient: isSelected 
-                            ? AppTheme.primaryGradient 
-                            : LinearGradient(
-                                colors: [
-                                  AppTheme.surfaceColor,
-                                  AppTheme.surfaceColor.withOpacity(0.8),
-                                ],
-                              ),
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                          color: isSelected 
-                              ? AppTheme.textPrimary 
-                              : AppTheme.textSecondary.withOpacity(0.3),
-                          width: 2,
-                        ),
-                        
-                      ),
+                      decoration: isSelected 
+                          ? AppTheme.selectedButtonDecoration.copyWith(
+                              borderRadius: BorderRadius.circular(30),
+                            )
+                          : AppTheme.inactiveButtonDecoration.copyWith(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                       child: Center(
                         child: FittedBox(
                           child: Text(
@@ -750,8 +725,9 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                             style: AppTheme.titleStyle.copyWith(
                               fontSize: 20,
                               color: isSelected 
-                                  ? AppTheme.textPrimary 
+                                  ? Colors.white 
                                   : AppTheme.textSecondary,
+                              fontWeight: FontWeight.w900,
                             ),
                           ),
                         ),
@@ -826,23 +802,9 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
         duration: AppTheme.fastAnimation,
         curve: AppTheme.defaultCurve,
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-        decoration: BoxDecoration(
-          gradient: isSelected 
-              ? AppTheme.primaryGradient 
-              : LinearGradient(
-                  colors: [
-                    AppTheme.surfaceColor,
-                    AppTheme.surfaceColor.withOpacity(0.8),
-                  ],
-                ),
-          borderRadius: AppTheme.buttonRadius,
-          border: Border.all(
-            color: isSelected 
-                ? AppTheme.textPrimary 
-                : AppTheme.textSecondary.withOpacity(0.3),
-            width: 2,
-          ),
-        ),
+        decoration: isSelected 
+            ? AppTheme.selectedButtonDecoration 
+            : AppTheme.inactiveButtonDecoration,
         child: Center(
           child: _buildTeamContent(team, isSelected),
         ),
@@ -881,7 +843,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
           fontWeight: FontWeight.bold,
           fontSize: 16,
           color: isSelected 
-              ? AppTheme.textPrimary 
+              ? Colors.white 
               : AppTheme.textSecondary,
         ),
         textAlign: TextAlign.center,

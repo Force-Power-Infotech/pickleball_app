@@ -545,7 +545,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                       style: AppTheme.captionStyle.copyWith(
                         fontWeight: FontWeight.w600,
                         color: provider.showScoreSummary 
-                            ? AppTheme.darkBackground 
+                            ? AppTheme.textPrimary 
                             : AppTheme.textPrimary,
                       ),
                     ),
