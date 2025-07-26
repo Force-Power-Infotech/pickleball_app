@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 
 /// Custom text field with modern styling and animations
 class CustomTextField extends StatefulWidget {
+  final Color? accentColor;
   final TextEditingController controller;
   final String label;
   final IconData? prefixIcon;
@@ -28,6 +29,7 @@ class CustomTextField extends StatefulWidget {
     this.maxLines = 1,
     this.hintText,
     this.enabled = true,
+  this.accentColor,
   });
 
   @override
@@ -38,6 +40,7 @@ class _CustomTextFieldState extends State<CustomTextField>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Color?> _borderColorAnimation;
+  Color get _accentColor => widget.accentColor ?? AppTheme.primaryEmerald;
   
   bool _isFocused = false;
 
@@ -51,7 +54,7 @@ class _CustomTextFieldState extends State<CustomTextField>
 
     _borderColorAnimation = ColorTween(
       begin: AppTheme.textSecondary.withOpacity(0.3),
-      end: AppTheme.primaryEmerald,
+      end: _accentColor,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: AppTheme.defaultCurve,
@@ -102,9 +105,9 @@ class _CustomTextFieldState extends State<CustomTextField>
                 prefixIcon: widget.prefixIcon != null
                     ? Icon(
                         widget.prefixIcon,
-                        color: _isFocused
-                            ? AppTheme.primaryEmerald
-                            : AppTheme.textSecondary,
+            color: _isFocused
+              ? _accentColor
+              : AppTheme.textSecondary,
                       )
                     : null,
                 suffixIcon: widget.suffixIcon != null
@@ -112,9 +115,9 @@ class _CustomTextFieldState extends State<CustomTextField>
                         onPressed: widget.onSuffixPressed,
                         icon: Icon(
                           widget.suffixIcon,
-                          color: _isFocused
-                              ? AppTheme.primaryEmerald
-                              : AppTheme.textSecondary,
+              color: _isFocused
+                ? _accentColor
+                : AppTheme.textSecondary,
                         ),
                       )
                     : null,
@@ -134,7 +137,7 @@ class _CustomTextFieldState extends State<CustomTextField>
                 focusedBorder: OutlineInputBorder(
                   borderRadius: AppTheme.buttonRadius,
                   borderSide: BorderSide(
-                    color: _borderColorAnimation.value ?? AppTheme.primaryEmerald,
+                    color: _borderColorAnimation.value ?? _accentColor,
                     width: 2,
                   ),
                 ),
@@ -153,9 +156,9 @@ class _CustomTextFieldState extends State<CustomTextField>
                   ),
                 ),
                 labelStyle: AppTheme.bodyStyle.copyWith(
-                  color: _isFocused
-                      ? AppTheme.primaryEmerald
-                      : AppTheme.textSecondary,
+          color: _isFocused
+            ? _accentColor
+            : AppTheme.textSecondary,
                 ),
                 hintStyle: AppTheme.captionStyle,
                 errorStyle: AppTheme.captionStyle.copyWith(

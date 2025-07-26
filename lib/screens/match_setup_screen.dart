@@ -456,6 +456,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                           controller: _teamBController,
                           label: 'Player Name',
                           prefixIcon: Icons.person,
+                          accentColor: AppTheme.primaryBlue,
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
                               return 'Please enter player name';
@@ -588,6 +589,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                           controller: _teamBNameController,
                           label: 'Team B Name',
                           prefixIcon: Icons.sports_tennis,
+                          accentColor: AppTheme.primaryBlue,
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
                               return 'Team name required';
@@ -604,6 +606,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                               controller: _teamBPlayer1Controller,
                               label: 'Player 1',
                               prefixIcon: Icons.person,
+                              accentColor: AppTheme.primaryBlue,
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {
                                   return 'Required';
@@ -616,6 +619,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                               controller: _teamBPlayer2Controller,
                               label: 'Player 2',
                               prefixIcon: Icons.person,
+                              accentColor: AppTheme.primaryBlue,
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {
                                   return 'Required';
