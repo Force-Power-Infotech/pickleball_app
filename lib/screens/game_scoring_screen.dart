@@ -230,7 +230,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                 child: Text(
                   match.duceMessage ?? 'Match Duce',
                   style: AppTheme.titleStyle.copyWith(
-                    fontSize: screenWidth * 0.052,
+                    fontSize: screenWidth * 0.045,
                     fontWeight: FontWeight.w900,
                     color: AppTheme.textPrimary,
                     letterSpacing: 1.2,
