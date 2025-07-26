@@ -1403,7 +1403,7 @@ class ScorecardScreen extends StatelessWidget {
                                       child: Text(
                                         '${point.teamAScore}',
                                         style: const TextStyle(
-                                          fontSize: 9,
+                                          fontSize: 13,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         ),
@@ -1502,7 +1502,7 @@ class ScorecardScreen extends StatelessWidget {
                                       child: Text(
                                         '${point.teamBScore}',
                                         style: const TextStyle(
-                                          fontSize: 9,
+                                          fontSize: 13,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         ),
@@ -1678,7 +1678,7 @@ class ScorecardScreen extends StatelessWidget {
                         child: Text(
                           '1',
                           style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 13,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
