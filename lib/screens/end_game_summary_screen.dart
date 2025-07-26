@@ -224,7 +224,7 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
     final winnerName = _getWinnerDisplayName(match, winner);
     
     final winnerColor = winner == ServingTeam.teamA 
-        ? AppTheme.primaryRed 
+        ? AppTheme.primaryEmerald 
         : AppTheme.primaryBlue;
 
     return Container(
@@ -391,7 +391,7 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
                       _truncateName(match.teamAName),
                       '${stats['teamAWins']} points (${stats['teamAWinPercentage']}%)',
                       Icons.trending_up,
-                      color: AppTheme.primaryRed,
+                      color: AppTheme.primaryEmerald,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -564,7 +564,7 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
           width: double.infinity,
           child: AnimatedButton(
             onPressed: _startNewMatch,
-            backgroundColor: AppTheme.primaryRed,
+            backgroundColor: AppTheme.buttonViolet,
             height: 56,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -660,7 +660,7 @@ class PointAnalysisScreen extends StatelessWidget {
                       child: _buildTeamSummary(
                         match.teamAName,
                         match.teamAScore,
-                        AppTheme.primaryRed,
+                        AppTheme.primaryEmerald,
                         match.winner == ServingTeam.teamA,
                       ),
                     ),
@@ -955,7 +955,7 @@ class PointAnalysisScreen extends StatelessWidget {
         ? match.teamAName 
         : match.teamBName;
     final winningTeamColor = point.winningTeam == ServingTeam.teamA 
-        ? AppTheme.primaryRed 
+        ? AppTheme.primaryEmerald 
         : AppTheme.primaryBlue;
 
     return Container(
@@ -1109,7 +1109,7 @@ class ScorecardScreen extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(
                       Icons.arrow_back,
-                      color: AppTheme.primaryRed,
+                      color: AppTheme.primaryEmerald,
                       size: 28,
                     ),
                   ),
@@ -1138,7 +1138,7 @@ class ScorecardScreen extends StatelessWidget {
                     onPressed: () => _downloadScorecard(context),
                     icon: const Icon(
                       Icons.download,
-                      color: AppTheme.primaryRed,
+                      color: AppTheme.primaryEmerald,
                       size: 28,
                     ),
                   ),
@@ -1280,7 +1280,7 @@ class ScorecardScreen extends StatelessWidget {
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
-                              color: AppTheme.primaryRed,
+                              color: AppTheme.primaryEmerald,
                             ),
                             overflow: TextOverflow.visible,
                             softWrap: true,

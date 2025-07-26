@@ -147,7 +147,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                 child: _buildTeamScore(
                   widget.match.teamAName,
                   widget.match.teamAScore,
-                  AppTheme.primaryRed,
+                  AppTheme.primaryEmerald,
                 ),
               ),
               Container(
@@ -267,11 +267,11 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                          (point.teamBScore >= widget.match.targetScore && point.teamBScore > point.teamAScore));
     
     final servingTeamColor = point.servingTeam == ServingTeam.teamA 
-        ? AppTheme.primaryRed 
+        ? AppTheme.primaryEmerald 
         : AppTheme.primaryBlue;
     
     final winningTeamColor = point.winningTeam == ServingTeam.teamA 
-        ? AppTheme.primaryRed 
+        ? AppTheme.primaryEmerald 
         : AppTheme.primaryBlue;
 
     return Container(

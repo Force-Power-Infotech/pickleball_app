@@ -385,7 +385,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                           children: [
                             Icon(
                               Icons.person,
-                              color: AppTheme.primaryRed,
+                              color: AppTheme.primaryEmerald,
                               size: screenWidth * 0.05,
                             ),
                             SizedBox(width: screenWidth * 0.02),
@@ -393,7 +393,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                               'Team A',
                               style: AppTheme.bodyStyle.copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: AppTheme.primaryRed,
+                                color: AppTheme.primaryEmerald,
                                 fontSize: screenWidth * 0.04,
                               ),
                             ),
@@ -485,7 +485,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                           children: [
                             Icon(
                               Icons.group,
-                              color: AppTheme.primaryRed,
+                              color: AppTheme.primaryEmerald,
                               size: screenWidth * 0.05,
                             ),
                             SizedBox(width: screenWidth * 0.02),
@@ -493,7 +493,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
                               'Team A',
                               style: AppTheme.bodyStyle.copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: AppTheme.primaryRed,
+                                color: AppTheme.primaryEmerald,
                                 fontSize: screenWidth * 0.045,
                               ),
                             ),
@@ -856,6 +856,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen>
   Widget _buildStartButton() {
     return AnimatedButton(
       onPressed: _startMatch,
+      backgroundColor: AppTheme.buttonViolet,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,

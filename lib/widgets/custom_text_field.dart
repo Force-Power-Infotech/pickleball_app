@@ -51,7 +51,7 @@ class _CustomTextFieldState extends State<CustomTextField>
 
     _borderColorAnimation = ColorTween(
       begin: AppTheme.textSecondary.withOpacity(0.3),
-      end: AppTheme.primaryRed,
+      end: AppTheme.primaryEmerald,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: AppTheme.defaultCurve,
@@ -103,7 +103,7 @@ class _CustomTextFieldState extends State<CustomTextField>
                     ? Icon(
                         widget.prefixIcon,
                         color: _isFocused
-                            ? AppTheme.primaryRed
+                            ? AppTheme.primaryEmerald
                             : AppTheme.textSecondary,
                       )
                     : null,
@@ -113,7 +113,7 @@ class _CustomTextFieldState extends State<CustomTextField>
                         icon: Icon(
                           widget.suffixIcon,
                           color: _isFocused
-                              ? AppTheme.primaryRed
+                              ? AppTheme.primaryEmerald
                               : AppTheme.textSecondary,
                         ),
                       )
@@ -134,7 +134,7 @@ class _CustomTextFieldState extends State<CustomTextField>
                 focusedBorder: OutlineInputBorder(
                   borderRadius: AppTheme.buttonRadius,
                   borderSide: BorderSide(
-                    color: _borderColorAnimation.value ?? AppTheme.primaryRed,
+                    color: _borderColorAnimation.value ?? AppTheme.primaryEmerald,
                     width: 2,
                   ),
                 ),
@@ -154,7 +154,7 @@ class _CustomTextFieldState extends State<CustomTextField>
                 ),
                 labelStyle: AppTheme.bodyStyle.copyWith(
                   color: _isFocused
-                      ? AppTheme.primaryRed
+                      ? AppTheme.primaryEmerald
                       : AppTheme.textSecondary,
                 ),
                 hintStyle: AppTheme.captionStyle,

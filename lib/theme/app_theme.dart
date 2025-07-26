@@ -3,9 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 
 /// App theme configuration with modern sports-inspired dark theme
 class AppTheme {
+  static const Color buttonViolet = Color(0xFF6C63FF); // Modern blue-violet for premium buttons
   // Colors - Premium 3D Metallic Theme
-  static const Color primaryRed = Color(0xFFE74C3C);
+  static const Color primaryEmerald = Color(0xFF00E676); // Sporty light green (replaces deep teal)
   static const Color primaryBlue = Color(0xFF3498DB);
+  static const Color neonBlue = Color(0xFF007AFF); // Neon blue for buttons
+  static const Color neonRed = Color(0xFFFF3B30); // Neon red for buttons
   static const Color neonGreen = Color(0xFF27AE60);
   static const Color lightBackground = Color(0xFFE8EAED); // Premium metallic base
   static const Color cardBackground = Color(0xFFF1F3F6); // Lighter metallic silver
@@ -16,7 +19,7 @@ class AppTheme {
 
   // Gradients - Premium 3D Metallic
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primaryRed, primaryBlue],
+    colors: [primaryEmerald, primaryBlue],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -238,7 +241,7 @@ class AppTheme {
     letterSpacing: 2.0,
     shadows: [
       Shadow(
-        color: primaryRed.withOpacity(0.5),
+        color: primaryEmerald.withOpacity(0.5),
         blurRadius: 10,
       ),
     ],
@@ -280,7 +283,7 @@ class AppTheme {
       ),
       colorScheme: const ColorScheme.light(
         primary: primaryBlue,
-        secondary: primaryRed,
+        secondary: primaryEmerald,
         surface: cardBackground,
         background: lightBackground,
         onPrimary: Colors.white,
@@ -326,7 +329,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: buttonRadius,
-          borderSide: const BorderSide(color: primaryRed, width: 2),
+          borderSide: const BorderSide(color: primaryEmerald, width: 2),
         ),
         labelStyle: bodyStyle,
         hintStyle: captionStyle,

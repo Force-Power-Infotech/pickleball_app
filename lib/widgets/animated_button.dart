@@ -115,7 +115,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = widget.backgroundColor ?? AppTheme.primaryRed;
+    final backgroundColor = widget.backgroundColor ?? AppTheme.primaryEmerald;
     final foregroundColor = widget.foregroundColor ?? AppTheme.textPrimary;
     final borderRadius = widget.borderRadius ?? AppTheme.buttonRadius;
     final padding = widget.padding ?? const EdgeInsets.symmetric(

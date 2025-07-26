@@ -269,7 +269,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
               match.teamAName, // Use team name instead of display name
               match.teamAScore,
               match.currentServingTeam == ServingTeam.teamA,
-              AppTheme.primaryRed,
+              AppTheme.primaryEmerald,
               ServingTeam.teamA,
             ),
           ),
@@ -463,7 +463,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                 child: ScoreButton(
                   onPressed: () => _awardPoint(ServingTeam.teamA),
                   teamName: match.teamAName, // Use team name instead of display name
-                  color: AppTheme.primaryRed,
+                  color: AppTheme.primaryEmerald,
                   isEnabled: !match.isMatchComplete,
                 ),
               ),
