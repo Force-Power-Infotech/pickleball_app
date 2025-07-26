@@ -1814,7 +1814,12 @@ class ScorecardScreen extends StatelessWidget {
                 pw.SizedBox(height: 8),
                 pw.Text('Final Score: ${match.teamAScore} - ${match.teamBScore}', style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica())),
                 pw.SizedBox(height: 16),
-                pw.Text('Rally Breakdown', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold, font: pw.Font.helvetica())),
+                pw.Center(
+                  child: pw.Text(
+                    'Rally Breakdown',
+                    style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold, font: pw.Font.helvetica()),
+                  ),
+                ),
                 pw.SizedBox(height: 8),
                 pw.Table.fromTextArray(
                   headers: ['Rally', 'Team A', 'Team B', 'Server', 'Winner'],
