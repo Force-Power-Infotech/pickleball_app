@@ -169,9 +169,18 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                   vertical: MediaQuery.of(context).size.height * 0.014,
                 ),
                 decoration: BoxDecoration(
-                  gradient: AppTheme.roseAccentGradient,
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFB39DDB), // Light violet
+                      AppTheme.buttonViolet, // Main violet
+                      Color(0xFF4527A0), // Deep violet
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    stops: [0.0, 0.5, 1.0],
+                  ),
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: Color(0xFFE91E63), width: 2.2),
+                  border: Border.all(color: AppTheme.buttonViolet, width: 2.2),
                   boxShadow: AppTheme.metallicShadow,
                 ),
                 child: Row(
