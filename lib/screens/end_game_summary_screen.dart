@@ -1860,23 +1860,65 @@ class ScorecardScreen extends StatelessWidget {
                   ),
                 ),
                 pw.SizedBox(height: 8),
-                pw.Table.fromTextArray(
-                  headers: ['Rally', 'Team A', 'Team B', 'Server', 'Winner'],
-                  data: [
-                    for (int i = 0; i < match.scoreHistory.length; i++)
-                      [
-                        (i + 1).toString(),
-                        match.scoreHistory[i].teamAScore.toString(),
-                        match.scoreHistory[i].teamBScore.toString(),
-                        match.scoreHistory[i].servingTeam == ServingTeam.teamA ? 'A' : 'B',
-                        match.scoreHistory[i].winningTeam == ServingTeam.teamA ? 'A' : 'B',
-                      ]
-                  ],
-                  cellStyle: pw.TextStyle(font: pw.Font.helvetica(), fontSize: 10),
-                  headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, font: pw.Font.helvetica(), fontSize: 11),
-                  cellAlignment: pw.Alignment.center,
-                  headerDecoration: pw.BoxDecoration(color: PdfColors.grey300),
+                pw.Table(
                   border: pw.TableBorder.all(color: PdfColors.grey600, width: 0.5),
+                  defaultVerticalAlignment: pw.TableCellVerticalAlignment.middle,
+                  children: [
+                    // Header row
+                    pw.TableRow(
+                      decoration: pw.BoxDecoration(color: PdfColors.grey300),
+                      children: [
+                        for (final h in ['Rally', match.teamADisplayName, match.teamBDisplayName, 'Server'])
+                          pw.Padding(
+                            padding: const pw.EdgeInsets.symmetric(vertical: 6),
+                            child: pw.Text(h, style: pw.TextStyle(font: pw.Font.helvetica(), fontWeight: pw.FontWeight.bold, fontSize: 11), textAlign: pw.TextAlign.center),
+                          ),
+                      ],
+                    ),
+                    // Data rows
+                    ...List.generate(match.scoreHistory.length, (i) {
+                      final point = match.scoreHistory[i];
+                      // Determine badge color and text for each cell
+                      pw.Widget teamACell, teamBCell;
+                      if (point.winningTeam == ServingTeam.teamA) {
+                        teamACell = pw.Container(
+                          alignment: pw.Alignment.center,
+                          color: PdfColors.lightGreen300,
+                          child: pw.Text('W', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                        );
+                        teamBCell = pw.Container(
+                          alignment: pw.Alignment.center,
+                          color: PdfColors.red200,
+                          child: pw.Text('L', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                        );
+                      } else {
+                        teamACell = pw.Container(
+                          alignment: pw.Alignment.center,
+                          color: PdfColors.red200,
+                          child: pw.Text('L', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                        );
+                        teamBCell = pw.Container(
+                          alignment: pw.Alignment.center,
+                          color: PdfColors.lightGreen300,
+                          child: pw.Text('W', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                        );
+                      }
+                      // Server badge
+                      final serverCell = pw.Container(
+                        alignment: pw.Alignment.center,
+                        color: point.servingTeam == ServingTeam.teamA ? PdfColors.cyan300 : PdfColors.blue300,
+                        child: pw.Text(point.servingTeam == ServingTeam.teamA ? 'A' : 'B', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                      );
+                      return pw.TableRow(
+                        children: [
+                          pw.Text((i + 1).toString(), style: pw.TextStyle(font: pw.Font.helvetica(), fontSize: 10), textAlign: pw.TextAlign.center),
+                          teamACell,
+                          teamBCell,
+                          serverCell,
+                        ],
+                      );
+                    }),
+                  ],
                 ),
               ],
             );
