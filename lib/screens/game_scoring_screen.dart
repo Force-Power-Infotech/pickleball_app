@@ -169,16 +169,16 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                   vertical: MediaQuery.of(context).size.height * 0.014,
                 ),
                 decoration: BoxDecoration(
-                  gradient: AppTheme.buttonGradient,
+                  gradient: AppTheme.roseAccentGradient,
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: AppTheme.buttonViolet, width: 2.2),
+                  border: Border.all(color: Color(0xFFE91E63), width: 2.2),
                   boxShadow: AppTheme.metallicShadow,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.sports_tennis, color: AppTheme.buttonViolet, size: 18),
+                    Icon(Icons.sports_tennis, color: Colors.white, size: 18),
                     const SizedBox(width: 7),
                     FittedBox(
                       fit: BoxFit.scaleDown,
@@ -187,7 +187,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                         style: AppTheme.titleStyle.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: MediaQuery.of(context).size.width * 0.036,
-                          color: AppTheme.buttonViolet,
+                          color: Colors.white,
                           letterSpacing: 1.08,
                         ),
                       ),
