@@ -161,36 +161,38 @@ class _GameScoringScreenState extends State<GameScoringScreen>
               alignment: Alignment.center,
               child: Container(
                 constraints: BoxConstraints(
-                  minWidth: 90,
-                  maxWidth: MediaQuery.of(context).size.width * 0.5,
+                  minWidth: 70,
+                  maxWidth: MediaQuery.of(context).size.width * 0.45,
                 ),
                 padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.052,
-                  vertical: MediaQuery.of(context).size.height * 0.018,
+                  horizontal: MediaQuery.of(context).size.width * 0.038,
+                  vertical: MediaQuery.of(context).size.height * 0.014,
                 ),
                 decoration: BoxDecoration(
-                  color: AppTheme.buttonViolet.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: AppTheme.buttonViolet.withOpacity(0.45), width: 1.3),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.buttonViolet.withOpacity(0.13),
-                      blurRadius: 7,
-                      offset: Offset(0, 1),
+                  gradient: AppTheme.buttonGradient,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: AppTheme.buttonViolet, width: 2.2),
+                  boxShadow: AppTheme.metallicShadow,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.sports_tennis, color: AppTheme.buttonViolet, size: 18),
+                    const SizedBox(width: 7),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        'Rallies: ${match.scoreHistory.length}',
+                        style: AppTheme.titleStyle.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: MediaQuery.of(context).size.width * 0.036,
+                          color: AppTheme.buttonViolet,
+                          letterSpacing: 1.08,
+                        ),
+                      ),
                     ),
                   ],
-                ),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    'Rallies: ${match.scoreHistory.length}',
-                    style: AppTheme.titleStyle.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: MediaQuery.of(context).size.width * 0.037,
-                      color: AppTheme.buttonViolet,
-                      letterSpacing: 1.08,
-                    ),
-                  ),
                 ),
               ),
             ),
