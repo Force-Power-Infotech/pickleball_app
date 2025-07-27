@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   static const Color buttonViolet = Color(0xFF6C63FF); // Modern blue-violet for premium buttons
   // Colors - Premium 3D Metallic Theme
-  static const Color primaryEmerald = Color(0xFF00E676); // Sporty light green (replaces deep teal)
+  static const Color primaryEmerald = Color(0xFF20948B); // Updated green (custom)
   static const Color primaryBlue = Color(0xFF3498DB);
   static const Color neonBlue = Color(0xFF007AFF); // Neon blue for buttons
   static const Color neonRed = Color(0xFFFF3B30); // Neon red for buttons
@@ -19,7 +19,7 @@ class AppTheme {
 
   // Gradients - Premium 3D Metallic
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primaryEmerald, primaryBlue],
+  colors: [primaryEmerald, primaryBlue],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -241,7 +241,7 @@ class AppTheme {
     letterSpacing: 2.0,
     shadows: [
       Shadow(
-        color: primaryEmerald.withOpacity(0.5),
+  color: primaryEmerald.withOpacity(0.5),
         blurRadius: 10,
       ),
     ],
@@ -283,7 +283,7 @@ class AppTheme {
       ),
       colorScheme: const ColorScheme.light(
         primary: primaryBlue,
-        secondary: primaryEmerald,
+  secondary: primaryEmerald,
         surface: cardBackground,
         background: lightBackground,
         onPrimary: Colors.white,
