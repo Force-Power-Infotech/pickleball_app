@@ -292,7 +292,6 @@ class _GameScoringScreenState extends State<GameScoringScreen>
             ),
           ),
           
-          // (VS divider removed)
           
           // Team B side
           Expanded(
