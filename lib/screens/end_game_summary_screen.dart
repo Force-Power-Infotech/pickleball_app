@@ -62,8 +62,14 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
     _startAnimations();
     _confettiController = ConfettiController(duration: const Duration(seconds: 5));
     _confettiController.play();
+    // Wait for confetti to finish, then wait 1s more before hiding widget for smooth fade-out
     Future.delayed(const Duration(seconds: 5), () {
-      if (mounted) setState(() => _showFireworks = false);
+      if (mounted) {
+        _confettiController.stop();
+        Future.delayed(const Duration(seconds: 1), () {
+          if (mounted) setState(() => _showFireworks = false);
+        });
+      }
     });
   }
 
