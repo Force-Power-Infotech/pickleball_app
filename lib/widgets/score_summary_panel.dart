@@ -186,7 +186,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
         FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            teamName.toUpperCase(),
+            teamName,
             textAlign: TextAlign.center,
             style: AppTheme.captionStyle.copyWith(
               fontSize: 12,
