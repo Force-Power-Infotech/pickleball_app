@@ -292,18 +292,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
             ),
           ),
           
-          // VS divider
-          Container(
-            width: 2,
-            height: 200,
-            decoration: BoxDecoration(
-              gradient: AppTheme.primaryGradient,
-              borderRadius: BorderRadius.circular(1),
-            ),
-          )
-              .animate()
-              .fadeIn(delay: 300.ms, duration: 500.ms)
-              .scale(begin: const Offset(1, 0), duration: 800.ms),
+          // (VS divider removed)
           
           // Team B side
           Expanded(
