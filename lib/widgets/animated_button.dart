@@ -235,7 +235,16 @@ class ScoreButton extends StatelessWidget {
     return AnimatedButton(
       onPressed: isEnabled ? onPressed : null,
       enabled: isEnabled,
-      backgroundColor: color,
+      // Use a metallic gradient with a semi-transparent overlay of the team color
+      gradient: LinearGradient(
+        colors: [
+          color.withOpacity(0.85),
+          color.withOpacity(0.7),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      boxShadow: AppTheme.metallicShadow,
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
