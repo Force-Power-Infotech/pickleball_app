@@ -235,40 +235,41 @@ class ScoreButton extends StatelessWidget {
     return AnimatedButton(
       onPressed: isEnabled ? onPressed : null,
       enabled: isEnabled,
-      // Use a metallic gradient with a semi-transparent overlay of the team color
-      gradient: LinearGradient(
-        colors: [
-          color.withOpacity(0.85),
-          color.withOpacity(0.7),
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
+      gradient: AppTheme.buttonGradient,
       boxShadow: AppTheme.metallicShadow,
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(height: 8),
-          Text(
-            'W',
-            style: AppTheme.buttonStyle.copyWith(
-              fontSize: 32,
-              fontWeight: FontWeight.w900,
+      // Add a colored border for team distinction
+      child: Container(
+        decoration: BoxDecoration(
+          color: color,
+          border: Border.all(color: color, width: 3),
+          borderRadius: AppTheme.buttonRadius,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 8),
+            Text(
+              'W',
+              style: AppTheme.buttonStyle.copyWith(
+                fontSize: 32,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '+1',
-            style: AppTheme.captionStyle.copyWith(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppTheme.textPrimary.withOpacity(0.8),
+            const SizedBox(height: 4),
+            Text(
+              '+1',
+              style: AppTheme.captionStyle.copyWith(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Colors.white.withOpacity(0.9),
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
