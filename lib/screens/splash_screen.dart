@@ -198,16 +198,27 @@ class _SplashScreenState extends State<SplashScreen>
           opacity: _textController.value,
           child: Transform.translate(
             offset: Offset(0, 20 * (1 - _textController.value)),
-            child: Text(
-              'PICKLEBALL',
-              style: AppTheme.headlineStyle.copyWith(
-                fontSize: 38,
-                shadows: [
-                  Shadow(
-                    color: AppTheme.buttonViolet.withOpacity(0.5),
-                    blurRadius: 15,
-                  ),
-                ],
+            child: ShaderMask(
+              shaderCallback: (Rect bounds) {
+                return LinearGradient(
+                  colors: [
+                    Color(0xFFFFF9C4), // Light gold
+                    AppTheme.accentGold,
+                    Color(0xFFF57F17), // Deep amber
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ).createShader(bounds);
+              },
+              child: Text(
+                'PICKLEBALL',
+                style: AppTheme.headlineStyle.copyWith(
+                  fontSize: 38,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2.5,
+                  color: Colors.white,
+                  // No shadow or glow
+                ),
               ),
             ),
           ),
@@ -227,9 +238,10 @@ class _SplashScreenState extends State<SplashScreen>
             child: Text(
               'PROFESSIONAL SCORER',
               style: AppTheme.captionStyle.copyWith(
-                fontSize: 16,
-                letterSpacing: 2.0,
-                color: AppTheme.accentGold,
+                fontSize: 17,
+                letterSpacing: 2.2,
+                color: AppTheme.primaryBlue,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
@@ -263,16 +275,20 @@ class ParticlesPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-  ..color = AppTheme.buttonViolet.withOpacity(0.1)
-      ..style = PaintingStyle.fill;
+    final List<Color> particleColors = [
+      AppTheme.accentGold.withOpacity(0.45),
+      Colors.white.withOpacity(0.38),
+      AppTheme.buttonViolet.withOpacity(0.32),
+      AppTheme.primaryBlue.withOpacity(0.28),
+    ];
+    final paint = Paint()..style = PaintingStyle.fill;
 
-    // Draw animated particles
-    for (int i = 0; i < 15; i++) {
-      final x = (size.width / 15) * i + (animationValue * 50);
-      final y = (size.height / 8) * (i % 8) + (animationValue * 30);
-      final radius = 2 + (animationValue * 3);
-      
+    // Draw animated particles (brighter, more visible)
+    for (int i = 0; i < 18; i++) {
+      final x = (size.width / 18) * i + (animationValue * 60 * (i % 2 == 0 ? 1 : -1));
+      final y = (size.height / 10) * (i % 10) + (animationValue * 40 * (i % 3 == 0 ? 1 : -1));
+      final radius = 3.5 + (animationValue * (i % 2 == 0 ? 4 : 2));
+      paint.color = particleColors[i % particleColors.length];
       canvas.drawCircle(
         Offset(x % size.width, y % size.height),
         radius,
@@ -280,13 +296,12 @@ class ParticlesPainter extends CustomPainter {
       );
     }
 
-    // Draw gradient orbs
-    paint.color = AppTheme.primaryBlue.withOpacity(0.05);
-    for (int i = 0; i < 8; i++) {
-      final x = (size.width / 8) * i + (animationValue * -30);
-      final y = (size.height / 6) * (i % 6) + (animationValue * 40);
-      final radius = 8 + (animationValue * 5);
-      
+    // Draw larger, soft orbs for depth
+    for (int i = 0; i < 6; i++) {
+      final x = (size.width / 6) * i + (animationValue * -40 * (i % 2 == 0 ? 1 : -1));
+      final y = (size.height / 5) * (i % 5) + (animationValue * 30 * (i % 2 == 0 ? 1 : -1));
+      final radius = 16 + (animationValue * 8);
+      paint.color = particleColors[(i + 1) % particleColors.length].withOpacity(0.18);
       canvas.drawCircle(
         Offset(x % size.width, y % size.height),
         radius,
