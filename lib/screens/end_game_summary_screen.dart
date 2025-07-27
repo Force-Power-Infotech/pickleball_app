@@ -293,7 +293,7 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                    winnerName.toUpperCase(),
+                    winnerName,
                     style: AppTheme.titleStyle.copyWith(
                       fontSize: fontSize,
                       color: winnerColor,
