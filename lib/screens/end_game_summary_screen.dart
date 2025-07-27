@@ -1820,6 +1820,7 @@ class ScorecardScreen extends StatelessWidget {
       final match = context.read<MatchProvider>().currentMatch;
       if (match == null) return;
 
+
       final pdf = pw.Document();
 
       pdf.addPage(
@@ -1869,8 +1870,10 @@ class ScorecardScreen extends StatelessWidget {
                       decoration: pw.BoxDecoration(color: PdfColors.grey300),
                       children: [
                         for (final h in ['Rally', match.teamADisplayName, match.teamBDisplayName, 'Server'])
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.symmetric(vertical: 6),
+                          pw.Container(
+                            alignment: pw.Alignment.center,
+                            padding: const pw.EdgeInsets.symmetric(vertical: 8), // Slightly reduced vertical padding
+                            constraints: const pw.BoxConstraints(minHeight: 20), // Minimum height for header
                             child: pw.Text(h, style: pw.TextStyle(font: pw.Font.helvetica(), fontWeight: pw.FontWeight.bold, fontSize: 11), textAlign: pw.TextAlign.center),
                           ),
                       ],
@@ -1884,22 +1887,30 @@ class ScorecardScreen extends StatelessWidget {
                         teamACell = pw.Container(
                           alignment: pw.Alignment.center,
                           color: PdfColors.lightGreen300,
+                          padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                          constraints: const pw.BoxConstraints(minHeight: 20),
                           child: pw.Text('W', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
                         );
                         teamBCell = pw.Container(
                           alignment: pw.Alignment.center,
                           color: PdfColors.red200,
+                          padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                          constraints: const pw.BoxConstraints(minHeight: 20),
                           child: pw.Text('L', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
                         );
                       } else {
                         teamACell = pw.Container(
                           alignment: pw.Alignment.center,
                           color: PdfColors.red200,
+                          padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                          constraints: const pw.BoxConstraints(minHeight: 20),
                           child: pw.Text('L', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
                         );
                         teamBCell = pw.Container(
                           alignment: pw.Alignment.center,
                           color: PdfColors.lightGreen300,
+                          padding: const pw.EdgeInsets.symmetric(vertical: 14),
+                          constraints: const pw.BoxConstraints(minHeight: 32),
                           child: pw.Text('W', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
                         );
                       }
@@ -1907,11 +1918,18 @@ class ScorecardScreen extends StatelessWidget {
                       final serverCell = pw.Container(
                         alignment: pw.Alignment.center,
                         color: point.servingTeam == ServingTeam.teamA ? PdfColors.cyan300 : PdfColors.blue300,
+                        padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                        constraints: const pw.BoxConstraints(minHeight: 20),
                         child: pw.Text(point.servingTeam == ServingTeam.teamA ? 'A' : 'B', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
                       );
                       return pw.TableRow(
                         children: [
-                          pw.Text((i + 1).toString(), style: pw.TextStyle(font: pw.Font.helvetica(), fontSize: 10), textAlign: pw.TextAlign.center),
+                          pw.Container(
+                            alignment: pw.Alignment.center,
+                            padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                            constraints: const pw.BoxConstraints(minHeight: 20),
+                            child: pw.Text((i + 1).toString(), style: pw.TextStyle(font: pw.Font.helvetica(), fontSize: 10), textAlign: pw.TextAlign.center),
+                          ),
                           teamACell,
                           teamBCell,
                           serverCell,
