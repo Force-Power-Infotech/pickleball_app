@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
+import 'package:confetti/confetti.dart';
 
 import '../theme/app_theme.dart';
 import '../models/match.dart';
@@ -51,12 +52,19 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
   
   late Animation<Offset> _slideAnimation;
   late Animation<double> _statsAnimation;
+  bool _showFireworks = true;
+  late ConfettiController _confettiController;
 
   @override
   void initState() {
     super.initState();
     _initializeAnimations();
     _startAnimations();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 5));
+    _confettiController.play();
+    Future.delayed(const Duration(seconds: 5), () {
+      if (mounted) setState(() => _showFireworks = false);
+    });
   }
 
   void _initializeAnimations() {
@@ -100,6 +108,7 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
   void dispose() {
     _slideController.dispose();
     _statsController.dispose();
+    _confettiController.dispose();
     super.dispose();
   }
 
@@ -176,35 +185,49 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
         }
 
         return Scaffold(
-          body: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
-              gradient: AppTheme.backgroundGradient,
-            ),
-            child: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    // Winner celebration - always fits
-                    _buildWinnerCelebration(match),
-                    
-                    const SizedBox(height: 20),
-                    
-                    // Match summary - responsive
-                    _buildMatchSummary(match),
-                    
-                    const SizedBox(height: 60),
-                    
-                    // Action buttons - responsive
-                    _buildActionButtons(),
-                    
-                    const SizedBox(height: 40),
-                  ],
+          body: Stack(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(
+                  gradient: AppTheme.backgroundGradient,
+                ),
+                child: SafeArea(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        // Winner celebration - always fits
+                        _buildWinnerCelebration(match),
+                        const SizedBox(height: 20),
+                        // Match summary - responsive
+                        _buildMatchSummary(match),
+                        const SizedBox(height: 60),
+                        // Action buttons - responsive
+                        _buildActionButtons(),
+                        const SizedBox(height: 40),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+              if (_showFireworks)
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: ConfettiWidget(
+                      confettiController: _confettiController,
+                      blastDirectionality: BlastDirectionality.explosive,
+                      shouldLoop: false,
+                      emissionFrequency: 0.12,
+                      numberOfParticles: 30,
+                      maxBlastForce: 30,
+                      minBlastForce: 10,
+                      gravity: 0.2,
+                    ),
+                  ),
+                ),
+            ],
           ),
         );
       },
