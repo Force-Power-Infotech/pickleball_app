@@ -370,7 +370,8 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                         child: Text(
                           DateFormat('HH:mm:ss').format(point.timestamp),
                           style: AppTheme.captionStyle.copyWith(
-                            fontSize: 11,
+                            fontSize: 12,
+                            color: Colors.black,
                           ),
                         ),
                       ),
