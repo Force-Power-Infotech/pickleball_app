@@ -232,44 +232,47 @@ class ScoreButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Use a custom gradient based on the team color for distinction
+    final Gradient buttonGradient = LinearGradient(
+      colors: [
+        color.withOpacity(0.98),
+        color.withOpacity(0.82),
+      ],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      stops: const [0.0, 1.0],
+    );
     return AnimatedButton(
       onPressed: isEnabled ? onPressed : null,
       enabled: isEnabled,
-      gradient: AppTheme.buttonGradient,
+      gradient: buttonGradient,
       boxShadow: AppTheme.metallicShadow,
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-      // Add a colored border for team distinction
-      child: Container(
-        decoration: BoxDecoration(
-          color: color,
-          border: Border.all(color: color, width: 3),
-          borderRadius: AppTheme.buttonRadius,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 8),
-            Text(
-              'W',
-              style: AppTheme.buttonStyle.copyWith(
-                fontSize: 32,
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.center,
+      borderRadius: AppTheme.buttonRadius,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 8),
+          Text(
+            'W',
+            style: AppTheme.buttonStyle.copyWith(
+              fontSize: 32,
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
             ),
-            const SizedBox(height: 4),
-            Text(
-              '+1',
-              style: AppTheme.captionStyle.copyWith(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: Colors.white.withOpacity(0.9),
-              ),
-              textAlign: TextAlign.center,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '+1',
+            style: AppTheme.captionStyle.copyWith(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: Colors.white.withOpacity(0.9),
             ),
-          ],
-        ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
