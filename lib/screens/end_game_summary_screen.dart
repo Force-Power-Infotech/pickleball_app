@@ -1167,7 +1167,7 @@ class ScorecardScreen extends StatelessWidget {
                   IconButton(
                     onPressed: () => _downloadScorecard(context),
                     icon: const Icon(
-                      Icons.download,
+                      Icons.share,
                       color: AppTheme.primaryEmerald,
                       size: 28,
                     ),
@@ -1440,8 +1440,8 @@ class ScorecardScreen extends StatelessWidget {
                                 if (point.servingTeam == ServingTeam.teamA && point.winningTeam == ServingTeam.teamA) ...[
                                   const SizedBox(width: 6),
                                   Container(
-                                    width: 18,
-                                    height: 18,
+                                    width: 20,
+                                    height: 20,
                                     decoration: const BoxDecoration(
                                       color: Colors.orange,
                                       shape: BoxShape.circle,
@@ -1539,8 +1539,8 @@ class ScorecardScreen extends StatelessWidget {
                                 if (point.servingTeam == ServingTeam.teamB && point.winningTeam == ServingTeam.teamB) ...[
                                   const SizedBox(width: 6),
                                   Container(
-                                    width: 18,
-                                    height: 18,
+                                    width: 20,
+                                    height: 20,
                                     decoration: const BoxDecoration(
                                       color: Colors.orange,
                                       shape: BoxShape.circle,
