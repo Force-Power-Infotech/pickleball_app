@@ -1820,14 +1820,13 @@ class ScorecardScreen extends StatelessWidget {
       final match = context.read<MatchProvider>().currentMatch;
       if (match == null) return;
 
-
       final pdf = pw.Document();
 
       pdf.addPage(
-        pw.Page(
+        pw.MultiPage(
           pageFormat: PdfPageFormat.a4,
-          build: (pw.Context context) {
-            return pw.Column(
+          build: (pw.Context context) => [
+            pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
                 // Date at top right
@@ -1861,96 +1860,146 @@ class ScorecardScreen extends StatelessWidget {
                   ),
                 ),
                 pw.SizedBox(height: 8),
-                pw.Table(
-                  border: pw.TableBorder.all(color: PdfColors.grey600, width: 0.5),
-                  defaultVerticalAlignment: pw.TableCellVerticalAlignment.middle,
+              ],
+            ),
+            pw.Table(
+              border: pw.TableBorder.all(color: PdfColors.grey600, width: 0.5),
+              defaultVerticalAlignment: pw.TableCellVerticalAlignment.middle,
+              children: [
+                // Header row (add current score columns)
+                pw.TableRow(
+                  decoration: pw.BoxDecoration(color: PdfColors.grey300),
                   children: [
-                    // Header row
-                    pw.TableRow(
-                      decoration: pw.BoxDecoration(color: PdfColors.grey300),
-                      children: [
-                        for (final h in ['Rally', match.teamADisplayName, match.teamBDisplayName, 'Server'])
-                          pw.Container(
-                            alignment: pw.Alignment.center,
-                            padding: const pw.EdgeInsets.symmetric(vertical: 8), // Slightly reduced vertical padding
-                            constraints: const pw.BoxConstraints(minHeight: 20), // Minimum height for header
-                            child: pw.Text(h, style: pw.TextStyle(font: pw.Font.helvetica(), fontWeight: pw.FontWeight.bold, fontSize: 11), textAlign: pw.TextAlign.center),
-                          ),
-                      ],
+                    pw.Container(
+                      alignment: pw.Alignment.center,
+                      padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                      constraints: const pw.BoxConstraints(minHeight: 20),
+                      child: pw.Text('Rally', style: pw.TextStyle(font: pw.Font.helvetica(), fontWeight: pw.FontWeight.bold, fontSize: 11), textAlign: pw.TextAlign.center),
                     ),
-                    // Data rows
-                    ...List.generate(match.scoreHistory.length, (i) {
-                      final point = match.scoreHistory[i];
-                      // Determine badge color and text for each cell
-                      pw.Widget teamACell, teamBCell;
-                      if (point.winningTeam == ServingTeam.teamA) {
-                        teamACell = pw.Container(
-                          alignment: pw.Alignment.center,
-                          color: PdfColors.lightGreen300,
-                          padding: const pw.EdgeInsets.symmetric(vertical: 8),
-                          constraints: const pw.BoxConstraints(minHeight: 20),
-                          child: pw.Text('W', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
-                        );
-                        teamBCell = pw.Container(
-                          alignment: pw.Alignment.center,
-                          color: PdfColors.red200,
-                          padding: const pw.EdgeInsets.symmetric(vertical: 8),
-                          constraints: const pw.BoxConstraints(minHeight: 20),
-                          child: pw.Text('L', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
-                        );
-                      } else {
-                        teamACell = pw.Container(
-                          alignment: pw.Alignment.center,
-                          color: PdfColors.red200,
-                          padding: const pw.EdgeInsets.symmetric(vertical: 8),
-                          constraints: const pw.BoxConstraints(minHeight: 20),
-                          child: pw.Text('L', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
-                        );
-                        teamBCell = pw.Container(
-                          alignment: pw.Alignment.center,
-                          color: PdfColors.lightGreen300,
-                          padding: const pw.EdgeInsets.symmetric(vertical: 14),
-                          constraints: const pw.BoxConstraints(minHeight: 32),
-                          child: pw.Text('W', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
-                        );
-                      }
-                      // Server badge
-                      final serverCell = pw.Container(
-                        alignment: pw.Alignment.center,
-                        color: point.servingTeam == ServingTeam.teamA ? PdfColors.cyan300 : PdfColors.blue300,
-                        padding: const pw.EdgeInsets.symmetric(vertical: 8),
-                        constraints: const pw.BoxConstraints(minHeight: 20),
-                        child: pw.Text(point.servingTeam == ServingTeam.teamA ? 'A' : 'B', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
-                      );
-                      return pw.TableRow(
-                        children: [
-                          pw.Container(
-                            alignment: pw.Alignment.center,
-                            padding: const pw.EdgeInsets.symmetric(vertical: 8),
-                            constraints: const pw.BoxConstraints(minHeight: 20),
-                            child: pw.Text((i + 1).toString(), style: pw.TextStyle(font: pw.Font.helvetica(), fontSize: 10), textAlign: pw.TextAlign.center),
-                          ),
-                          teamACell,
-                          teamBCell,
-                          serverCell,
-                        ],
-                      );
-                    }),
+                    pw.Container(
+                      alignment: pw.Alignment.center,
+                      padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                      constraints: const pw.BoxConstraints(minHeight: 20),
+                      child: pw.Text(match.teamADisplayName, style: pw.TextStyle(font: pw.Font.helvetica(), fontWeight: pw.FontWeight.bold, fontSize: 11), textAlign: pw.TextAlign.center),
+                    ),
+                    pw.Container(
+                      alignment: pw.Alignment.center,
+                      padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                      constraints: const pw.BoxConstraints(minHeight: 20),
+                      child: pw.Text(match.teamBDisplayName, style: pw.TextStyle(font: pw.Font.helvetica(), fontWeight: pw.FontWeight.bold, fontSize: 11), textAlign: pw.TextAlign.center),
+                    ),
+                    pw.Container(
+                      alignment: pw.Alignment.center,
+                      padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                      constraints: const pw.BoxConstraints(minHeight: 20),
+                      child: pw.Text('Server', style: pw.TextStyle(font: pw.Font.helvetica(), fontWeight: pw.FontWeight.bold, fontSize: 11), textAlign: pw.TextAlign.center),
+                    ),
+                    pw.Container(
+                      alignment: pw.Alignment.center,
+                      padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                      constraints: const pw.BoxConstraints(minHeight: 20),
+                      child: pw.Text('Current Score', style: pw.TextStyle(font: pw.Font.helvetica(), fontWeight: pw.FontWeight.bold, fontSize: 11), textAlign: pw.TextAlign.center),
+                    ),
                   ],
                 ),
+                // Data rows
+                ...List.generate(match.scoreHistory.length, (i) {
+                  final point = match.scoreHistory[i];
+                  // Determine badge color and text for each cell
+                  pw.Widget teamACell, teamBCell;
+                  const cellPadding = pw.EdgeInsets.symmetric(vertical: 10);
+                  const cellMinHeight = pw.BoxConstraints(minHeight: 28);
+                  if (point.winningTeam == ServingTeam.teamA) {
+                    teamACell = pw.Container(
+                      alignment: pw.Alignment.center,
+                      color: PdfColors.lightGreen300,
+                      padding: cellPadding,
+                      constraints: cellMinHeight,
+                      child: pw.Text('W', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                    );
+                    teamBCell = pw.Container(
+                      alignment: pw.Alignment.center,
+                      color: PdfColors.red200,
+                      padding: cellPadding,
+                      constraints: cellMinHeight,
+                      child: pw.Text('L', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                    );
+                  } else {
+                    teamACell = pw.Container(
+                      alignment: pw.Alignment.center,
+                      color: PdfColors.red200,
+                      padding: cellPadding,
+                      constraints: cellMinHeight,
+                      child: pw.Text('L', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                    );
+                    teamBCell = pw.Container(
+                      alignment: pw.Alignment.center,
+                      color: PdfColors.lightGreen300,
+                      padding: cellPadding,
+                      constraints: cellMinHeight,
+                      child: pw.Text('W', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                    );
+                  }
+                  // Server badge - use full cell color and match app theme
+                  const serverCellPadding = pw.EdgeInsets.symmetric(vertical: 10);
+                  const serverCellMinHeight = pw.BoxConstraints(minHeight: 28);
+                  final serverCellColor = point.servingTeam == ServingTeam.teamA
+                      ? PdfColor.fromInt(0xFF00C853) // AppTheme.primaryEmerald
+                      : PdfColor.fromInt(0xFF007AFF); // AppTheme.primaryBlue
+                  final serverCell = pw.Container(
+                    alignment: pw.Alignment.center,
+                    color: serverCellColor,
+                    padding: serverCellPadding,
+                    constraints: serverCellMinHeight,
+                    child: pw.Text(
+                      point.servingTeam == ServingTeam.teamA ? 'A' : 'B',
+                      style: pw.TextStyle(
+                        font: pw.Font.helvetica(),
+                        color: PdfColors.white,
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: 10,
+                      ),
+                    ),
+                  );
+                  // Current score cell
+                  final currentScoreCell = pw.Container(
+                    alignment: pw.Alignment.center,
+                    padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                    constraints: const pw.BoxConstraints(minHeight: 20),
+                    child: pw.Text(
+                      '${point.teamAScore} - ${point.teamBScore}',
+                      style: pw.TextStyle(font: pw.Font.helvetica(), fontWeight: pw.FontWeight.bold, fontSize: 10),
+                      textAlign: pw.TextAlign.center,
+                    ),
+                  );
+                  return pw.TableRow(
+                    children: [
+                      pw.Container(
+                        alignment: pw.Alignment.center,
+                        padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                        constraints: const pw.BoxConstraints(minHeight: 20),
+                        child: pw.Text((i + 1).toString(), style: pw.TextStyle(font: pw.Font.helvetica(), fontSize: 10), textAlign: pw.TextAlign.center),
+                      ),
+                      teamACell,
+                      teamBCell,
+                      serverCell,
+                      currentScoreCell,
+                    ],
+                  );
+                }),
               ],
-            );
-          },
+            ),
+          ],
         ),
       );
 
-  final bytes = await pdf.save();
-  // Sanitize team names for filename (remove spaces and special characters)
-  String sanitize(String name) => name.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
-  final teamA = sanitize(match.teamADisplayName);
-  final teamB = sanitize(match.teamBDisplayName);
-  final filename = 'scorecard_${teamA}_vs_${teamB}.pdf';
-  await Printing.sharePdf(bytes: bytes, filename: filename);
+      final bytes = await pdf.save();
+      // Sanitize team names for filename (remove spaces and special characters)
+      String sanitize(String name) => name.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+      final teamA = sanitize(match.teamADisplayName);
+      final teamB = sanitize(match.teamBDisplayName);
+      final filename = 'scorecard_${teamA}_vs_${teamB}.pdf';
+      await Printing.sharePdf(bytes: bytes, filename: filename);
     }();
   }
 }
