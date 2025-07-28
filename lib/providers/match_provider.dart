@@ -233,7 +233,7 @@ class MatchProvider extends ChangeNotifier {
     if (_currentMatch == null || _currentMatch!.scoreHistory.isEmpty) return;
 
     final lastPoint = _currentMatch!.scoreHistory.removeLast();
-    
+
     // Restore previous score
     if (lastPoint.pointAwarded) {
       if (lastPoint.winningTeam == ServingTeam.teamA) {
@@ -252,6 +252,36 @@ class MatchProvider extends ChangeNotifier {
     } else {
       // If this was the first point, restore initial serving team
       _currentMatch!.currentServingTeam = _currentMatch!.firstServingTeam;
+    }
+
+    // Restore doubles serve state by replaying history
+    if (_currentMatch!.matchType == MatchType.doubles) {
+      _currentMatch!.doublesServeState = DoublesServeState();
+      final state = _currentMatch!.doublesServeState!;
+      state.isFirstServe = true;
+      for (final point in _currentMatch!.scoreHistory) {
+        // At the start of the game, only server 2 serves
+        if (state.isFirstServe) {
+          state.isFirstServe = false;
+          state.serverNumber = 2;
+          state.serverPlayerIndex = 1;
+        }
+        if (point.servingTeam == point.winningTeam) {
+          // Switch sides for both players
+          state.switchSides(point.servingTeam);
+          // Same server continues
+        } else {
+          // If first server, go to second server
+          if (state.serverNumber == 1) {
+            state.serverNumber = 2;
+            state.serverPlayerIndex = 1;
+          } else {
+            // Side-out: switch to other team, server 1
+            state.serverNumber = 1;
+            state.serverPlayerIndex = 0;
+          }
+        }
+      }
     }
 
     // Reset match completion status if necessary
