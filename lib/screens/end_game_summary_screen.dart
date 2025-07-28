@@ -1206,6 +1206,41 @@ class ScorecardScreen extends StatelessWidget {
     );
   }
 
+  // Helper for scorecard cell content (doubles: W•/W••/L•/L••, singles: W/L/W•/L•)
+  String _getScorecardCellContent(ScorePoint point, bool isTeamA, Match match) {
+    if (match.matchType == MatchType.doubles) {
+      bool isTeamAServing = point.servingTeam == ServingTeam.teamA;
+      bool isTeamBServing = point.servingTeam == ServingTeam.teamB;
+      bool isTeamAWon = point.winningTeam == ServingTeam.teamA;
+      bool isTeamBWon = point.winningTeam == ServingTeam.teamB;
+      int? serverNumber;
+      if (isTeamAServing && point.serverPlayerIndex != null && isTeamA) {
+        serverNumber = point.serverPlayerIndex! + 1;
+      } else if (isTeamBServing && point.serverPlayerIndex != null && !isTeamA) {
+        serverNumber = point.serverPlayerIndex! + 1;
+      }
+      if ((isTeamA && isTeamAServing) || (!isTeamA && isTeamBServing)) {
+        String prefix = (isTeamA && isTeamAWon) || (!isTeamA && isTeamBWon) ? 'W' : 'L';
+        if (serverNumber == 1) {
+          return '$prefix•';
+        } else if (serverNumber == 2) {
+          return '$prefix••';
+        }
+      }
+      return (isTeamA ? (isTeamAWon ? 'W' : 'L') : (isTeamBWon ? 'W' : 'L'));
+    } else {
+      String winLoss = isTeamA
+          ? (point.winningTeam == ServingTeam.teamA ? 'W' : 'L')
+          : (point.winningTeam == ServingTeam.teamB ? 'W' : 'L');
+      bool isServing = (isTeamA && point.servingTeam == ServingTeam.teamA) ||
+          (!isTeamA && point.servingTeam == ServingTeam.teamB);
+      if (isServing) {
+        return winLoss + '•';
+      }
+      return winLoss;
+    }
+  }
+
   Widget _buildScorecardTable(BuildContext context) {
     final scoreHistory = match.scoreHistory;
     List<String> playerNamesA = [];
@@ -1411,48 +1446,49 @@ class ScorecardScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ],
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: _getScorecardCellContent(point, true).startsWith('W') 
-                                        ? Colors.green.shade100 
-                                        : Colors.red.shade100,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: _getScorecardCellContent(point, true).startsWith('W') 
-                                          ? Colors.green.shade300 
-                                          : Colors.red.shade300,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        _getScorecardCellContent(point, true).startsWith('W') ? 'W' : 'L',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                          color: _getScorecardCellContent(point, true).startsWith('W') 
-                                              ? Colors.green.shade800 
-                                              : Colors.red.shade800,
+                                Builder(
+                                  builder: (context) {
+                                    final cellContent = _getScorecardCellContent(point, true, match);
+                                    final isWin = cellContent.startsWith('W');
+                                    // Render W•/W••/L•/L•• with larger dot(s)
+                                    String mainChar = cellContent.replaceAll('•', '');
+                                    int dotCount = cellContent.split('•').length - 1;
+                                    return Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: isWin ? Colors.green.shade100 : Colors.red.shade100,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: isWin ? Colors.green.shade300 : Colors.red.shade300,
+                                          width: 1,
                                         ),
                                       ),
-                                      if (point.servingTeam == ServingTeam.teamA) ...[
-                                        const SizedBox(width: 2),
-                                        Container(
-                                          width: 8,
-                                          height: 8,
-                                          decoration: BoxDecoration(
-                                            color: (point.servingTeam == ServingTeam.teamA && point.winningTeam == ServingTeam.teamA)
-                                                ? Colors.green.shade800
-                                                : Colors.red.shade800,
-                                            shape: BoxShape.circle,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            mainChar,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                              color: isWin ? Colors.green.shade800 : Colors.red.shade800,
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ],
-                                  ),
+                                          if (dotCount > 0) ...List.generate(dotCount, (i) => Padding(
+                                            padding: const EdgeInsets.only(left: 2, right: 1),
+                                            child: Container(
+                                              width: 10, // Increased dot size
+                                              height: 10,
+                                              decoration: BoxDecoration(
+                                                color: isWin ? Colors.green.shade800 : Colors.red.shade800,
+                                                shape: BoxShape.circle,
+                                              ),
+                                            ),
+                                          )),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                 ),
                                 if (point.servingTeam == ServingTeam.teamA && point.winningTeam == ServingTeam.teamA) ...[
                                   const SizedBox(width: 6),
@@ -1510,48 +1546,48 @@ class ScorecardScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ],
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: _getScorecardCellContent(point, false).startsWith('W') 
-                                        ? Colors.green.shade100 
-                                        : Colors.red.shade100,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: _getScorecardCellContent(point, false).startsWith('W') 
-                                          ? Colors.green.shade300 
-                                          : Colors.red.shade300,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        _getScorecardCellContent(point, false).startsWith('W') ? 'W' : 'L',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                          color: _getScorecardCellContent(point, false).startsWith('W') 
-                                              ? Colors.green.shade800 
-                                              : Colors.red.shade800,
+                                Builder(
+                                  builder: (context) {
+                                    final cellContent = _getScorecardCellContent(point, false, match);
+                                    final isWin = cellContent.startsWith('W');
+                                    String mainChar = cellContent.replaceAll('•', '');
+                                    int dotCount = cellContent.split('•').length - 1;
+                                    return Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: isWin ? Colors.green.shade100 : Colors.red.shade100,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: isWin ? Colors.green.shade300 : Colors.red.shade300,
+                                          width: 1,
                                         ),
                                       ),
-                                      if (point.servingTeam == ServingTeam.teamB) ...[
-                                        const SizedBox(width: 2),
-                                        Container(
-                                          width: 8,
-                                          height: 8,
-                                          decoration: BoxDecoration(
-                                            color: (point.servingTeam == ServingTeam.teamB && point.winningTeam == ServingTeam.teamB)
-                                                ? Colors.green.shade800
-                                                : Colors.red.shade800,
-                                            shape: BoxShape.circle,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            mainChar,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                              color: isWin ? Colors.green.shade800 : Colors.red.shade800,
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ],
-                                  ),
+                                          if (dotCount > 0) ...List.generate(dotCount, (i) => Padding(
+                                            padding: const EdgeInsets.only(left: 2, right: 1),
+                                            child: Container(
+                                              width: 10, // Increased dot size
+                                              height: 10,
+                                              decoration: BoxDecoration(
+                                                color: isWin ? Colors.green.shade800 : Colors.red.shade800,
+                                                shape: BoxShape.circle,
+                                              ),
+                                            ),
+                                          )),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                 ),
                                 if (point.servingTeam == ServingTeam.teamB && point.winningTeam == ServingTeam.teamB) ...[
                                   const SizedBox(width: 6),
@@ -1796,39 +1832,6 @@ class ScorecardScreen extends StatelessWidget {
     );
   }
 
-  String _getScorecardCellContent(ScorePoint point, bool isTeamA) {
-    String winLoss;
-    if (isTeamA) {
-      winLoss = point.winningTeam == ServingTeam.teamA ? 'W' : 'L';
-    } else {
-      winLoss = point.winningTeam == ServingTeam.teamB ? 'W' : 'L';
-    }
-    
-    // Check if this team was serving
-    bool isServing = (isTeamA && point.servingTeam == ServingTeam.teamA) || 
-                     (!isTeamA && point.servingTeam == ServingTeam.teamB);
-    
-    // Check if this team scored a point (only serving team can score in pickleball)
-    bool scoredPoint = false;
-    if (isTeamA) {
-      // Team A scores only if they were serving AND won the rally
-      scoredPoint = (point.servingTeam == ServingTeam.teamA && point.winningTeam == ServingTeam.teamA);
-    } else {
-      // Team B scores only if they were serving AND won the rally
-      scoredPoint = (point.servingTeam == ServingTeam.teamB && point.winningTeam == ServingTeam.teamB);
-    }
-    
-    // Build the display string
-    String result = winLoss;
-    if (scoredPoint) {
-      result += ' ⊕'; // Circular +1 indicator
-    }
-    if (isServing) {
-      result += '●'; // Serving indicator
-    }
-    
-    return result;
-  }
 
   void _downloadScorecard(BuildContext context) {
   final match = context.read<MatchProvider>().currentMatch;
