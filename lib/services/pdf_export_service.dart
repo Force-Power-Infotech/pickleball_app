@@ -174,26 +174,49 @@ class PdfExportService {
                     ),
                   );
                 }
+                // Server cell logic: show server details for doubles, simple for singles
+                pw.Widget serverCell;
                 const serverCellPadding = pw.EdgeInsets.symmetric(vertical: 10);
                 const serverCellMinHeight = pw.BoxConstraints(minHeight: 28);
                 final serverCellColor = point.servingTeam == ServingTeam.teamA
                     ? PdfColor.fromInt(0xFF00C853)
                     : PdfColor.fromInt(0xFF007AFF);
-                final serverCell = pw.Container(
-                  alignment: pw.Alignment.center,
-                  color: serverCellColor,
-                  padding: serverCellPadding,
-                  constraints: serverCellMinHeight,
-                  child: pw.Text(
-                    point.servingTeam == ServingTeam.teamA ? 'A' : 'B',
-                    style: pw.TextStyle(
-                      font: pw.Font.helvetica(),
-                      color: PdfColors.white,
-                      fontWeight: pw.FontWeight.bold,
-                      fontSize: 10,
+                if (match.matchType == MatchType.doubles) {
+                  // Just show A S1, A S2, B S1, B S2 (no dots)
+                  String serverLabel = point.serverNumber == 2 ? 'S2' : 'S1';
+                  serverCell = pw.Container(
+                    alignment: pw.Alignment.center,
+                    color: serverCellColor,
+                    padding: serverCellPadding,
+                    constraints: serverCellMinHeight,
+                    child: pw.Text(
+                      '${point.servingTeam == ServingTeam.teamA ? 'A' : 'B'} $serverLabel',
+                      style: pw.TextStyle(
+                        font: pw.Font.helvetica(),
+                        color: PdfColors.white,
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: 10,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                } else {
+                  // Singles: just show A/B
+                  serverCell = pw.Container(
+                    alignment: pw.Alignment.center,
+                    color: serverCellColor,
+                    padding: serverCellPadding,
+                    constraints: serverCellMinHeight,
+                    child: pw.Text(
+                      point.servingTeam == ServingTeam.teamA ? 'A' : 'B',
+                      style: pw.TextStyle(
+                        font: pw.Font.helvetica(),
+                        color: PdfColors.white,
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: 10,
+                      ),
+                    ),
+                  );
+                }
                 final currentScoreCell = pw.Container(
                   alignment: pw.Alignment.center,
                   padding: const pw.EdgeInsets.symmetric(vertical: 8),
