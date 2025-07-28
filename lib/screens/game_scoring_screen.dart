@@ -463,7 +463,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                             )
                           else
                             Text(
-                              'WAITING',
+                              'Waiting',
                               style: AppTheme.captionStyle.copyWith(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
