@@ -192,7 +192,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        'Rallies: ${match.scoreHistory.length}',
+                        '${match.scoreHistory.length} Rallies',
                         style: AppTheme.titleStyle.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: MediaQuery.of(context).size.width * 0.036,
