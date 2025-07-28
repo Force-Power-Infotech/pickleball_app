@@ -1,5 +1,19 @@
+
+
+class DoublesServeState {
+  bool isFirstServe = true;
+  int serverNumber = 2; // Start with server 2
+  int serverPlayerIndex = 1;
+  // Track player positions for each team if needed
+  void switchSides(ServingTeam team) {
+    // Implement side switching logic if you track player positions
+  }
+}
+
 /// Match model representing a pickleball game
 class Match {
+  // For doubles mode: serving state tracking
+  DoublesServeState? doublesServeState;
   final String teamAName;
   final String teamBName;
   final MatchType matchType;
@@ -215,6 +229,10 @@ class ScorePoint {
   final int teamAScore;
   final int teamBScore;
   final DateTime timestamp;
+  // For doubles: 1 or 2 (null for singles)
+  final int? serverNumber;
+  // For doubles: 0 or 1 (null for singles), index of player serving
+  final int? serverPlayerIndex;
 
   ScorePoint({
     required this.turnNumber,
@@ -224,6 +242,8 @@ class ScorePoint {
     required this.teamAScore,
     required this.teamBScore,
     required this.timestamp,
+    this.serverNumber,
+    this.serverPlayerIndex,
   });
 
   /// Convert to JSON
@@ -236,6 +256,8 @@ class ScorePoint {
       'teamAScore': teamAScore,
       'teamBScore': teamBScore,
       'timestamp': timestamp.toIso8601String(),
+      'serverNumber': serverNumber,
+      'serverPlayerIndex': serverPlayerIndex,
     };
   }
 
@@ -249,6 +271,8 @@ class ScorePoint {
       teamAScore: json['teamAScore'],
       teamBScore: json['teamBScore'],
       timestamp: DateTime.parse(json['timestamp']),
+      serverNumber: json['serverNumber'],
+      serverPlayerIndex: json['serverPlayerIndex'],
     );
   }
 }

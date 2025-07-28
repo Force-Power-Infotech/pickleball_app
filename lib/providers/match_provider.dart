@@ -45,39 +45,84 @@ class MatchProvider extends ChangeNotifier {
   void awardPoint(ServingTeam winningTeam) {
     if (_currentMatch == null || _currentMatch!.isMatchComplete) return;
 
-    final servingTeam = _currentMatch!.currentServingTeam;
-    bool pointAwarded = false;
-
-    // Pickleball scoring rules:
-    // - Only the serving team can score points
-    // - If serving team wins the rally, they get a point and continue serving
-    // - If receiving team wins the rally, they get the serve but no point
-    
-    if (servingTeam == winningTeam) {
-      // Serving team wins - they get a point and continue serving
-      pointAwarded = true;
-      if (winningTeam == ServingTeam.teamA) {
-        _currentMatch!.teamAScore++;
+    if (_currentMatch!.matchType == MatchType.singles) {
+      // --- SINGLES LOGIC (unchanged) ---
+      final servingTeam = _currentMatch!.currentServingTeam;
+      bool pointAwarded = false;
+      if (servingTeam == winningTeam) {
+        pointAwarded = true;
+        if (winningTeam == ServingTeam.teamA) {
+          _currentMatch!.teamAScore++;
+        } else {
+          _currentMatch!.teamBScore++;
+        }
       } else {
-        _currentMatch!.teamBScore++;
+        _currentMatch!.currentServingTeam = winningTeam;
       }
+      final scorePoint = ScorePoint(
+        turnNumber: _currentMatch!.scoreHistory.length + 1,
+        servingTeam: servingTeam,
+        winningTeam: winningTeam,
+        pointAwarded: pointAwarded,
+        teamAScore: _currentMatch!.teamAScore,
+        teamBScore: _currentMatch!.teamBScore,
+        timestamp: DateTime.now(),
+        serverNumber: null,
+        serverPlayerIndex: null,
+      );
+      _currentMatch!.scoreHistory.add(scorePoint);
     } else {
-      // Receiving team wins - serve switches but no point awarded
-      _currentMatch!.currentServingTeam = winningTeam;
+      // --- DOUBLES LOGIC ---
+      // State for doubles serving
+  _currentMatch!.doublesServeState ??= DoublesServeState();
+  final state = _currentMatch!.doublesServeState!;
+      final servingTeam = _currentMatch!.currentServingTeam;
+      bool pointAwarded = false;
+
+      // At the start of the game, only server 2 serves
+      if (state.isFirstServe) {
+        state.isFirstServe = false;
+        state.serverNumber = 2;
+        state.serverPlayerIndex = 1;
+      }
+
+      // If serving team wins
+      if (servingTeam == winningTeam) {
+        pointAwarded = true;
+        if (winningTeam == ServingTeam.teamA) {
+          _currentMatch!.teamAScore++;
+        } else {
+          _currentMatch!.teamBScore++;
+        }
+        // Switch sides for both players
+        state.switchSides(servingTeam);
+        // Same server continues
+      } else {
+        // If first server, go to second server
+        if (state.serverNumber == 1) {
+          state.serverNumber = 2;
+          state.serverPlayerIndex = 1;
+        } else {
+          // Side-out: switch to other team, server 1
+          _currentMatch!.currentServingTeam = servingTeam.opposite;
+          state.serverNumber = 1;
+          state.serverPlayerIndex = 0;
+        }
+      }
+
+      final scorePoint = ScorePoint(
+        turnNumber: _currentMatch!.scoreHistory.length + 1,
+        servingTeam: servingTeam,
+        winningTeam: winningTeam,
+        pointAwarded: pointAwarded,
+        teamAScore: _currentMatch!.teamAScore,
+        teamBScore: _currentMatch!.teamBScore,
+        timestamp: DateTime.now(),
+        serverNumber: state.serverNumber,
+        serverPlayerIndex: state.serverPlayerIndex,
+      );
+      _currentMatch!.scoreHistory.add(scorePoint);
     }
-
-    // Add to score history
-    final scorePoint = ScorePoint(
-      turnNumber: _currentMatch!.scoreHistory.length + 1,
-      servingTeam: servingTeam,
-      winningTeam: winningTeam,
-      pointAwarded: pointAwarded,
-      teamAScore: _currentMatch!.teamAScore,
-      teamBScore: _currentMatch!.teamBScore,
-      timestamp: DateTime.now(),
-    );
-
-    _currentMatch!.scoreHistory.add(scorePoint);
 
     // Check if match is complete
     if (_currentMatch!.hasWinner) {
@@ -88,6 +133,9 @@ class MatchProvider extends ChangeNotifier {
     notifyListeners();
     _saveMatch();
   }
+
+// Helper class for doubles serve state
+
 
   /// Toggle score summary panel visibility
   void toggleScoreSummary() {

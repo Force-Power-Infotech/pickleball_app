@@ -315,12 +315,26 @@ class _GameScoringScreenState extends State<GameScoringScreen>
     Color teamColor,
     ServingTeam team,
   ) {
+    final match = context.read<MatchProvider>().currentMatch;
+    final isDoubles = match?.matchType == MatchType.doubles;
+    String? player1;
+    String? player2;
+    int? serverPlayerIndex;
+    if (isDoubles) {
+      if (team == ServingTeam.teamA) {
+        player1 = match?.teamAPlayer1;
+        player2 = match?.teamAPlayer2;
+      } else {
+        player1 = match?.teamBPlayer1;
+        player2 = match?.teamBPlayer2;
+      }
+      serverPlayerIndex = match?.doublesServeState?.serverPlayerIndex;
+    }
     return LayoutBuilder(
       builder: (context, constraints) {
-  // Responsive sizing
-  final double maxCircle = (constraints.maxHeight * 0.48).clamp(64.0, 130.0);
-  final double fontSize = (maxCircle * 0.45).clamp(24.0, 52.0);
-  final double vSpace = constraints.maxHeight < 300 ? 10 : 18;
+        final double maxCircle = (constraints.maxHeight * 0.48).clamp(64.0, 130.0);
+        final double fontSize = (maxCircle * 0.45).clamp(24.0, 52.0);
+        final double vSpace = constraints.maxHeight < 300 ? 10 : 18;
         return Container(
           padding: EdgeInsets.symmetric(
             horizontal: constraints.maxWidth < 180 ? 8 : 16,
@@ -330,7 +344,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              // Team name inside squared colored container with padding
+              // Team name or player names
               Container(
                 width: maxCircle * 1.25,
                 height: maxCircle * 0.34,
@@ -427,14 +441,35 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                             color: AppTheme.textPrimary,
                           ),
                           const SizedBox(width: 10),
-                          Text(
-                            isServing ? 'SERVING' : 'WAITING',
-                            style: AppTheme.captionStyle.copyWith(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: AppTheme.textPrimary,
+                          if (!isDoubles)
+                            Text(
+                              isServing ? 'SERVING' : 'WAITING',
+                              style: AppTheme.captionStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: AppTheme.textPrimary,
+                              ),
+                            )
+                          else if (isServing)
+                            Text(
+                              serverPlayerIndex == 0
+                                  ? (player1 ?? 'Server 1')
+                                  : (player2 ?? 'Server 2'),
+                              style: AppTheme.captionStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: AppTheme.textPrimary,
+                              ),
+                            )
+                          else
+                            Text(
+                              'WAITING',
+                              style: AppTheme.captionStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: AppTheme.textPrimary,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),

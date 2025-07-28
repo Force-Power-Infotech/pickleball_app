@@ -260,20 +260,27 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
     final isDuce = point.teamAScore >= duceThreshold && 
                    point.teamBScore >= duceThreshold && 
                    point.teamAScore == point.teamBScore;
-    
     // Match point is when one team is at target score or above AND ahead by 1+, but NOT in duce
     final isMatchPoint = !isDuce && 
                         ((point.teamAScore >= widget.match.targetScore && point.teamAScore > point.teamBScore) ||
                          (point.teamBScore >= widget.match.targetScore && point.teamBScore > point.teamAScore));
-    
     final servingTeamColor = point.servingTeam == ServingTeam.teamA 
         ? AppTheme.primaryEmerald 
         : AppTheme.primaryBlue;
-    
     final winningTeamColor = point.winningTeam == ServingTeam.teamA 
         ? AppTheme.primaryEmerald 
         : AppTheme.primaryBlue;
-
+    final isDoubles = widget.match.matchType == MatchType.doubles;
+    String? serverName;
+    if (isDoubles) {
+      if (point.servingTeam == ServingTeam.teamA) {
+        if (point.serverPlayerIndex == 0) serverName = widget.match.teamAPlayer1;
+        if (point.serverPlayerIndex == 1) serverName = widget.match.teamAPlayer2;
+      } else {
+        if (point.serverPlayerIndex == 0) serverName = widget.match.teamBPlayer1;
+        if (point.serverPlayerIndex == 1) serverName = widget.match.teamBPlayer2;
+      }
+    }
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -311,9 +318,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                 ),
             ],
           ),
-          
           const SizedBox(width: 16),
-          
           // Point details
           Expanded(
             child: Container(
@@ -350,15 +355,27 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 alignment: Alignment.centerLeft,
-                                child: Text(
-                                  '${_getTeamName(point.servingTeam)} serving',
-                                  style: AppTheme.captionStyle.copyWith(
-                                    color: servingTeamColor,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                                child: isDoubles
+                                    ? Text(
+                                        serverName != null
+                                            ? '${_getTeamName(point.servingTeam)} (${serverName}) serving'
+                                            : '${_getTeamName(point.servingTeam)} serving',
+                                        style: AppTheme.captionStyle.copyWith(
+                                          color: servingTeamColor,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    : Text(
+                                        '${_getTeamName(point.servingTeam)} serving',
+                                        style: AppTheme.captionStyle.copyWith(
+                                          color: servingTeamColor,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                               ),
                             ),
                           ],
@@ -377,9 +394,19 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                       ),
                     ],
                   ),
-                  
                   const SizedBox(height: 8),
-                  
+                  if (isDoubles && serverName != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4.0),
+                      child: Text(
+                        'Server: $serverName (Server ${point.serverNumber ?? ''})',
+                        style: AppTheme.captionStyle.copyWith(
+                          fontSize: 12,
+                          color: servingTeamColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
                   Row(
                     children: [
                       Icon(
@@ -401,9 +428,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                       ),
                     ],
                   ),
-                  
                   const SizedBox(height: 8),
-                  
                   Row(
                     children: [
                       Expanded(

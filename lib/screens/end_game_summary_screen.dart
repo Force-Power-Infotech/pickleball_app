@@ -987,7 +987,17 @@ class PointAnalysisScreen extends StatelessWidget {
     final winningTeamColor = point.winningTeam == ServingTeam.teamA 
         ? AppTheme.primaryEmerald 
         : AppTheme.primaryBlue;
-
+    final isDoubles = match.matchType == MatchType.doubles;
+    String? serverName;
+    if (isDoubles) {
+      if (point.servingTeam == ServingTeam.teamA) {
+        if (point.serverPlayerIndex == 0) serverName = match.teamAPlayer1;
+        if (point.serverPlayerIndex == 1) serverName = match.teamAPlayer2;
+      } else {
+        if (point.serverPlayerIndex == 0) serverName = match.teamBPlayer1;
+        if (point.serverPlayerIndex == 1) serverName = match.teamBPlayer2;
+      }
+    }
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1023,9 +1033,7 @@ class PointAnalysisScreen extends StatelessWidget {
               ),
             ),
           ),
-          
           const SizedBox(width: 16),
-          
           // Point details
           Expanded(
             child: Column(
@@ -1050,9 +1058,7 @@ class PointAnalysisScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                
                 const SizedBox(height: 6),
-                
                 Row(
                   children: [
                     Text(
@@ -1070,7 +1076,6 @@ class PointAnalysisScreen extends StatelessWidget {
                         color: AppTheme.textPrimary,
                       ),
                     ),
-                    
                     const SizedBox(width: 8),
                     const Icon(
                       Icons.sports_volleyball,
@@ -1082,15 +1087,27 @@ class PointAnalysisScreen extends StatelessWidget {
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Serving: ${point.servingTeam == ServingTeam.teamA ? match.teamAName : match.teamBName}',
-                          style: AppTheme.captionStyle.copyWith(
-                            fontSize: 11,
-                            color: AppTheme.textSecondary,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                        child: isDoubles
+                            ? Text(
+                                'Serving: '
+                                '${serverName ?? (point.servingTeam == ServingTeam.teamA ? match.teamAName : match.teamBName)}'
+                                ' (${point.servingTeam == ServingTeam.teamA ? match.teamAName : match.teamBName})',
+                                style: AppTheme.captionStyle.copyWith(
+                                  fontSize: 11,
+                                  color: AppTheme.textSecondary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            : Text(
+                                'Serving: ${point.servingTeam == ServingTeam.teamA ? match.teamAName : match.teamBName}',
+                                style: AppTheme.captionStyle.copyWith(
+                                  fontSize: 11,
+                                  color: AppTheme.textSecondary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                       ),
                     ),
                   ],
