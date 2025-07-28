@@ -243,6 +243,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
       );
     }
 
+    // Use the actual scoreHistory for timeline (doubles logic is already correct)
     return ListView.builder(
       controller: _scrollController,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

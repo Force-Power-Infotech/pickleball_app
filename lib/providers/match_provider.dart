@@ -86,6 +86,11 @@ class MatchProvider extends ChangeNotifier {
         state.serverPlayerIndex = 1;
       }
 
+      // Capture current server info BEFORE updating state
+      final currentServerNumber = state.serverNumber;
+      final currentServerPlayerIndex = state.serverPlayerIndex;
+      final currentServingTeam = servingTeam;
+
       // If serving team wins
       if (servingTeam == winningTeam) {
         pointAwarded = true;
@@ -112,14 +117,14 @@ class MatchProvider extends ChangeNotifier {
 
       final scorePoint = ScorePoint(
         turnNumber: _currentMatch!.scoreHistory.length + 1,
-        servingTeam: servingTeam,
+        servingTeam: currentServingTeam,
         winningTeam: winningTeam,
         pointAwarded: pointAwarded,
         teamAScore: _currentMatch!.teamAScore,
         teamBScore: _currentMatch!.teamBScore,
         timestamp: DateTime.now(),
-        serverNumber: state.serverNumber,
-        serverPlayerIndex: state.serverPlayerIndex,
+        serverNumber: currentServerNumber,
+        serverPlayerIndex: currentServerPlayerIndex,
       );
       _currentMatch!.scoreHistory.add(scorePoint);
     }

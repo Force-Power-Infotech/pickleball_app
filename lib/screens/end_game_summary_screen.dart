@@ -830,31 +830,24 @@ class PointAnalysisScreen extends StatelessWidget {
   }
 
   List<TimelineItem> _buildTimelineData(Match match) {
+    // Use the actual scoreHistory for all timeline/analysis (doubles logic is already correct)
     final timelineItems = <TimelineItem>[];
     final duceThreshold = match.targetScore - 1;
     final seenDuceScores = <String>{};
-    
     for (int i = 0; i < match.scoreHistory.length; i++) {
       final point = match.scoreHistory[i];
-      
       // Check if this point created a duce condition
       if (point.teamAScore >= duceThreshold && 
           point.teamBScore >= duceThreshold && 
           point.teamAScore == point.teamBScore) {
-        
         final duceKey = '${point.teamAScore}-${point.teamBScore}';
-        
-        // Add duce card if we haven't seen this score tie before
         if (!seenDuceScores.contains(duceKey)) {
           timelineItems.add(TimelineItem.duce(point.teamAScore));
           seenDuceScores.add(duceKey);
         }
       }
-      
-      // Add the regular point
       timelineItems.add(TimelineItem.point(point, i + 1));
     }
-    
     return timelineItems;
   }
 

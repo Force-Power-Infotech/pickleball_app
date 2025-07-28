@@ -92,6 +92,7 @@ class PdfExportService {
                   ),
                 ],
               ),
+              // Use the actual scoreHistory for all rows (doubles logic is already correct)
               ...List.generate(match.scoreHistory.length, (i) {
                 final point = match.scoreHistory[i];
                 pw.Widget teamACell, teamBCell;
