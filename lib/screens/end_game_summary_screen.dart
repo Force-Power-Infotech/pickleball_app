@@ -1816,6 +1816,14 @@ class ScorecardScreen extends StatelessWidget {
   }
 
   void _downloadScorecard(BuildContext context) {
+      // Helper to check duce at a point (copied from UI logic)
+      bool isDuceAtPoint(ScorePoint point, Match match) {
+        final duceThreshold = match.targetScore - 1;
+        if (point.teamAScore < duceThreshold || point.teamBScore < duceThreshold) {
+          return false;
+        }
+        return point.teamAScore == point.teamBScore;
+      }
     () async {
       final match = context.read<MatchProvider>().currentMatch;
       if (match == null) return;
@@ -1909,20 +1917,55 @@ class ScorecardScreen extends StatelessWidget {
                   pw.Widget teamACell, teamBCell;
                   const cellPadding = pw.EdgeInsets.symmetric(vertical: 10);
                   const cellMinHeight = pw.BoxConstraints(minHeight: 28);
+                  // Duce indicator widget
+                  pw.Widget duceIndicator = pw.SizedBox(width: 0, height: 0);
+                  if (isDuceAtPoint(point, match)) {
+                    duceIndicator = pw.Container(
+                      width: 14,
+                      height: 14,
+                      margin: const pw.EdgeInsets.only(right: 4),
+                      decoration: pw.BoxDecoration(
+                        color: PdfColors.yellow,
+                        shape: pw.BoxShape.circle,
+                      ),
+                      alignment: pw.Alignment.center,
+                      child: pw.Text(
+                        'D',
+                        style: pw.TextStyle(
+                          font: pw.Font.helvetica(),
+                          fontSize: 8,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColors.black,
+                        ),
+                      ),
+                    );
+                  }
                   if (point.winningTeam == ServingTeam.teamA) {
                     teamACell = pw.Container(
                       alignment: pw.Alignment.center,
                       color: PdfColors.lightGreen300,
                       padding: cellPadding,
                       constraints: cellMinHeight,
-                      child: pw.Text('W', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                      child: pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          if (isDuceAtPoint(point, match)) duceIndicator,
+                          pw.Text('W', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                        ],
+                      ),
                     );
                     teamBCell = pw.Container(
                       alignment: pw.Alignment.center,
                       color: PdfColors.red200,
                       padding: cellPadding,
                       constraints: cellMinHeight,
-                      child: pw.Text('L', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                      child: pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          if (isDuceAtPoint(point, match)) duceIndicator,
+                          pw.Text('L', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                        ],
+                      ),
                     );
                   } else {
                     teamACell = pw.Container(
@@ -1930,14 +1973,26 @@ class ScorecardScreen extends StatelessWidget {
                       color: PdfColors.red200,
                       padding: cellPadding,
                       constraints: cellMinHeight,
-                      child: pw.Text('L', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                      child: pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          if (isDuceAtPoint(point, match)) duceIndicator,
+                          pw.Text('L', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                        ],
+                      ),
                     );
                     teamBCell = pw.Container(
                       alignment: pw.Alignment.center,
                       color: PdfColors.lightGreen300,
                       padding: cellPadding,
                       constraints: cellMinHeight,
-                      child: pw.Text('W', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                      child: pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          if (isDuceAtPoint(point, match)) duceIndicator,
+                          pw.Text('W', style: pw.TextStyle(font: pw.Font.helvetica(), color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                        ],
+                      ),
                     );
                   }
                   // Server badge - use full cell color and match app theme
