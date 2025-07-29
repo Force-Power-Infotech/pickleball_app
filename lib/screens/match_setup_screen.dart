@@ -18,167 +18,7 @@ class MatchSetupScreen extends StatefulWidget {
 }
 
 class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProviderStateMixin {
-  Widget _buildCourtNoSelector() {
-    final List<int> courtNumbers = [1, 2, 3, 4, 5];
-    final bool isCustom = _selectedCourtNo == null && _customCourtNo != null && _customCourtNo!.isNotEmpty;
-    final screenWidth = MediaQuery.of(context).size.width;
-  final buttonSize = screenWidth * 0.18; // Slightly smaller for better fit
-  final minButtonSize = 48.0;
-  final maxButtonSize = 80.0;
-  final actualButtonSize = buttonSize.clamp(minButtonSize, maxButtonSize);
-  final fontSize = 17.0; 
-    final customFontSize = (screenWidth * 0.04).clamp(12.0, 18.0);
-    final padding = EdgeInsets.all(screenWidth * 0.05);
-    return Container(
-      padding: padding,
-      decoration: BoxDecoration(
-        gradient: AppTheme.cardGradient,
-        borderRadius: AppTheme.cardRadius,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Court No',
-            style: AppTheme.bodyStyle.copyWith(fontWeight: FontWeight.w600, fontSize: fontSize),
-          ),
-          SizedBox(height: screenWidth * 0.04),
-          Center(
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              runAlignment: WrapAlignment.center,
-              spacing: screenWidth * 0.05,
-              runSpacing: screenWidth * 0.05,
-              children: [
-                ...courtNumbers.map((num) {
-                  final bool selected = _selectedCourtNo == num && !isCustom;
-                  return Padding(
-                    padding: EdgeInsets.symmetric(vertical: screenWidth * 0.01),
-                    child: SizedBox(
-                      width: actualButtonSize,
-                      height: actualButtonSize,
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedCourtNo = num;
-                            _customCourtNo = null;
-                          });
-                        },
-                        child: AnimatedContainer(
-                          duration: AppTheme.fastAnimation,
-                          curve: AppTheme.defaultCurve,
-                          decoration: selected
-                              ? AppTheme.selectedButtonDecoration.copyWith(
-                                  borderRadius: BorderRadius.circular(actualButtonSize / 2),
-                                )
-                              : AppTheme.inactiveButtonDecoration.copyWith(
-                                  borderRadius: BorderRadius.circular(actualButtonSize / 2),
-                                ),
-                          child: Center(
-                            child: Text(
-                              num.toString(),
-                              style: AppTheme.titleStyle.copyWith(
-                                fontSize: fontSize,
-                                color: selected ? Colors.white : AppTheme.textSecondary,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: screenWidth * 0.01),
-                  child: SizedBox(
-                    width: actualButtonSize,
-                    height: actualButtonSize,
-                    child: GestureDetector(
-                      onTap: () async {
-                        final result = await showDialog<String>(
-                          context: context,
-                          builder: (context) {
-                            final TextEditingController controller = TextEditingController(text: _customCourtNo);
-                            return AlertDialog(
-                              title: const Text('Enter Court No'),
-                              content: TextField(
-                                controller: controller,
-                                keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(hintText: 'Custom Court No'),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(controller.text.trim());
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                        if (result != null && result.isNotEmpty) {
-                          setState(() {
-                            _selectedCourtNo = null;
-                            _customCourtNo = result;
-                          });
-                        }
-                      },
-                      child: AnimatedContainer(
-                        duration: AppTheme.fastAnimation,
-                        curve: AppTheme.defaultCurve,
-                        decoration: isCustom
-                            ? AppTheme.selectedButtonDecoration.copyWith(
-                                borderRadius: BorderRadius.circular(actualButtonSize / 2),
-                              )
-                            : AppTheme.inactiveButtonDecoration.copyWith(
-                                borderRadius: BorderRadius.circular(actualButtonSize / 2),
-                              ),
-                        child: Center(
-                          child: Text(
-                            'Custom',
-                            style: AppTheme.titleStyle.copyWith(
-                              fontSize: (customFontSize * 0.85).clamp(11.0, 14.0),
-                              color: isCustom ? Colors.white : AppTheme.textSecondary,
-                              fontWeight: FontWeight.w900,
-                            ),
-                            maxLines: 1,
-                            softWrap: false,
-                            overflow: TextOverflow.visible,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (isCustom && _customCourtNo != null && _customCourtNo!.isNotEmpty)
-            Padding(
-              padding: EdgeInsets.only(top: screenWidth * 0.03),
-              child: Text(
-                'Selected: ${_customCourtNo}',
-                style: AppTheme.captionStyle.copyWith(
-                  color: AppTheme.primaryBlue,
-                  fontWeight: FontWeight.w600,
-                  fontSize: customFontSize,
-                ),
-              ),
-            ),
-        ],
-      ),
-    )
-        .animate(delay: 250.ms)
-        .slideY(begin: 0.3, duration: 500.ms, curve: AppTheme.defaultCurve)
-        .fadeIn();
-  }
+  
   final _formKey = GlobalKey<FormState>();
   final _teamAController = TextEditingController();
   final _teamBController = TextEditingController();
@@ -828,6 +668,168 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
         );
       },
     );
+  }
+
+  Widget _buildCourtNoSelector() {
+    final List<int> courtNumbers = [1, 2, 3, 4, 5];
+    final bool isCustom = _selectedCourtNo == null && _customCourtNo != null && _customCourtNo!.isNotEmpty;
+    final screenWidth = MediaQuery.of(context).size.width;
+  final buttonSize = screenWidth * 0.18; // Slightly smaller for better fit
+  final minButtonSize = 48.0;
+  final maxButtonSize = 80.0;
+  final actualButtonSize = buttonSize.clamp(minButtonSize, maxButtonSize);
+  final fontSize = 17.0; 
+    final customFontSize = (screenWidth * 0.04).clamp(12.0, 18.0);
+    final padding = EdgeInsets.all(screenWidth * 0.05);
+    return Container(
+      padding: padding,
+      decoration: BoxDecoration(
+        gradient: AppTheme.cardGradient,
+        borderRadius: AppTheme.cardRadius,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Court No',
+            style: AppTheme.bodyStyle.copyWith(fontWeight: FontWeight.w600, fontSize: fontSize),
+          ),
+          SizedBox(height: screenWidth * 0.04),
+          Center(
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              runAlignment: WrapAlignment.center,
+              spacing: screenWidth * 0.05,
+              runSpacing: screenWidth * 0.05,
+              children: [
+                ...courtNumbers.map((num) {
+                  final bool selected = _selectedCourtNo == num && !isCustom;
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: screenWidth * 0.01),
+                    child: SizedBox(
+                      width: actualButtonSize,
+                      height: actualButtonSize,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedCourtNo = num;
+                            _customCourtNo = null;
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: AppTheme.fastAnimation,
+                          curve: AppTheme.defaultCurve,
+                          decoration: selected
+                              ? AppTheme.selectedButtonDecoration.copyWith(
+                                  borderRadius: BorderRadius.circular(actualButtonSize / 2),
+                                )
+                              : AppTheme.inactiveButtonDecoration.copyWith(
+                                  borderRadius: BorderRadius.circular(actualButtonSize / 2),
+                                ),
+                          child: Center(
+                            child: Text(
+                              num.toString(),
+                              style: AppTheme.titleStyle.copyWith(
+                                fontSize: fontSize,
+                                color: selected ? Colors.white : AppTheme.textSecondary,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: screenWidth * 0.01),
+                  child: SizedBox(
+                    width: actualButtonSize,
+                    height: actualButtonSize,
+                    child: GestureDetector(
+                      onTap: () async {
+                        final result = await showDialog<String>(
+                          context: context,
+                          builder: (context) {
+                            final TextEditingController controller = TextEditingController(text: _customCourtNo);
+                            return AlertDialog(
+                              title: const Text('Enter Court No'),
+                              content: TextField(
+                                controller: controller,
+                                keyboardType: TextInputType.text,
+                                decoration: const InputDecoration(hintText: 'Custom Court No'),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(controller.text.trim());
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        if (result != null && result.isNotEmpty) {
+                          setState(() {
+                            _selectedCourtNo = null;
+                            _customCourtNo = result;
+                          });
+                        }
+                      },
+                      child: AnimatedContainer(
+                        duration: AppTheme.fastAnimation,
+                        curve: AppTheme.defaultCurve,
+                        decoration: isCustom
+                            ? AppTheme.selectedButtonDecoration.copyWith(
+                                borderRadius: BorderRadius.circular(actualButtonSize / 2),
+                              )
+                            : AppTheme.inactiveButtonDecoration.copyWith(
+                                borderRadius: BorderRadius.circular(actualButtonSize / 2),
+                              ),
+                        child: Center(
+                          child: Text(
+                            'Custom',
+                            style: AppTheme.titleStyle.copyWith(
+                              fontSize: (customFontSize * 0.85).clamp(11.0, 14.0),
+                              color: isCustom ? Colors.white : AppTheme.textSecondary,
+                              fontWeight: FontWeight.w900,
+                            ),
+                            maxLines: 1,
+                            softWrap: false,
+                            overflow: TextOverflow.visible,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (isCustom && _customCourtNo != null && _customCourtNo!.isNotEmpty)
+            Padding(
+              padding: EdgeInsets.only(top: screenWidth * 0.03),
+              child: Text(
+                'Selected: ${_customCourtNo}',
+                style: AppTheme.captionStyle.copyWith(
+                  color: AppTheme.primaryBlue,
+                  fontWeight: FontWeight.w600,
+                  fontSize: customFontSize,
+                ),
+              ),
+            ),
+        ],
+      ),
+    )
+        .animate(delay: 250.ms)
+        .slideY(begin: 0.3, duration: 500.ms, curve: AppTheme.defaultCurve)
+        .fadeIn();
   }
 
   Widget _buildTargetScoreSelector() {
