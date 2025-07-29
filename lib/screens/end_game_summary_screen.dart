@@ -438,12 +438,12 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
               
               const SizedBox(height: 12),
               
-              // Third row - Duce and Final Score
+              // Third row - Deuce and Final Score
               Row(
                 children: [
                   Expanded(
                     child: _buildStatCard(
-                      'Duce Periods',
+                      'Deuce Periods',
                       stats['ducePeriods'].toString(),
                       Icons.balance,
                       color: AppTheme.accentGold,
@@ -881,7 +881,7 @@ class PointAnalysisScreen extends StatelessWidget {
       child: FittedBox(
         fit: BoxFit.scaleDown,
         child: Text(
-          'Match Duce $score all',
+          'Match Deuce $score all',
           style: AppTheme.titleStyle.copyWith(
             fontSize: 12,
             fontWeight: FontWeight.w900,
@@ -2033,7 +2033,7 @@ class ScorecardScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Duce',
+                      'Deuce',
                       style: AppTheme.captionStyle.copyWith(
                         color: Colors.grey.shade700,
                       ),

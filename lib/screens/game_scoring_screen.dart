@@ -246,7 +246,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  match.duceMessage ?? 'Match Duce',
+                  match.duceMessage ?? 'Match Deuce',
                   style: AppTheme.titleStyle.copyWith(
                     fontSize: screenWidth * 0.045,
                     fontWeight: FontWeight.w900,

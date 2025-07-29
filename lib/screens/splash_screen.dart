@@ -211,7 +211,7 @@ class _SplashScreenState extends State<SplashScreen>
                 ).createShader(bounds);
               },
               child: Text(
-                'PICKLEBLAZE',
+                'PICKLEBALL',
                 style: AppTheme.headlineStyle.copyWith(
                   fontSize: 38,
                   fontWeight: FontWeight.bold,

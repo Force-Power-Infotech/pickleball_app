@@ -113,7 +113,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
           ),
           const SizedBox(height: 8),
           
-          // Show duce status if applicable
+      // Show duce status if applicable
           if (widget.match.isDuce)
             Container(
               margin: const EdgeInsets.only(bottom: 12),
@@ -127,7 +127,9 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  widget.match.duceMessage ?? 'Match Duce',
+          widget.match.duceMessage != null
+            ? widget.match.duceMessage!.replaceAll('Duce', 'Deuce')
+            : 'Match Deuce',
                   style: AppTheme.titleStyle.copyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.w900,
@@ -475,7 +477,7 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              'DUCE',
+                              'DEUCE',
                               style: AppTheme.captionStyle.copyWith(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w900,

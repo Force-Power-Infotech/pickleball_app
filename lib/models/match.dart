@@ -100,12 +100,12 @@ class Match {
     return scoreDifference < 2;
   }
 
-  /// Get duce message for display
+  /// Get deuce message for display
   String? get duceMessage {
     if (!isDuce) return null;
     
     if (teamAScore == teamBScore) {
-      return 'Match Duce ${teamAScore} all';
+      return 'Match Deuce ${teamAScore} all';
     } else {
       final leadingTeam = teamAScore > teamBScore ? teamAName : teamBName;
       // Truncate team name if too long for mobile
