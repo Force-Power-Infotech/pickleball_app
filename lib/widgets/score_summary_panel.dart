@@ -394,18 +394,6 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
                     ],
                   ),
                   const SizedBox(height: 8),
-                  if (isDoubles && serverName != null)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 4.0),
-                      child: Text(
-                        'Server: $serverName (Server ${point.serverNumber ?? ''})',
-                        style: AppTheme.captionStyle.copyWith(
-                          fontSize: 12,
-                          color: servingTeamColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
                   Row(
                     children: [
                       Icon(
