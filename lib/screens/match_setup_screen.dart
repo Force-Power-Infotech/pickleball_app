@@ -26,7 +26,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
   final minButtonSize = 48.0;
   final maxButtonSize = 80.0;
   final actualButtonSize = buttonSize.clamp(minButtonSize, maxButtonSize);
-    final fontSize = (screenWidth * 0.05).clamp(14.0, 22.0);
+  final fontSize = 17.0; 
     final customFontSize = (screenWidth * 0.04).clamp(12.0, 18.0);
     final padding = EdgeInsets.all(screenWidth * 0.05);
     return Container(
@@ -360,8 +360,6 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           _buildMatchTypeSection(),
-                          const SizedBox(height: 30),
-                          _buildCourtNoSelector(),
                           const SizedBox(height: 40),
                           _buildTeamSetupSection(),
                           const SizedBox(height: 40),
@@ -816,12 +814,12 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
                   style: AppTheme.titleStyle.copyWith(fontSize: 20),
                 ),
                 const SizedBox(height: 20),
-                
                 // Target score selector
                 _buildTargetScoreSelector(),
-                
                 const SizedBox(height: 30),
-                
+                // Court No selector (moved here)
+                _buildCourtNoSelector(),
+                const SizedBox(height: 30),
                 // First serving team selector
                 _buildFirstServingTeamSelector(),
               ],
