@@ -548,29 +548,20 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
                         
                         // Team A Name Input
                         if (_showTeamANameField)
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomTextField(
-                                  controller: _teamANameController,
-                                  label: 'Team A Name',
-                                  prefixIcon: Icons.sports_tennis,
-                                  validator: (value) {
-                                    if (value == null || value.trim().isEmpty) {
-                                      return 'Team name required';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.edit, color: AppTheme.primaryEmerald),
-                                onPressed: () {
-                                  FocusScope.of(context).requestFocus(FocusNode());
-                                },
-                                tooltip: 'Edit Team Name',
-                              ),
-                            ],
+                          CustomTextField(
+                            controller: _teamANameController,
+                            label: 'Team A Name',
+                            prefixIcon: Icons.sports_tennis,
+                            suffixIcon: Icons.edit,
+                            onSuffixPressed: () {
+                              // Optionally, you can focus the field or show a dialog
+                            },
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Team name required';
+                              }
+                              return null;
+                            },
                           ),
                         SizedBox(height: screenWidth * 0.03),
                         
@@ -644,30 +635,21 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
                         
                         // Team B Name Input
                         if (_showTeamBNameField)
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomTextField(
-                                  controller: _teamBNameController,
-                                  label: 'Team B Name',
-                                  prefixIcon: Icons.sports_tennis,
-                                  accentColor: AppTheme.primaryBlue,
-                                  validator: (value) {
-                                    if (value == null || value.trim().isEmpty) {
-                                      return 'Team name required';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.edit, color: AppTheme.primaryBlue),
-                                onPressed: () {
-                                  FocusScope.of(context).requestFocus(FocusNode());
-                                },
-                                tooltip: 'Edit Team Name',
-                              ),
-                            ],
+                          CustomTextField(
+                            controller: _teamBNameController,
+                            label: 'Team B Name',
+                            prefixIcon: Icons.sports_tennis,
+                            accentColor: AppTheme.primaryBlue,
+                            suffixIcon: Icons.edit,
+                            onSuffixPressed: () {
+                              // Optionally, you can focus the field or show a dialog
+                            },
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Team name required';
+                              }
+                              return null;
+                            },
                           ),
                         SizedBox(height: screenWidth * 0.03),
                         
