@@ -813,11 +813,11 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
                           builder: (context) {
                             final TextEditingController controller = TextEditingController(text: _customCourtNo);
                             return AlertDialog(
-                              title: const Text('Enter Court No'),
+                              title: const Text('Enter Court Number'),
                               content: TextField(
                                 controller: controller,
                                 keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(hintText: 'Custom Court No'),
+                                decoration: const InputDecoration(hintText: 'Custom Court Number'),
                               ),
                               actions: [
                                 TextButton(
@@ -878,7 +878,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
               child: Text(
                 'Selected: ${_customCourtNo}',
                 style: AppTheme.captionStyle.copyWith(
-                  color: AppTheme.primaryBlue,
+                  color: AppTheme.buttonViolet,
                   fontWeight: FontWeight.w600,
                   fontSize: customFontSize,
                 ),
