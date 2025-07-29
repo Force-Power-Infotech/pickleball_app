@@ -211,7 +211,7 @@ class _SplashScreenState extends State<SplashScreen>
                 ).createShader(bounds);
               },
               child: Text(
-                'PICKLEBALL',
+                'PICKLEBLAZE',
                 style: AppTheme.headlineStyle.copyWith(
                   fontSize: 38,
                   fontWeight: FontWeight.bold,
@@ -236,7 +236,7 @@ class _SplashScreenState extends State<SplashScreen>
           child: Transform.translate(
             offset: Offset(0, 15 * (1 - _textController.value)),
             child: Text(
-              'PROFESSIONAL SCORER',
+              'SCORE TRACKER',
               style: AppTheme.captionStyle.copyWith(
                 fontSize: 17,
                 letterSpacing: 2.2,

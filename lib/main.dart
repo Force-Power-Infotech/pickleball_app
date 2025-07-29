@@ -38,7 +38,7 @@ class PickleballApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MatchProvider()),
       ],
       child: MaterialApp(
-        title: 'Pickleball Scorer',
+        title: 'PickleBlaze',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         home: const SplashScreen(),
