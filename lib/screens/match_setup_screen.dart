@@ -36,7 +36,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
   int _selectedTargetScore = 11;
   ServingTeam _firstServingTeam = ServingTeam.teamA;
   MatchType _selectedMatchType = MatchType.singles;
-  int? _selectedCourtNo;
+  int? _selectedCourtNo = 1;
   String? _customCourtNo;
   
   late AnimationController _slideController;
@@ -126,6 +126,14 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
 
   void _startMatch() {
     if (_formKey.currentState!.validate()) {
+      // Determine selected court number as string
+      String? courtNo;
+      if (_selectedCourtNo != null) {
+        courtNo = _selectedCourtNo.toString();
+      } else if (_customCourtNo != null && _customCourtNo!.isNotEmpty) {
+        courtNo = _customCourtNo;
+      }
+
       if (_selectedMatchType == MatchType.singles) {
         // Singles match
         context.read<MatchProvider>().startMatch(
@@ -134,6 +142,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
           matchType: _selectedMatchType,
           targetScore: _selectedTargetScore,
           firstServingTeam: _firstServingTeam,
+          courtNo: courtNo,
         );
       } else {
         // Doubles match - use custom team names or defaults
@@ -143,13 +152,14 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
         String teamBName = _teamBNameController.text.trim().isNotEmpty 
             ? _teamBNameController.text.trim() 
             : 'Team B';
-            
+
         context.read<MatchProvider>().startMatch(
           teamAName: teamAName,
           teamBName: teamBName,
           matchType: _selectedMatchType,
           targetScore: _selectedTargetScore,
           firstServingTeam: _firstServingTeam,
+          courtNo: courtNo,
           teamAPlayer1: _teamAPlayer1Controller.text.trim(),
           teamAPlayer2: _teamAPlayer2Controller.text.trim(),
           teamBPlayer1: _teamBPlayer1Controller.text.trim(),
@@ -691,7 +701,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Court No',
+            'Court Number',
             style: AppTheme.bodyStyle.copyWith(fontWeight: FontWeight.w600, fontSize: fontSize),
           ),
           SizedBox(height: screenWidth * 0.04),

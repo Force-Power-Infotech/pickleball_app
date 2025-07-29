@@ -19,20 +19,23 @@ class Match {
   final MatchType matchType;
   final int targetScore; // 11, 18, or 21
   final ServingTeam firstServingTeam;
-  
+
+  /// Court number (can be int or custom string)
+  final String? courtNo;
+
   // Player names for doubles matches
   final String? teamAPlayer1;
   final String? teamAPlayer2;
   final String? teamBPlayer1;
   final String? teamBPlayer2;
-  
+
   int teamAScore;
   int teamBScore;
   ServingTeam currentServingTeam;
   bool isMatchComplete;
   DateTime startTime;
   DateTime? endTime;
-  
+
   List<ScorePoint> scoreHistory;
 
   Match({
@@ -41,6 +44,7 @@ class Match {
     required this.matchType,
     required this.targetScore,
     required this.firstServingTeam,
+    this.courtNo,
     this.teamAPlayer1,
     this.teamAPlayer2,
     this.teamBPlayer1,
@@ -140,6 +144,7 @@ class Match {
       'matchType': matchType.index,
       'targetScore': targetScore,
       'firstServingTeam': firstServingTeam.index,
+      'courtNo': courtNo,
       'teamAPlayer1': teamAPlayer1,
       'teamAPlayer2': teamAPlayer2,
       'teamBPlayer1': teamBPlayer1,
@@ -162,6 +167,7 @@ class Match {
       matchType: MatchType.values[json['matchType'] ?? 0],
       targetScore: json['targetScore'],
       firstServingTeam: ServingTeam.values[json['firstServingTeam']],
+      courtNo: json['courtNo'],
       teamAPlayer1: json['teamAPlayer1'],
       teamAPlayer2: json['teamAPlayer2'],
       teamBPlayer1: json['teamBPlayer1'],
@@ -170,17 +176,17 @@ class Match {
       teamBScore: json['teamBScore'],
       isMatchComplete: json['isMatchComplete'],
     );
-    
+
     match.currentServingTeam = ServingTeam.values[json['currentServingTeam']];
     match.startTime = DateTime.parse(json['startTime']);
     if (json['endTime'] != null) {
       match.endTime = DateTime.parse(json['endTime']);
     }
-    
+
     match.scoreHistory = (json['scoreHistory'] as List)
         .map((e) => ScorePoint.fromJson(e))
         .toList();
-    
+
     return match;
   }
 }

@@ -23,8 +23,17 @@ class PdfExportService {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Spacer(),
+                  // Court No (left)
+                  if (match.courtNo != null && match.courtNo!.isNotEmpty)
+                    pw.Text(
+                      'Court Number: ${match.courtNo}',
+                      style: pw.TextStyle(fontSize: 12, font: pw.Font.helvetica()),
+                    )
+                  else
+                    pw.SizedBox(),
+                  // Date (right)
                   pw.Text(
                     'Date: ' + (match.endTime?.toLocal().toString().split(' ')[0] ?? ''),
                     style: pw.TextStyle(fontSize: 12, font: pw.Font.helvetica()),
