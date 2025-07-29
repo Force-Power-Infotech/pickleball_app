@@ -730,7 +730,7 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
                             child: Text(
                               num.toString(),
                               style: AppTheme.titleStyle.copyWith(
-                                fontSize: fontSize,
+                                fontSize: fontSize + 6,
                                 color: selected ? Colors.white : AppTheme.textSecondary,
                                 fontWeight: FontWeight.w900,
                               ),
