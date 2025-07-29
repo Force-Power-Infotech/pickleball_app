@@ -443,7 +443,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
                           const SizedBox(width: 10),
                           if (!isDoubles)
                             Text(
-                              isServing ? 'SERVING' : 'WAITING',
+                              isServing ? 'Serving' : 'Waiting',
                               style: AppTheme.captionStyle.copyWith(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
@@ -495,7 +495,6 @@ class _GameScoringScreenState extends State<GameScoringScreen>
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
-          // ...removed 'TAP TO AWARD POINT' text...
           const SizedBox(height: 20),
           Row(
             children: [
