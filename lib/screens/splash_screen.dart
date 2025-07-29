@@ -225,7 +225,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  // _buildAnimatedSubtitle removed as subheading is no longer needed
+
 
   Widget _buildLoadingIndicator() {
     return SizedBox(
