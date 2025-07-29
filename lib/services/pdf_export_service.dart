@@ -50,14 +50,14 @@ class PdfExportService {
               pw.SizedBox(height: 12),
               if (match.matchType == MatchType.doubles)
                 pw.Text(
-                  'Team A: ${match.teamADisplayName}  (S1: ${match.teamAPlayer1 ?? 'Player 1'}, S2: ${match.teamAPlayer2 ?? 'Player 2'})',
+                  'Team A: ${match.teamADisplayName}  (S1: Server 1, S2: Server 2)',
                   style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica()),
                 )
               else
                 pw.Text('Team A: ' + match.teamADisplayName, style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica())),
               if (match.matchType == MatchType.doubles)
                 pw.Text(
-                  'Team B: ${match.teamBDisplayName}  (S1: ${match.teamBPlayer1 ?? 'Player 1'}, S2: ${match.teamBPlayer2 ?? 'Player 2'})',
+                  'Team B: ${match.teamBDisplayName}  (S1: Server 1, S2: Server 2)',
                   style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica()),
                 )
               else

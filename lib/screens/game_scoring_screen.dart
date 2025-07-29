@@ -321,14 +321,10 @@ class _GameScoringScreenState extends State<GameScoringScreen>
     String? player2;
     int? serverPlayerIndex;
     if (isDoubles) {
-      if (team == ServingTeam.teamA) {
-        player1 = match?.teamAPlayer1;
-        player2 = match?.teamAPlayer2;
-      } else {
-        player1 = match?.teamBPlayer1;
-        player2 = match?.teamBPlayer2;
-      }
-      serverPlayerIndex = match?.doublesServeState?.serverPlayerIndex;
+  // Showing Server 1 and Server 2 for doubles
+  player1 = 'Server 1';
+  player2 = 'Server 2';
+  serverPlayerIndex = match?.doublesServeState?.serverPlayerIndex;
     }
     return LayoutBuilder(
       builder: (context, constraints) {

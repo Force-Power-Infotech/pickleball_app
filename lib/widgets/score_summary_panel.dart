@@ -276,13 +276,9 @@ class _ScoreSummaryPanelState extends State<ScoreSummaryPanel>
     final isDoubles = widget.match.matchType == MatchType.doubles;
     String? serverName;
     if (isDoubles) {
-      if (point.servingTeam == ServingTeam.teamA) {
-        if (point.serverPlayerIndex == 0) serverName = widget.match.teamAPlayer1;
-        if (point.serverPlayerIndex == 1) serverName = widget.match.teamAPlayer2;
-      } else {
-        if (point.serverPlayerIndex == 0) serverName = widget.match.teamBPlayer1;
-        if (point.serverPlayerIndex == 1) serverName = widget.match.teamBPlayer2;
-      }
+  // Always show as Server 1 and Server 2 for doubles
+  if (point.serverPlayerIndex == 0) serverName = 'Server 1';
+  if (point.serverPlayerIndex == 1) serverName = 'Server 2';
     }
     return Container(
       margin: const EdgeInsets.only(bottom: 12),

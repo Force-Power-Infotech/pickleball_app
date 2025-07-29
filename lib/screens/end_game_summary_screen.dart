@@ -983,13 +983,9 @@ class PointAnalysisScreen extends StatelessWidget {
     final isDoubles = match.matchType == MatchType.doubles;
     String? serverName;
     if (isDoubles) {
-      if (point.servingTeam == ServingTeam.teamA) {
-        if (point.serverPlayerIndex == 0) serverName = match.teamAPlayer1;
-        if (point.serverPlayerIndex == 1) serverName = match.teamAPlayer2;
-      } else {
-        if (point.serverPlayerIndex == 0) serverName = match.teamBPlayer1;
-        if (point.serverPlayerIndex == 1) serverName = match.teamBPlayer2;
-      }
+  // Always show as Server 1 and Server 2 for doubles
+  if (point.serverPlayerIndex == 0) serverName = 'Server 1';
+  if (point.serverPlayerIndex == 1) serverName = 'Server 2';
     }
     return Container(
       padding: const EdgeInsets.all(16),
