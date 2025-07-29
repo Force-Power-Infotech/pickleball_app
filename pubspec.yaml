@@ -53,6 +53,9 @@ dependencies:
   # Firework celebration
   confetti: ^0.7.0
 
+  # Audio playback for button tap sound
+  audioplayers: ^5.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -75,7 +78,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-
+  assets:
+    - assets/click.mp3
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

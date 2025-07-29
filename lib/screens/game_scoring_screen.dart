@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import '../theme/app_theme.dart';
 import '../models/match.dart';
@@ -25,10 +26,16 @@ class _GameScoringScreenState extends State<GameScoringScreen>
   late Animation<double> _serveAnimation;
   late Animation<Offset> _slideAnimation;
 
+  // Audio player for button tap sound
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
   @override
   void initState() {
     super.initState();
     _initializeAnimations();
+    // Preload the click sound for low latency
+    _audioPlayer.setSourceAsset('assets/click.mp3');
+    _audioPlayer.setVolume(0.7);
   }
 
   void _initializeAnimations() {    
@@ -65,10 +72,22 @@ class _GameScoringScreenState extends State<GameScoringScreen>
   void dispose() {
     _serveController.dispose();
     _slideController.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
+  Future<void> _playClickSound() async {
+    try {
+      await _audioPlayer.stop(); // Stop any previous sound to avoid overlap
+      await _audioPlayer.play(AssetSource('click.mp3'), volume: 0.8);
+      Future.delayed(const Duration(seconds: 1), () {
+        _audioPlayer.stop(); // Stop playback after 1 second
+      });
+    } catch (_) {}
+  }
+
   void _awardPoint(ServingTeam team) {
+    _playClickSound();
     context.read<MatchProvider>().awardPoint(team);
     
     // Check if match is complete
