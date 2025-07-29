@@ -18,6 +18,45 @@ class MatchSetupScreen extends StatefulWidget {
 }
 
 class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProviderStateMixin {
+  bool get _showTeamANameField {
+    return _teamAPlayer1Controller.text.trim().isNotEmpty && _teamAPlayer2Controller.text.trim().isNotEmpty;
+  }
+  bool get _showTeamBNameField {
+    return _teamBPlayer1Controller.text.trim().isNotEmpty && _teamBPlayer2Controller.text.trim().isNotEmpty;
+  }
+  // Helper to auto-generate team name from player names
+  String _generateTeamName(String player1, String player2) {
+    String getInitial(String name) {
+      final parts = name.trim().split(RegExp(r'\s+'));
+      return parts.isNotEmpty && parts[0].isNotEmpty ? parts[0][0].toUpperCase() : '';
+    }
+    final initial1 = getInitial(player1);
+    final initial2 = getInitial(player2);
+    if (initial1.isNotEmpty && initial2.isNotEmpty) {
+      return '$initial1-$initial2';
+    }
+    return '';
+  }
+
+  void _updateTeamANameFromPlayers() {
+    if (_teamANameController.text.trim().isEmpty) {
+      final autoName = _generateTeamName(_teamAPlayer1Controller.text, _teamAPlayer2Controller.text);
+      if (autoName.isNotEmpty) {
+        _teamANameController.text = autoName;
+        _teamANameController.selection = TextSelection.fromPosition(TextPosition(offset: autoName.length));
+      }
+    }
+  }
+
+  void _updateTeamBNameFromPlayers() {
+    if (_teamBNameController.text.trim().isEmpty) {
+      final autoName = _generateTeamName(_teamBPlayer1Controller.text, _teamBPlayer2Controller.text);
+      if (autoName.isNotEmpty) {
+        _teamBNameController.text = autoName;
+        _teamBNameController.selection = TextSelection.fromPosition(TextPosition(offset: autoName.length));
+      }
+    }
+  }
   
   final _formKey = GlobalKey<FormState>();
   final _teamAController = TextEditingController();
@@ -93,18 +132,19 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
     });
     
     _teamAPlayer1Controller.addListener(() {
+      _updateTeamANameFromPlayers();
       setState(() {});
     });
-    
     _teamAPlayer2Controller.addListener(() {
+      _updateTeamANameFromPlayers();
       setState(() {});
     });
-    
     _teamBPlayer1Controller.addListener(() {
+      _updateTeamBNameFromPlayers();
       setState(() {});
     });
-    
     _teamBPlayer2Controller.addListener(() {
+      _updateTeamBNameFromPlayers();
       setState(() {});
     });
   }
@@ -507,17 +547,31 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
                         SizedBox(height: screenWidth * 0.04),
                         
                         // Team A Name Input
-                        CustomTextField(
-                          controller: _teamANameController,
-                          label: 'Team A Name',
-                          prefixIcon: Icons.sports_tennis,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Team name required';
-                            }
-                            return null;
-                          },
-                        ),
+                        if (_showTeamANameField)
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomTextField(
+                                  controller: _teamANameController,
+                                  label: 'Team A Name',
+                                  prefixIcon: Icons.sports_tennis,
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Team name required';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.edit, color: AppTheme.primaryEmerald),
+                                onPressed: () {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                },
+                                tooltip: 'Edit Team Name',
+                              ),
+                            ],
+                          ),
                         SizedBox(height: screenWidth * 0.03),
                         
                         // Team A Players
@@ -589,18 +643,32 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
                         SizedBox(height: screenWidth * 0.04),
                         
                         // Team B Name Input
-                        CustomTextField(
-                          controller: _teamBNameController,
-                          label: 'Team B Name',
-                          prefixIcon: Icons.sports_tennis,
-                          accentColor: AppTheme.primaryBlue,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Team name required';
-                            }
-                            return null;
-                          },
-                        ),
+                        if (_showTeamBNameField)
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomTextField(
+                                  controller: _teamBNameController,
+                                  label: 'Team B Name',
+                                  prefixIcon: Icons.sports_tennis,
+                                  accentColor: AppTheme.primaryBlue,
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Team name required';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.edit, color: AppTheme.primaryBlue),
+                                onPressed: () {
+                                  FocusScope.of(context).requestFocus(FocusNode());
+                                },
+                                tooltip: 'Edit Team Name',
+                              ),
+                            ],
+                          ),
                         SizedBox(height: screenWidth * 0.03),
                         
                         // Team B Players
