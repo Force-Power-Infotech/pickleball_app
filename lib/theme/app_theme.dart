@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   static const Color buttonViolet = Color(0xFF6C63FF); // Modern blue-violet for premium buttons
   // Colors - Premium 3D Metallic Theme
-  static const Color primaryEmerald = Color(0xFF20948B); // Updated green (custom)
+  static const Color primaryEmerald = Color(0xFF00C853); // Sporty green
   static const Color primaryBlue = Color(0xFF3498DB);
   static const Color neonBlue = Color(0xFF007AFF); // Neon blue for buttons
   static const Color neonRed = Color(0xFFFF3B30); // Neon red for buttons
