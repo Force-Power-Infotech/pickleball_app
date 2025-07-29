@@ -39,8 +39,20 @@ class PdfExportService {
                 ),
               ),
               pw.SizedBox(height: 12),
-              pw.Text('Team A: ' + match.teamADisplayName, style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica())),
-              pw.Text('Team B: ' + match.teamBDisplayName, style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica())),
+              if (match.matchType == MatchType.doubles)
+                pw.Text(
+                  'Team A: ${match.teamADisplayName}  (S1: ${match.teamAPlayer1 ?? 'Player 1'}, S2: ${match.teamAPlayer2 ?? 'Player 2'})',
+                  style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica()),
+                )
+              else
+                pw.Text('Team A: ' + match.teamADisplayName, style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica())),
+              if (match.matchType == MatchType.doubles)
+                pw.Text(
+                  'Team B: ${match.teamBDisplayName}  (S1: ${match.teamBPlayer1 ?? 'Player 1'}, S2: ${match.teamBPlayer2 ?? 'Player 2'})',
+                  style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica()),
+                )
+              else
+                pw.Text('Team B: ' + match.teamBDisplayName, style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica())),
               pw.SizedBox(height: 8),
                 pw.Text('Final Score: ${match.teamAScore} - ${match.teamBScore}', style: pw.TextStyle(fontSize: 14, font: pw.Font.helvetica())),
               pw.SizedBox(height: 16),
