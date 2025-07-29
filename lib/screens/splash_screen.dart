@@ -131,9 +131,7 @@ class _SplashScreenState extends State<SplashScreen>
                   
                   const SizedBox(height: 20),
                   
-                  // Subtitle
-                  _buildAnimatedSubtitle(),
-                  
+                  // Removed subtitle (Score Tracker)
                   const SizedBox(height: 60),
                   
                   // Loading indicator
@@ -227,28 +225,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  Widget _buildAnimatedSubtitle() {
-    return AnimatedBuilder(
-      animation: _textController,
-      builder: (context, child) {
-        return Opacity(
-          opacity: _textController.value * 0.8,
-          child: Transform.translate(
-            offset: Offset(0, 15 * (1 - _textController.value)),
-            child: Text(
-              'SCORE TRACKER',
-              style: AppTheme.captionStyle.copyWith(
-                fontSize: 17,
-                letterSpacing: 2.2,
-                color: AppTheme.primaryBlue,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // _buildAnimatedSubtitle removed as subheading is no longer needed
 
   Widget _buildLoadingIndicator() {
     return SizedBox(
