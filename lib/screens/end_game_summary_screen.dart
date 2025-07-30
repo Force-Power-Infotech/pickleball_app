@@ -399,8 +399,19 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
   }
 
   Widget _buildMatchStats(Match match) {
+    // Calculate percentages based on final points (not serves or rallies)
+    final int teamAScore = match.teamAScore;
+    final int teamBScore = match.teamBScore;
+    final int totalPoints = teamAScore + teamBScore;
+    double teamAPercentage = 0;
+    double teamBPercentage = 0;
+    if (totalPoints > 0) {
+      teamAPercentage = (teamAScore / totalPoints) * 100;
+      teamBPercentage = (teamBScore / totalPoints) * 100;
+    }
+
     final stats = context.read<MatchProvider>().getMatchStats();
-    
+
     return AnimatedBuilder(
       animation: _statsAnimation,
       builder: (context, child) {
@@ -431,13 +442,13 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
               
               const SizedBox(height: 12),
               
-              // Bottom row - Team points (actual points scored)
+              // Bottom row - Team points (actual points scored, percentage based on final points)
               Row(
                 children: [
                   Expanded(
                     child: _buildStatCard(
                       _truncateName(match.teamAName),
-                      '${stats['teamAPointsWon']} points (${stats['teamAWinPercentage']}%)',
+                      '$teamAScore points (${teamAPercentage.toStringAsFixed(0)}%)',
                       Icons.trending_up,
                       color: AppTheme.primaryEmerald,
                     ),
@@ -446,7 +457,7 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
                   Expanded(
                     child: _buildStatCard(
                       _truncateName(match.teamBName),
-                      '${stats['teamBPointsWon']} points (${stats['teamBWinPercentage']}%)',
+                      '$teamBScore points (${teamBPercentage.toStringAsFixed(0)}%)',
                       Icons.trending_up,
                       color: AppTheme.primaryBlue,
                     ),
