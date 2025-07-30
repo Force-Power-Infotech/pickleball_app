@@ -34,7 +34,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
     super.initState();
     _initializeAnimations();
     // Preload the click sound for low latency
-    _audioPlayer.setSourceAsset('assets/click.mp3');
+    _audioPlayer.setSourceAsset('assets/click1.wav');
     _audioPlayer.setVolume(0.7);
   }
 
@@ -79,7 +79,7 @@ class _GameScoringScreenState extends State<GameScoringScreen>
   Future<void> _playClickSound() async {
     try {
       await _audioPlayer.stop(); // Stop any previous sound to avoid overlap
-      await _audioPlayer.play(AssetSource('click.mp3'), volume: 0.8);
+      await _audioPlayer.play(AssetSource('click1.wav'), volume: 0.8);
       Future.delayed(const Duration(seconds: 1), () {
         _audioPlayer.stop(); // Stop playback after 1 second
       });

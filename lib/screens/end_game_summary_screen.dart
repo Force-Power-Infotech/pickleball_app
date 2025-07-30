@@ -413,13 +413,13 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
               
               const SizedBox(height: 12),
               
-              // Bottom row - Team wins
+              // Bottom row - Team points (actual points scored)
               Row(
                 children: [
                   Expanded(
                     child: _buildStatCard(
                       _truncateName(match.teamAName),
-                      '${stats['teamAWins']} points (${stats['teamAWinPercentage']}%)',
+                      '${stats['teamAPointsWon']} points (${stats['teamAWinPercentage']}%)',
                       Icons.trending_up,
                       color: AppTheme.primaryEmerald,
                     ),
@@ -428,7 +428,7 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
                   Expanded(
                     child: _buildStatCard(
                       _truncateName(match.teamBName),
-                      '${stats['teamBWins']} points (${stats['teamBWinPercentage']}%)',
+                      '${stats['teamBPointsWon']} points (${stats['teamBWinPercentage']}%)',
                       Icons.trending_up,
                       color: AppTheme.primaryBlue,
                     ),
