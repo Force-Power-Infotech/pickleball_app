@@ -185,6 +185,3 @@ MIT License. See `LICENSE` for details.
 ---
 
 Built with ❤️ for the pickleball community. Enjoy your matches! 🏓
----
-
-Built with ❤️ for the pickleball community. Enjoy your matches! 🏓
