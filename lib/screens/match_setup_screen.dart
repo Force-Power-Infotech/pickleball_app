@@ -810,30 +810,129 @@ class _MatchSetupScreenState extends State<MatchSetupScreen> with TickerProvider
                       onTap: () async {
                         final result = await showDialog<String>(
                           context: context,
+                          barrierColor: Colors.black.withOpacity(0.6),
                           builder: (context) {
                             final TextEditingController controller = TextEditingController(text: _customCourtNo);
-                            return AlertDialog(
-                              title: const Text('Enter Court Number'),
-                              content: TextField(
+                            final screenWidth = MediaQuery.of(context).size.width;
+                            final neonRed = AppTheme.primaryEmerald;
+                            final neonBlue = AppTheme.primaryBlue;
+                            final borderRadius = AppTheme.cardRadius;
+                            return Center(
+                              child: Material(
+                                color: Colors.transparent,
+                                child: AnimatedContainer(
+                                  duration: AppTheme.normalAnimation,
+                                  curve: AppTheme.defaultCurve,
+                                  width: screenWidth * 0.85,
+                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+                                  decoration: BoxDecoration(
+                                    borderRadius: borderRadius,
+                                    gradient: AppTheme.cardGradient,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: neonBlue.withOpacity(0.10),
+                                        blurRadius: 18,
+                                        spreadRadius: 1,
+                                        offset: const Offset(0, 6),
+                                      ),
+                                    ],
+                                    border: Border.all(
+                                      color: neonRed.withOpacity(0.18),
+                                      width: 1.2,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.sports_tennis, size: 38, color: neonBlue),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        'Court Number',
+                                        style: AppTheme.titleStyle.copyWith(
+                                          fontSize: 22,
+                                          color: neonRed,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1.1,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 18),
+                                     TextField(
                                 controller: controller,
                                 keyboardType: TextInputType.text,
-                                decoration: const InputDecoration(hintText: 'Custom Court Number'),
-                              ),
-                              actions: [
-                                TextButton(
+                                style: AppTheme.bodyStyle.copyWith(
+                                          color: AppTheme.textPrimary,
+                                          fontSize: 18,
+                                        ),
+                                        cursorColor: neonBlue,
+                                        decoration: InputDecoration(
+                                          hintText: 'Enter court number',
+                                          hintStyle: AppTheme.captionStyle.copyWith(color: AppTheme.textSecondary),
+                                          filled: true,
+                                          fillColor: Colors.white.withOpacity(0.85),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: borderRadius,
+                                            borderSide: BorderSide(color: neonBlue.withOpacity(0.3), width: 1.2),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: borderRadius,
+                                            borderSide: BorderSide(color: neonRed, width: 2.0),
+                                      ),
+                                       prefixIcon: Icon(Icons.edit, color: neonBlue.withOpacity(0.8)),
+                                        ),
+                                        autofocus: true,
+                                        onSubmitted: (val) {
+                                          Navigator.of(context).pop(val.trim());
+                                        },
+                                      ),
+                                      const SizedBox(height: 24),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Expanded(
+                                            child: ElevatedButton(
                                   onPressed: () => Navigator.of(context).pop(),
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
+                                   style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.white,
+                                                foregroundColor: neonBlue,
+                                                elevation: 0,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: borderRadius,
+                                                  side: BorderSide(color: neonBlue.withOpacity(0.7), width: 1.2),
+                                                ),
+                                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                              ),
+                                              child: Text('Cancel', style: AppTheme.buttonStyle.copyWith(fontSize: 16, color: neonBlue)),
+                                            ),
+                                      ),
+                                     const SizedBox(width: 16),
+                                          Expanded(
+                                            child: ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(controller.text.trim());
                                   },
-                                  child: const Text('OK'),
+                                   style: ElevatedButton.styleFrom(
+                                                backgroundColor: neonRed,
+                                                foregroundColor: Colors.white,
+                                                elevation: 0,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: borderRadius,
+                                                ),
+                                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                              ),
+                                              child: Text('OK', style: AppTheme.buttonStyle.copyWith(fontSize: 16, color: Colors.white)),
+                                            ),
                                 ),
                               ],
-                            );
-                          },
-                        );
+                             ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
                         if (result != null && result.isNotEmpty) {
                           setState(() {
                             _selectedCourtNo = null;
