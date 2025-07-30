@@ -1,33 +1,40 @@
 # Pickleball Scorer Pro 🏓
 
-A state-of-the-art Flutter mobile application for scoring pickleball matches with modern, animated UI inspired by professional sports apps like Nike Training Club and F1.
+A next-generation Flutter app for scoring pickleball matches, featuring a premium metallic sports UI, smooth animations, and advanced match analytics. Designed for players, coaches, and fans who want a visually striking, intuitive, and reliable scoring experience.
 
-## ✨ Features
+---
+
+## ✨ Key Features
 
 ### Core Functionality
-- **Professional Pickleball Scoring**: Implements official pickleball rules where only the serving team can score points
-- **Live Match Timeline**: Real-time point-by-point breakdown with detailed rally information
-- **Multiple Game Modes**: Support for 11, 18, or 21 point matches
-- **Undo/Redo Functionality**: Easily correct scoring mistakes
-- **Match Statistics**: Comprehensive analytics including rally win percentages and match duration
+
+- **Official Pickleball Scoring**: Only the serving team scores, with support for 11, 18, or 21-point matches.
+- **Live Match Timeline**: Point-by-point breakdown with rally details and animated transitions.
+- **Undo/Redo**: Instantly correct mistakes with a robust history system.
+- **Match Statistics**: View rally percentages, serve streaks, and match duration.
+- **Serving Indicators**: Animated paddle icons show who’s serving.
+- **Match Sharing**: Export summaries and stats to share with friends or coaches.
 
 ### Modern UI/UX
-- **Dark Sports Theme**: Sleek dark interface with neon red/blue accents and gold highlights
-- **Smooth Animations**: Performance-optimized transitions using flutter_animate
-- **Split-Screen Layout**: Dedicated team areas with large, readable scores
-- **Serving Indicators**: Animated paddle icons show which team is currently serving
-- **Responsive Design**: Optimized for all screen sizes and orientations
+
+- **Metallic Sports Theme**: Sleek metallic surfaces, chrome gradients, and reflective highlights for a premium look.
+- **Vivid Accents**: Neon red, blue, and gold highlights for teams and actions.
+- **Responsive Layout**: Optimized for all devices and orientations.
+- **Custom Typography**: Orbitron for headers, Barlow for body text.
+- **Smooth Animations**: Fast, normal, and slow transitions using `flutter_animate`.
+- **Haptic Feedback**: Tactile responses for key actions.
+- **Accessibility**: Semantic labels and high-contrast elements.
 
 ### Technical Features
-- **Local Data Persistence**: Matches are automatically saved and can be resumed
-- **State Management**: Clean architecture using Provider pattern
-- **Modern Typography**: Orbitron and Barlow fonts for a professional sports aesthetic
-- **Haptic Feedback**: Tactile responses for button interactions
-- **Match Sharing**: Export match summaries and statistics
 
-## 🏗 Architecture
+- **Local Data Persistence**: Matches are saved and can be resumed anytime.
+- **Provider State Management**: Clean, scalable architecture.
+- **Comprehensive Error Handling**: Robust user feedback and error recovery.
 
-### Project Structure
+---
+
+## 🏗️ Project Structure
+
 ```
 lib/
 ├── models/           # Data models (Match, ScorePoint, ServingTeam)
@@ -40,45 +47,58 @@ lib/
 │   ├── animated_button.dart
 │   ├── custom_text_field.dart
 │   └── score_summary_panel.dart
-├── providers/        # State management
+├── providers/        # State management (Provider pattern)
 │   └── match_provider.dart
 ├── services/         # Business logic and data persistence
 │   └── storage_service.dart
-├── theme/           # App styling and theme configuration
+├── theme/            # App styling and theme configuration
 │   └── app_theme.dart
-└── main.dart        # App entry point
+├── utils/            # Utility functions and helpers
+└── main.dart         # App entry point
 ```
 
-### Design Patterns
-- **Provider Pattern**: For state management and dependency injection
-- **Repository Pattern**: Clean separation of data access logic
-- **Widget Composition**: Modular, reusable UI components
-- **Animation Controllers**: Managed lifecycle for smooth transitions
+---
 
-## 🎯 Screen Flow
+## 🎨 Design System
 
-1. **Splash Screen**: Animated intro with logo fade-in and loading
-2. **Match Setup Screen**: Configure teams, target score (11/18/21), and first serving team
-3. **Game Scoring Screen**: Live scoring with split layout and serving indicators
-4. **Score Summary Panel**: Toggleable timeline view of all match events
-5. **End Game Summary**: Winner celebration with detailed match statistics
+- **Metallic Surfaces**: Chrome gradients, brushed metal backgrounds, and reflective highlights.
+- **Primary Red**: `#FF3B30` (Team A, main actions)
+- **Primary Blue**: `#007AFF` (Team B, secondary actions)
+- **Accent Gold**: `#FFD60A` (Highlights, celebrations)
+- **Background**: Metallic silver/grey gradients
+- **Card Surface**: Polished metallic panels
+- **Corner Radius**: 15px (buttons), 20px (cards)
+- **Shadows/Glows**: Neon and metallic glows for interactive elements
 
-## 🏓 Pickleball Scoring Rules
+**Typography**:  
+- Headlines: Orbitron (Bold, Futuristic)  
+- Body: Barlow (Clean, Readable)  
+- Scores: Orbitron (Extra Bold, Large)
 
-The app implements official pickleball scoring rules:
+**Animation Timing**:  
+- Fast: 200ms  
+- Normal: 300ms  
+- Slow: 500ms
 
-- **Only the serving team can score points**
-- **Serving team wins rally**: Gets 1 point and continues serving
-- **Receiving team wins rally**: Gets the serve but no point is awarded
-- **Match ends**: When a team reaches the target score (11, 18, or 21)
+---
 
-## 🚀 Getting Started
+## 🏓 Scoring Rules
+
+- Only the serving team can score points.
+- Serving team wins rally: +1 point, continues serving.
+- Receiving team wins rally: gains serve, no point.
+- Match ends when a team reaches the target score (11, 18, or 21).
+
+---
+
+## 📲 Getting Started
 
 ### Prerequisites
-- Flutter SDK (3.8.1 or higher)
+
+- Flutter SDK (3.8.1+)
 - Dart SDK
-- Android Studio / VS Code with Flutter extensions
-- iOS Simulator / Android Emulator
+- Android Studio or VS Code (with Flutter extensions)
+- iOS Simulator or Android Emulator
 
 ### Installation
 
@@ -99,60 +119,72 @@ The app implements official pickleball scoring rules:
    ```
 
 ### Dependencies
-- **provider**: State management
-- **flutter_animate**: High-performance animations
-- **google_fonts**: Typography (Orbitron, Barlow)
-- **shared_preferences**: Local data persistence
-- **intl**: Date/time formatting
 
-## 🎨 Design System
+- `provider`: State management
+- `flutter_animate`: High-performance animations
+- `google_fonts`: Orbitron, Barlow
+- `shared_preferences`: Local data persistence
+- `intl`: Date/time formatting
 
-### Color Palette
-- **Primary Red**: #FF3B30 (Team A, Primary actions)
-- **Primary Blue**: #007AFF (Team B, Secondary actions)
-- **Accent Gold**: #FFD60A (Highlights, Celebrations)
-- **Dark Background**: #0A0A0A (Main background)
-- **Card Surface**: #1C1C1E (Card backgrounds)
+---
 
-### Typography
-- **Headlines**: Orbitron (Bold, Futuristic)
-- **Body Text**: Barlow (Clean, Readable)
-- **Scores**: Orbitron (Extra Bold, Large)
+## 🖥️ Usage Guide
 
-### Animation Timing
-- **Fast**: 200ms (Button interactions)
-- **Normal**: 300ms (Screen transitions)
-- **Slow**: 500ms (Complex animations)
+1. **Splash Screen**: Animated metallic logo and loading.
+2. **Match Setup**: Enter team names, select target score, choose first server.
+3. **Game Scoring**: Tap to score, view live timeline, see serving indicators.
+4. **Score Summary**: Toggle timeline for all match events.
+5. **End Game**: Winner celebration, detailed stats, and sharing options.
+
+---
+
+## 🧩 Customization
+
+- **Theme**: Edit `/lib/theme/app_theme.dart` for metallic colors, gradients, and fonts.
+- **Animations**: Adjust durations and curves in widgets and screens.
+- **Persistence**: Modify `/lib/services/storage_service.dart` for custom storage.
+
+---
 
 ## 🧪 Testing
 
-Run tests with:
+Run all tests with:
 ```bash
 flutter test
 ```
 
-## 📱 Platform Support
+---
 
-- ✅ **Android**: API 21+ (Android 5.0+)
-- ✅ **iOS**: iOS 12.0+
-- 🚧 **Web**: Planned for future release
-- 🚧 **Desktop**: Planned for future release
+## 🛠 Troubleshooting
+
+- **Build errors**: Ensure Flutter and Dart SDKs are up to date.
+- **Font issues**: Run `flutter pub get` and check internet connection.
+- **Persistence issues**: Clear app data or reinstall.
+
+---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read our contributing guidelines and submit pull requests for any improvements.
+We welcome contributions! Please fork the repo, create a feature branch, and submit a pull request. See `CONTRIBUTING.md` for guidelines.
+
+---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT License. See `LICENSE` for details.
 
-## 🏆 Credits
+---
 
-- **UI Inspiration**: Nike Training Club, F1 Mobile App
-- **Icons**: Material Design Icons
-- **Fonts**: Google Fonts (Orbitron, Barlow)
-- **Animation Framework**: flutter_animate
+## 🙏 Credits
 
+- UI Inspiration: Nike Training Club, F1 Mobile App, metallic sports dashboards
+- Icons: Material Design Icons
+- Fonts: Google Fonts (Orbitron, Barlow)
+- Animations: flutter_animate
+
+---
+
+Built with ❤️ for the pickleball community. Enjoy your matches! 🏓
 ---
 
 Built with ❤️ for the pickleball community. Enjoy your matches! 🏓
