@@ -2,7 +2,9 @@ import '../services/pdf_export_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
+
 import 'package:confetti/confetti.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import '../theme/app_theme.dart';
 import '../models/match.dart';
@@ -45,6 +47,7 @@ class EndGameSummaryScreen extends StatefulWidget {
 
 class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
     with TickerProviderStateMixin {
+  late final AudioPlayer _winnerAudioPlayer;
   late AnimationController _slideController;
   late AnimationController _statsController;
   
@@ -59,16 +62,30 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
     _initializeAnimations();
     _startAnimations();
     _confettiController = ConfettiController(duration: const Duration(seconds: 5));
+    _winnerAudioPlayer = AudioPlayer();
+    _playWinnerSound();
     _confettiController.play();
     // Wait for confetti to finish, then wait 1s more before hiding widget for smooth fade-out
     Future.delayed(const Duration(seconds: 5), () {
       if (mounted) {
         _confettiController.stop();
+        _winnerAudioPlayer.stop();
         Future.delayed(const Duration(seconds: 1), () {
           if (mounted) setState(() => _showFireworks = false);
         });
       }
     });
+  }
+
+  Future<void> _playWinnerSound() async {
+    try {
+      await _winnerAudioPlayer.stop();
+      await _winnerAudioPlayer.play(AssetSource('winner.mp3'), volume: 1.0);
+      // Optionally, stop after 5 seconds to match confetti
+      Future.delayed(const Duration(seconds: 5), () {
+        _winnerAudioPlayer.stop();
+      });
+    } catch (_) {}
   }
 
   void _initializeAnimations() {
@@ -113,6 +130,7 @@ class _EndGameSummaryScreenState extends State<EndGameSummaryScreen>
     _slideController.dispose();
     _statsController.dispose();
     _confettiController.dispose();
+    _winnerAudioPlayer.dispose();
     super.dispose();
   }
 

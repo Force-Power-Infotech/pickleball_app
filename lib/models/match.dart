@@ -1,5 +1,3 @@
-
-
 class DoublesServeState {
   bool isFirstServe = true;
   int serverNumber = 2; // Start with server 2
@@ -38,6 +36,8 @@ class Match {
 
   List<ScorePoint> scoreHistory;
 
+  int? currentServerPlayerIndex; // 0 or 1 for doubles, null for singles
+
   Match({
     required this.teamAName,
     required this.teamBName,
@@ -52,6 +52,7 @@ class Match {
     this.teamAScore = 0,
     this.teamBScore = 0,
     this.isMatchComplete = false,
+    this.currentServerPlayerIndex,
   }) : currentServingTeam = firstServingTeam,
        startTime = DateTime.now(),
        scoreHistory = [];
@@ -152,6 +153,7 @@ class Match {
       'teamAScore': teamAScore,
       'teamBScore': teamBScore,
       'currentServingTeam': currentServingTeam.index,
+      'currentServerPlayerIndex': currentServerPlayerIndex,
       'isMatchComplete': isMatchComplete,
       'startTime': startTime.toIso8601String(),
       'endTime': endTime?.toIso8601String(),
@@ -175,6 +177,7 @@ class Match {
       teamAScore: json['teamAScore'],
       teamBScore: json['teamBScore'],
       isMatchComplete: json['isMatchComplete'],
+      currentServerPlayerIndex: json['currentServerPlayerIndex'],
     );
 
     match.currentServingTeam = ServingTeam.values[json['currentServingTeam']];

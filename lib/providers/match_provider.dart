@@ -129,6 +129,8 @@ class MatchProvider extends ChangeNotifier {
         serverPlayerIndex: currentServerPlayerIndex,
       );
       _currentMatch!.scoreHistory.add(scorePoint);
+      // Persist the current server player index for doubles
+      _currentMatch!.currentServerPlayerIndex = state.serverPlayerIndex;
     }
 
     // Check if match is complete
@@ -174,6 +176,36 @@ class MatchProvider extends ChangeNotifier {
       final savedMatch = await _storageService.loadMatch();
       if (savedMatch != null && !savedMatch.isMatchComplete) {
         _currentMatch = savedMatch;
+        // After restoring doublesServeState, also set state.serverPlayerIndex = _currentMatch!.currentServerPlayerIndex;
+        if (_currentMatch!.matchType == MatchType.doubles) {
+          _currentMatch!.doublesServeState = DoublesServeState();
+          final state = _currentMatch!.doublesServeState!;
+          state.isFirstServe = true;
+          for (final point in _currentMatch!.scoreHistory) {
+            // At the start of the game, only server 2 serves
+            if (state.isFirstServe) {
+              state.isFirstServe = false;
+              state.serverNumber = 2;
+              state.serverPlayerIndex = 1;
+            }
+            if (point.servingTeam == point.winningTeam) {
+              // Switch sides for both players
+              state.switchSides(point.servingTeam);
+              // Same server continues
+            } else {
+              // If first server, go to second server
+              if (state.serverNumber == 1) {
+                state.serverNumber = 2;
+                state.serverPlayerIndex = 1;
+              } else {
+                // Side-out: switch to other team, server 1
+                state.serverNumber = 1;
+                state.serverPlayerIndex = 0;
+              }
+            }
+          }
+          state.serverPlayerIndex = _currentMatch!.currentServerPlayerIndex ?? 0;
+        }
         notifyListeners();
       }
     } catch (e) {
@@ -289,6 +321,7 @@ class MatchProvider extends ChangeNotifier {
           }
         }
       }
+      state.serverPlayerIndex = _currentMatch!.currentServerPlayerIndex ?? 0;
     }
 
     // Reset match completion status if necessary
